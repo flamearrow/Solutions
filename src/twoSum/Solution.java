@@ -11,7 +11,6 @@ import java.util.Arrays;
 //
 // You may assume that each input would have exactly one solution.
 // input is NOT sorted
-// ml
 public class Solution {
 	public int[] twoSum(int[] numbers, int target) {
 		int[] back = numbers.clone();
