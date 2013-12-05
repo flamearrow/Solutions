@@ -13,7 +13,7 @@ public class LRUCache {
 	 * Input: 1,[set(2,1),get(2),set(3,2),get(2),get(3)] Output: [1,1,-1]
 	 * Expected: [1,-1,2]
 	 */
-	Node useHead;
+	Node head, tail;
 	int capacity;
 	int used = 0;
 	Map<Integer, Node> backMap;
@@ -34,145 +34,45 @@ public class LRUCache {
 
 	public void set(int key, int value) {
 		if (backMap.containsKey(key)) {
+			backMap.get(key).value = value;
 			liftN(backMap.get(key));
 		} else {
 			// need to add one
 			Node newNode = new Node(key, value);
 			backMap.put(key, newNode);
 
-			if (useHead != null) {
-				newNode.useNext = useHead;
-				useHead.usePrevious = newNode;
+			if (head != null) {
+				newNode.next = head;
+				head.previous = newNode;
+			} else {
+				tail = newNode;
 			}
-			useHead = newNode;
+			head = newNode;
 			if (used < capacity) {
 				used++;
 			} else {
-				Node toRemove = backMap.remove(key);
-				// need to remove it from uselist
-				if (toRemove == useHead) {
-					useHead = toRemove.useNext;
-					useHead.usePrevious = null;
+				// remove tail
+				backMap.remove(tail.key);
+				if (head == tail) {
+					head = tail = null;
 				} else {
-					toRemove.usePrevious.useNext = toRemove.useNext;
-					if (toRemove.useNext != null)
-						toRemove.useNext.usePrevious = toRemove.usePrevious;
+					tail = tail.previous;
+					tail.next = null;
 				}
+
 			}
 		}
 	}
 
 	public static void main(String[] args) {
-		LRUCache cache = new LRUCache(3);
-		cache.set(10, 13);
-		cache.set(3, 17);
-		cache.set(6, 11);
-		cache.set(10, 5);
-		cache.set(9, 10);
-		cache.get(13);
-		cache.set(2, 19);
-		cache.get(2);
-		cache.get(3);
-		cache.set(5, 25);
-		cache.get(8);
-		cache.set(9, 22);
-		cache.set(5, 5);
-		cache.set(1, 30);
-		cache.get(11);
-		cache.set(9, 12);
-		cache.get(7);
-		cache.get(5);
-		cache.get(8);
-		cache.get(9);
-		cache.set(4, 30);
-		cache.set(9, 3);
-		cache.get(9);
-		cache.get(10);
-		cache.get(10);
-		cache.set(6, 14);
-		cache.set(3, 1);
-		cache.get(3);
-		cache.set(10, 11);
-		cache.get(8);
-		cache.set(2, 14);
-		cache.get(1);
-		cache.get(5);
-		cache.get(4);
-		cache.set(11, 4);
-		cache.set(12, 24);
-		cache.set(5, 18);
-		cache.get(13);
-		cache.set(7, 23);
-		cache.get(8);
-		cache.get(12);
-		cache.set(3, 27);
-		cache.set(2, 12);
-		cache.get(5);
-		cache.set(2, 9);
-		cache.set(13, 4);
-		cache.set(8, 18);
-		cache.set(1, 7);
-		cache.get(6);
-		cache.set(9, 29);
-		cache.set(8, 21);
-		cache.get(5);
-		cache.set(6, 30);
-		cache.set(1, 12);
-		cache.get(10);
-		cache.set(4, 15);
-		cache.set(7, 22);
-		cache.set(11, 26);
-		cache.set(8, 17);
-		cache.set(9, 29);
-		cache.get(5);
-		cache.set(3, 4);
-		cache.set(11, 30);
-		cache.get(12);
-		cache.set(4, 29);
-		cache.get(3);
-		cache.get(9);
-		cache.get(6);
-		cache.set(3, 4);
-		cache.get(1);
-		cache.get(10);
-		cache.set(3, 29);
-		cache.set(10, 28);
-		cache.set(1, 20);
-		cache.set(11, 13);
-		cache.get(3);
-		cache.set(3, 12);
-		cache.set(3, 8);
-		cache.set(10, 9);
-		cache.set(3, 26);
-		cache.get(8);
-		cache.get(7);
-		cache.get(5);
-		cache.set(13, 17);
-		cache.set(2, 27);
-		cache.set(11, 15);
-		cache.get(12);
-		cache.set(9, 19);
-		cache.set(2, 15);
-		cache.set(3, 16);
-		cache.get(1);
-		cache.set(12, 17);
-		cache.set(9, 1);
-		cache.set(6, 19);
-		cache.get(4);
-		cache.get(5);
-		cache.get(5);
-		cache.set(8, 1);
-		cache.set(11, 7);
-		cache.set(5, 2);
-		cache.set(9, 28);
-		cache.get(1);
-		cache.set(2, 2);
-		cache.set(7, 4);
-		cache.set(4, 22);
-		cache.set(7, 24);
-		cache.set(9, 26);
-		cache.set(13, 28);
-		cache.set(11, 26);
+		LRUCache cache = new LRUCache(2);
+		cache.set(2, 1);
+		cache.set(1, 1);
+		cache.set(2, 3);
+		cache.set(4, 1);
+		System.out.println(cache.get(1));
+		System.out.println(cache.get(2));
+
 		// for (i = 0; i < cache.capacity * 2; i++) {
 		// cache.set(i, i);
 		// }
@@ -183,21 +83,26 @@ public class LRUCache {
 	}
 
 	private void liftN(Node n) {
-		if (n == useHead)
+		if (n == head)
 			return;
-		n.usePrevious.useNext = n.useNext;
-		if (n.useNext != null) {
-			n.useNext.usePrevious = n.usePrevious;
+		if (n == tail) {
+			tail = n.previous;
+			tail.next = null;
+		} else {
+			n.previous.next = n.next;
+			if (n.next != null) {
+				n.next.previous = n.previous;
+			}
 		}
-		n.usePrevious = null;
-		n.useNext = useHead;
-		useHead.usePrevious = n;
-		useHead = n;
+		n.previous = null;
+		n.next = head;
+		head.previous = n;
+		head = n;
 	}
 }
 
 class Node {
-	Node useNext = null, usePrevious = null;
+	Node next = null, previous = null;
 	int value;
 	int key;
 
