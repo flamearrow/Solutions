@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class Solution {
+	// from low to high
 	public ArrayList<Integer> postorderTraversal(TreeNode root) {
 		ArrayList<Integer> ret = new ArrayList<Integer>();
 		Stack<TreeNode> s = new Stack<TreeNode>();
@@ -14,7 +15,8 @@ public class Solution {
 			// we probe left when
 			// 1) right is null && (left is not null && left is not just added)
 			// or
-			// 2) right is not null && right is not just added && (left is not null && left is not just added)
+			// 2) right is not null && right is not just added && (left is not
+			// null && left is not just added)
 			if (cur.left != null
 					&& justAdd != cur.left
 					&& ((cur.right != null && justAdd != cur.right) || cur.right == null)) {

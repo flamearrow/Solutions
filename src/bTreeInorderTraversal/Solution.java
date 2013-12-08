@@ -1,32 +1,25 @@
-package bTreePreorderTraversal;
+package bTreeInorderTraversal;
 
 import java.util.ArrayList;
 import java.util.Stack;
 
 public class Solution {
-	// from high to low
-	public ArrayList<Integer> preorderTraversal(TreeNode root) {
+	// from left to right
+	public ArrayList<Integer> inorderTraversal(TreeNode root) {
 		ArrayList<Integer> ret = new ArrayList<Integer>();
-		Stack<TreeNode> s = new Stack<TreeNode>();
 		TreeNode cur = root;
+		Stack<TreeNode> s = new Stack<TreeNode>();
 		while (cur != null) {
-			ret.add(cur.val);
 			if (cur.left != null) {
 				s.push(cur);
 				cur = cur.left;
-				continue;
-			}
-			if (cur.right != null) {
-				cur = cur.right;
-				continue;
 			} else {
-				if (s.isEmpty())
-					cur = null;
-				else {
-					cur = s.pop().right;
-					while (cur == null && !s.isEmpty()) {
-						cur = s.pop().right;
-					}
+				ret.add(cur.val);
+				cur = cur.right;
+				while (cur == null && !s.isEmpty()) {
+					cur = s.pop();
+					ret.add(cur.val);
+					cur = cur.right;
 				}
 			}
 		}
@@ -34,12 +27,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		TreeNode n = new TreeNode(1);
-		n.setLeft(4).setLeft(2);
-		n.setRight(3);
-		for (int i : new Solution().preorderTraversal(n)) {
-			System.out.println(i);
-		}
+
 	}
 }
 
