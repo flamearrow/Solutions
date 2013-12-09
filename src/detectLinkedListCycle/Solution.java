@@ -1,5 +1,6 @@
 package detectLinkedListCycle;
 
+//Given a linked list, return the if the linked list has a cycle
 public class Solution {
 	public boolean hasCycle(ListNode head) {
 		if (head == null || head.next == null)
