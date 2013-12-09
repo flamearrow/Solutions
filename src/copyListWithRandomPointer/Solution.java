@@ -10,6 +10,7 @@ import java.util.Set;
 //Return a deep copy of the list. 
 public class Solution {
 	public RandomListNode copyRandomList(RandomListNode head) {
+		// use a map to map node pointed to in the ori list and nodes pointing from in the copied list
 		if (head == null)
 			return null;
 		RandomListNode ret = new RandomListNode(head.label);
