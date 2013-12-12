@@ -9,6 +9,12 @@ package candy;
 //
 //What is the minimum candies you must give? 
 public class Solution {
+	// reason why this works:
+	// when going from left to right, once ratings[right] > ratings[left], candies[right] would be >candies[left]
+	// when going from right to left, once ratings[left] > ratings[right], candies[left] would be >candies[right]
+	// 	and once candies[left]'s origin value is bigger then the value calculated by the 2nd run
+	// 	we maintain the bigger value, in this case candies[left] must be > candies[left-1] 
+	//						   candies[left] must be > candies[right]
 	public int candy(int[] ratings) {
 		int candies[] = new int[ratings.length];
 		candies[0] = 1;
