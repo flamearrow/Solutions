@@ -10,29 +10,46 @@ package candy;
 //What is the minimum candies you must give? 
 public class Solution {
 	public int candy(int[] ratings) {
-		int[] dp = new int[ratings.length];
-		dp[0] = 1;
+		int candies[] = new int[ratings.length];
+		candies[0] = 1;
+		for (int i = 1; i < ratings.length; i++) {
+			candies[i] = ratings[i] > ratings[i - 1] ? candies[i - 1] + 1 : 1;
+		}
+		int ret = candies[ratings.length - 1];
+		for (int i = ratings.length - 1; i > 0; i--) {
+			candies[i - 1] = (ratings[i - 1] > ratings[i])
+					&& (candies[i] + 1 > candies[i - 1]) ? candies[i] + 1
+					: candies[i - 1];
+			ret += candies[i - 1];
+		}
+		return ret;
+	}
+
+	public int candyNaive(int[] ratings) {
+		int[] candies = new int[ratings.length];
+		candies[0] = 1;
 		for (int i = 1; i < ratings.length; i++) {
 			if (ratings[i] > ratings[i - 1]) {
-				dp[i] = dp[i - 1] + 1;
+				candies[i] = candies[i - 1] + 1;
 			} else {
 				int k = i;
-				dp[k] = 1;
-				while (k > 0 && ratings[k] < ratings[k-1] && dp[k] == dp[k - 1]) {
-					dp[k - 1]++;
+				candies[k] = 1;
+				while (k > 0 && ratings[k] < ratings[k - 1]
+						&& candies[k] == candies[k - 1]) {
+					candies[k - 1]++;
 					k--;
 				}
 			}
 		}
 		int min = 0;
-		for (int i : dp) {
+		for (int i : candies) {
 			min += i;
 		}
 		return min;
 	}
 
 	public static void main(String[] args) {
-		int[] ratings = { 2,2 };
+		int[] ratings = { 1, 2 };
 		System.out.println(new Solution().candy(ratings));
 	}
 }
