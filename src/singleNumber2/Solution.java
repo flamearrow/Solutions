@@ -1,4 +1,4 @@
-package SingleNumber2;
+package singleNumber2;
 
 //Given an array of integers, every element appears three times except for one. Find that single one.
 //
