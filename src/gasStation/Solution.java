@@ -36,7 +36,13 @@ public class Solution {
 				end = (end + 1) % len;
 				// can only find an answer when expanding end
 				if (start == end) {
-					return start;
+					if (sum >= 0) {
+						return start;
+					}
+					// sum of entire array is negative, can't find an answer
+					else {
+						return -1;
+					}
 				}
 			} else {
 				sum -= dif[start];
