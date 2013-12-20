@@ -10,48 +10,41 @@ public class Solution {
 	public int maxProfit(int[] prices) {
 		if (prices.length < 2)
 			return 0;
-		int[] diff = new int[prices.length - 1];
-		for (int i = 1; i < prices.length; i++) {
-			diff[i - 1] = prices[i] - prices[i - 1];
+		int len = prices.length;
+		int[] preProfit = new int[len];
+		int[] postProfit = new int[len];
+
+		int preSmall = prices[0];
+		int postBig = prices[len - 1];
+		int maxProfit = 0;
+		for (int i = 1; i < len; i++) {
+			// find a new small value, all the right high value can be applied
+			// to this small value
+			if (preSmall > prices[i]) {
+				preSmall = prices[i];
+			}
+			// try to use this value to minus smallest value we see so
+			// far and see if we have a bigger profit
+			// if not, use the previous value int preProfit
+			int newProfit = prices[i] - preSmall;
+			preProfit[i] = preProfit[i - 1] > newProfit ? preProfit[i - 1]
+					: newProfit;
 		}
 
-		// find the first two max subarray of diff
-		int max = 0;
-		int secondMax = 0;
-		int maxE = -1;
-
-		int start = 0, end = 1;
-		int currentSum = diff[0];
-		while (start < diff.length) {
-			// might hit new max
-			if (currentSum > max) {
-				// new max doesn't intersect with old max, move old max as
-				// second max
-				// if new max intersects with old max, we just replace old max
-				// with new max, don't touch second max
-				if (start >= maxE) {
-					secondMax = max;
-				}
-				max = currentSum;
-				maxE = end;
-			} else if (currentSum > secondMax) {
-				// new second max doesn't intersect with max, we replace second
-				// max
-				// if new second max intersects with max, then we drop new
-				// second max
-				if (start >= maxE) {
-					secondMax = currentSum;
-				}
+		for (int i = len - 2; i >= 0; i--) {
+			// find a new big value, all the left small value can be applied to
+			// this big value
+			if (postBig < prices[i]) {
+				postBig = prices[i];
 			}
-			if (currentSum >= 0 && end < diff.length) {
-				currentSum += diff[end];
-				end++;
-			} else {
-				currentSum -= diff[start];
-				start++;
+			int newProfit = postBig - prices[i];
+			postProfit[i] = postProfit[i + 1] > newProfit ? postProfit[i + 1]
+					: newProfit;
+			if (preProfit[i] + postProfit[i] > maxProfit) {
+				maxProfit = preProfit[i] + postProfit[i];
 			}
 		}
-		return max + secondMax;
+		return maxProfit;
 	}
 
 	public static void main(String[] args) {
