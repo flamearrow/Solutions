@@ -31,7 +31,7 @@ public class Solution {
 
 	}
 
-	private ListNode reverse(ListNode head) {
+	public ListNode reverse(ListNode head) {
 		if (head == null || head.next == null) {
 			return head;
 		} else {
