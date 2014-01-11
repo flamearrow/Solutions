@@ -3,7 +3,7 @@ package constructBTreeFromPreOrderAndInOrder;
 //Given preorder and inorder traversal of a tree, construct the binary tree.
 //
 //Note:
-//You may assume that duplicates do not exist in the tree.
+//You may assume that duplicates do not exist in the tree. 
 // Note: using preorder and postorder traversal can't recreate a tree!
 //  1              1
 // 2      and       2
