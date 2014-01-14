@@ -9,34 +9,26 @@ import java.util.Set;
 // that lie on the same straight line.
 public class Solution {
 	// the idea:
-	// just go over the n^2 nodes once, have two HashMaps storing line and point INDEX on the line
-	// and point and points INDEX thats the point
+	// just go over the n^2 nodes once,
+	// have a HashMaps storing line and point INDEX on the line
 	// update maxCount when necessary
+	//
+	// also keep a boolean 'allPointsSame' to track the scenario that
+	// 	all points are at the same position, in which case we should
+	// 	return the size of points
 	public int maxPoints(Point[] points) {
-	    if (points.length <= 1)
+		if (points.length <= 1)
 			return points.length;
 		HashMap<Line, Set<Integer>> lineCount = new HashMap<Line, Set<Integer>>();
-		HashMap<Point, Set<Integer>> pointCount = new HashMap<Point, Set<Integer>>();
+		boolean allPointsSame = true;
 		int len = points.length;
 		int count = -1, maxCount = -1;
 		for (int i = 0; i < len; i++) {
 			for (int j = i + 1; j < len; j++) {
 				Point p1 = points[i];
 				Point p2 = points[j];
-				if (p1.x == p2.x && p1.y == p2.y) {
-					if (pointCount.containsKey(p1)) {
-						Set<Integer> set = pointCount.get(p1);
-						set.add(i);
-						set.add(j);
-						count = set.size();
-					} else {
-						Set<Integer> set = new HashSet<Integer>();
-						set.add(i);
-						set.add(j);
-						pointCount.put(p1, set);
-						count = set.size();
-					}
-				} else {
+				if (p1.x != p2.x || p1.y != p2.y) {
+					allPointsSame = false;
 					Line l = new Line(p1, p2);
 					// add the line to set, remove duplicates
 					if (lineCount.containsKey(l)) {
@@ -57,7 +49,10 @@ public class Solution {
 				}
 			}
 		}
-		return maxCount;
+		if (allPointsSame)
+			return points.length;
+		else
+			return maxCount;
 	}
 
 	// the idea:
