@@ -23,8 +23,6 @@ public class Solution {
 			for (int j = i + 1; j < len; j++) {
 				Point p1 = points[i];
 				Point p2 = points[j];
-				// if the two nodes are equal, can't create a line, just
-				// continue
 				if (p1.x == p2.x && p1.y == p2.y) {
 					if (pointCount.containsKey(p1)) {
 						Set<Integer> set = pointCount.get(p1);
