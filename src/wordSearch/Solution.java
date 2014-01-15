@@ -19,12 +19,8 @@ package wordSearch;
 
 // AKA boggle
 public class Solution {
-	public static int LEFT = 1 << 0;
-	public static int RIGHT = 1 << 1;
-	public static int UP = 1 << 2;
-	public static int DOWN = 1 << 3;
 
-	// naive dfs search would take O(m*n*l) time
+	// naive dfs search would take O(m*n*3^l) time
 	public boolean exist(char[][] board, String word) {
 		if (word.length() == 0)
 			return false;
@@ -32,21 +28,12 @@ public class Solution {
 		boolean[][] maps = new boolean[board.length][board[0].length];
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[0].length; j++) {
-				clearMap(maps);
 				if (probe(board, chars, 0, i, j, maps)) {
 					return true;
 				}
 			}
 		}
 		return false;
-	}
-
-	void clearMap(boolean[][] map) {
-		for (int i = 0; i < map.length; i++) {
-			for (int j = 0; j < map[0].length; j++) {
-				map[i][j] = false;
-			}
-		}
 	}
 
 	boolean probe(char[][] board, char[] chars, int index, int i, int j,
@@ -62,19 +49,21 @@ public class Solution {
 				// probe left
 				if (probe(board, chars, index + 1, i, j - 1, visited)) {
 					return true;
-				} 
+				}
 				// probe right
 				else if (probe(board, chars, index + 1, i, j + 1, visited)) {
 					return true;
-				} 
+				}
 				// probe up
 				else if (probe(board, chars, index + 1, i - 1, j, visited)) {
 					return true;
-				} 
+				}
 				// probe down
 				else if (probe(board, chars, index + 1, i + 1, j, visited)) {
 					return true;
 				}
+				// clear this bit
+				visited[i][j] = false;
 				return false;
 			}
 		}
@@ -83,7 +72,7 @@ public class Solution {
 	public static void main(String[] args) {
 		char[][] board = { { 'A', 'B', 'C', 'E' }, { 'S', 'F', 'C', 'S' },
 				{ 'A', 'D', 'E', 'E' } };
-		String word = "ABCB";
+		String word = "ABCCED";
 		System.out.println(new Solution().exist(board, word));
 	}
 }
