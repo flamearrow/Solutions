@@ -88,7 +88,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		ArrayList<ArrayList<Integer>> triangle = new ArrayList<>();
+		ArrayList<ArrayList<Integer>> triangle = new ArrayList<ArrayList<Integer>>();
 		triangle.add(new ArrayList<Integer>());
 		triangle.add(new ArrayList<Integer>());
 		triangle.add(new ArrayList<Integer>());

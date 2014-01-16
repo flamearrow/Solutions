@@ -12,8 +12,8 @@ import java.util.ArrayList;
 public class Solution {
 	public ArrayList<Integer> getRow(int rowIndex) {
 		rowIndex++;
-		ArrayList<Integer> ret = new ArrayList<>();
-		ArrayList<Integer> back = new ArrayList<>();
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+		ArrayList<Integer> back = new ArrayList<Integer>();
 
 		ret.add(1);
 		for (int i = 0; i < rowIndex; i++) {

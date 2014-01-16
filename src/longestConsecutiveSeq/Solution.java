@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class Solution {
 	public int longestConsecutive(int[] num) {
 		// backMap stores: item -> length of sequence containing this item
-		HashMap<Integer, Integer> backMap = new HashMap<>();
+		HashMap<Integer, Integer> backMap = new HashMap<Integer, Integer>();
 		int max = Integer.MIN_VALUE;
 		int newLen = 0;
 		for (int i : num) {
