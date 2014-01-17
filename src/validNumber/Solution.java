@@ -72,8 +72,18 @@ public class Solution {
 					state = DIGIT | SPACE;
 				}
 				// we have seen dot before
-				else if (state == DIGIT || state == (DIGIT | SPACE | eE)) {
+				else if (state == (DIGIT | SPACE | eE)) {
 					state = DIGIT | SPACE | eE;
+				}
+				// two scenarios
+				// a) ".1" after .
+				// 2) "1.2e+3" after +
+				else if (state == DIGIT) {
+					if (s.charAt(cur - 2) == '.') {
+						state = DIGIT | SPACE | eE;
+					} else {
+						state = DIGIT | SPACE;
+					}
 				}
 
 				// otherwise are still expecting DIGIT | DOT | eE | SPACE
@@ -105,8 +115,12 @@ public class Solution {
 				// we have found something end with -
 				if (cur == s.length())
 					return false;
-				// note "1.3e-2.2" is valid, after e we can still have dot
-				state = LEADING_PLUSMINUS;
+				if (state == LEADING_SPACE)
+					state = LEADING_PLUSMINUS;
+				// other wise we have seen something like "1.2e+2"
+				else {
+					state = DIGIT;
+				}
 			} else {
 				return false;
 			}
@@ -118,8 +132,12 @@ public class Solution {
 		return ('0' <= c) && (c <= '9');
 	}
 
+	public boolean isNumber2(String s) {
+		return s.matches("^\\s*[+-]?(\\d+|\\d*\\.\\d+|\\d+\\.\\d*)([eE][+-]?\\d+)?\\s*$");
+	}
+
 	public static void main(String[] args) {
-		String[] ss = { "1.3e-2.2 ", "2.e10", "3.1.3" };
+		String[] ss = { "1e+1e1", "1e1.1", "1e-1.1", "1e-11", "1e11", "1e+11" };
 		for (String s : ss)
 			System.out.println(new Solution().isNumber(s));
 	}
