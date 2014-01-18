@@ -10,23 +10,30 @@ package uniquePaths;
 
 //Note: m and n will be at most 100
 public class Solution {
+	// a simple dp
 	public int uniquePaths(int m, int n) {
 		if (m == 0 || n == 0)
-			return 0;
-		int min = m < n ? m : n;
+			return 1;
+		int[][] dp = new int[m][n];
+		for (int i = 0; i < m; i++) {
+			dp[i][0] = 1;
+		}
+		for (int i = 0; i < n; i++) {
+			dp[0][i] = 1;
+		}
+		for (int i = 1; i < m; i++) {
+			for (int j = 1; j < n; j++) {
+				dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+			}
+		}
 
-		int a = timesBack(m + n, min);
-
-		int b = facN(m - min);
-
-		return a / b;
+		return dp[m - 1][n - 1];
 	}
 
-	int timesBack(int start, int loop) {
-		if (loop == 1)
-			return start;
-		else
-			return start * timesBack(start - 1, loop - 1);
+	public int uniquePathsFac(int m, int n) {
+		if (m <= 1 || n <= 1)
+			return 1;
+		return facN(m + n - 2) / (facN(m - 1) * facN(n - 1));
 	}
 
 	static int facN(int n) {
@@ -37,8 +44,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(facN(29));
-		System.out.println(new Solution().uniquePaths(36, 7));
+		System.out.println(new Solution().uniquePathsFac(1, 2));
 
 	}
 }
