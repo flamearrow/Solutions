@@ -18,7 +18,7 @@ public class Solution {
 	enum Direction {
 		UP, DOWN, LEFT, RIGHT
 	}
-
+	// use a loop to lock how far we can go, no need to use back array
 	public ArrayList<Integer> spiralOrder(int[][] matrix) {
 		ArrayList<Integer> ret = new ArrayList<Integer>();
 		if (matrix.length == 0)
