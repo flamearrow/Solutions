@@ -16,6 +16,10 @@ import java.util.ArrayList;
 public class Solution {
 	public ArrayList<Interval> insert(ArrayList<Interval> intervals,
 			Interval newInterval) {
+		// first use bSearch to find the start interval and end interval based
+		// on interval.start and interval.end
+		// then merge/delete/create new intervals for these bunch of intervals
+		// and newInterval
 		int start, end;
 		int len = intervals.size();
 		if (len == 0) {
