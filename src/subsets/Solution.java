@@ -55,8 +55,34 @@ public class Solution {
 		}
 	}
 
+	// another solution, use DFS
+	// probe is searching for all combinations starting from curIndex
+	// in each iteration, we try to find a path starting from curIndex to end
+	// since the path before curIndex is already in place we just need to
+	// concatenate
+
+	// this is DFS because we are searching a btree of height num.length-1,
+	// at each level i we need to decide to take num[i] or not
+	public ArrayList<ArrayList<Integer>> subsets2(int[] num) {
+		Arrays.sort(num);
+		ArrayList<Integer> curSet = new ArrayList<Integer>();
+		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+		probe(num, 0, curSet, ret);
+		return ret;
+	}
+
+	void probe(int[] num, int curIndex, ArrayList<Integer> currentPath,
+			ArrayList<ArrayList<Integer>> result) {
+		result.add(new ArrayList<Integer>(currentPath));
+		for (int i = curIndex; i < num.length; i++) {
+			currentPath.add(num[i]);
+			probe(num, i + 1, currentPath, result);
+			currentPath.remove(currentPath.size() - 1);
+		}
+	}
+
 	public static void main(String[] args) {
-		int[] num = { 0 };
+		int[] num = { 1, 2, 3 };
 		ArrayList<ArrayList<Integer>> ret = new Solution().subsets(num);
 		System.out.println(ret);
 	}
