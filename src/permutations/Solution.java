@@ -1,6 +1,7 @@
 package permutations;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 //Given a collection of numbers, return all possible permutations.
 //
@@ -31,9 +32,36 @@ public class Solution {
 		return ret;
 	}
 
+	// DFS, use a boolean[] to mark visit
+	// we do this because dup resolving will be easier
+	public ArrayList<ArrayList<Integer>> permuteDFS(int[] num) {
+		LinkedList<Integer> path = new LinkedList<Integer>();
+		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+		boolean[] used = new boolean[num.length];
+		probe(num, path, ret, used);
+		return ret;
+	}
+
+	void probe(int[] num, LinkedList<Integer> path,
+			ArrayList<ArrayList<Integer>> ret, boolean[] used) {
+		if (path.size() == num.length) {
+			ret.add(new ArrayList<Integer>(path));
+		}
+
+		for (int i = 0; i < num.length; i++) {
+			if (!used[i]) {
+				used[i] = true;
+				path.add(num[i]);
+				probe(num, path, ret, used);
+				used[i] = false;
+				path.removeLast();
+			}
+		}
+	}
+
 	public static void main(String[] args) {
-		int[] num = {};
-		ArrayList<ArrayList<Integer>> ret = new Solution().permute(num);
+		int[] num = { 1, 2, 3 };
+		ArrayList<ArrayList<Integer>> ret = new Solution().permuteDFS(num);
 		System.out.println(ret);
 	}
 }

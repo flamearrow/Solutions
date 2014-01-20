@@ -2,6 +2,7 @@ package subsets2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 //Given a collection of integers that might contain duplicates, S, return all possible subsets.
 //
@@ -24,7 +25,8 @@ public class Solution {
 	// 1) the subsets of previous result
 	// 2) all arrays from 1) plus the new biggest number
 	// 3) a single element array of the new biggest number
-	// note apart from that, we need to calculate how many dups we met and avoid adding duplicates
+	// note apart from that, we need to calculate how many dups we met and avoid
+	// adding duplicates
 	public ArrayList<ArrayList<Integer>> subsetsWithDup(int[] num) {
 		Arrays.sort(num);
 		ArrayList<ArrayList<Integer>> ret = probe(num, num.length - 1);
@@ -81,9 +83,32 @@ public class Solution {
 		}
 	}
 
+	// using DFS in this one dup can be removed easier
+	public ArrayList<ArrayList<Integer>> subsetsWithDup2(int[] num) {
+		Arrays.sort(num);
+		LinkedList<Integer> path = new LinkedList<Integer>();
+		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+		probe(num, 0, path, ret);
+		return ret;
+	}
+
+	void probe(int[] num, int curIndex, LinkedList<Integer> path,
+			ArrayList<ArrayList<Integer>> ret) {
+		ret.add(new ArrayList<Integer>(path));
+		for (int i = curIndex; i < num.length; i++) {
+			// note if num[i] == num[i-1] we don't probe i
+			// because the result of i will be subset of result of i-1
+			if (i > curIndex && num[i] == num[i - 1])
+				continue;
+			path.add(num[i]);
+			probe(num, i + 1, path, ret);
+			path.removeLast();
+		}
+	}
+
 	public static void main(String[] args) {
-		int[] num = { 1, 1 };
-		ArrayList<ArrayList<Integer>> ret = new Solution().subsetsWithDup(num);
+		int[] num = { 1, 1, 2 };
+		ArrayList<ArrayList<Integer>> ret = new Solution().subsetsWithDup2(num);
 		System.out.println(ret);
 	}
 }
