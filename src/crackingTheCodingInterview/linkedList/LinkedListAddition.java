@@ -1,4 +1,4 @@
-package crackingTheCodingInterview.linkedLists;
+package crackingTheCodingInterview.linkedList;
 
 // 2.5
 

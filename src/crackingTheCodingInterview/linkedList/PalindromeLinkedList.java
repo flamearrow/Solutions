@@ -1,4 +1,4 @@
-package crackingTheCodingInterview.linkedLists;
+package crackingTheCodingInterview.linkedList;
 
 // check if a linked list is a palindrome
 public class PalindromeLinkedList {

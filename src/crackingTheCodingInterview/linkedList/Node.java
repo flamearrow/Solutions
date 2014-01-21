@@ -1,4 +1,4 @@
-package crackingTheCodingInterview.linkedLists;
+package crackingTheCodingInterview.linkedList;
 
 public class Node {
 	int val;
