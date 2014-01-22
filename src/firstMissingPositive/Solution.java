@@ -8,7 +8,7 @@ package firstMissingPositive;
 //
 //Your algorithm should run in O(n) time and uses constant space. 
 public class Solution {
-	// modify the array
+	// modify the array, let A[0] = 1, A[1] = 2, A[2] = 3, ... then find the first i where A[i] != i+1
 	public int firstMissingPositive(int[] A) {
 		int len = A.length;
 		int i = 0;
