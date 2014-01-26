@@ -13,6 +13,8 @@ package romanToInt;
 //Input is guaranteed to be within the range from 1 to 3999.
 public class Solution {
 	public int romanToInt(String s) {
+		// to be cleaner, search from start, probe for a valid candidate each
+		// time
 		int ret = 0;
 		int cur = 0;
 		int prob = cur;
