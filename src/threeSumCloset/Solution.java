@@ -28,6 +28,9 @@ public class Solution {
 				else if (end < num.length - 1 && num[end] == num[end + 1])
 					end--;
 				else if (num[start] + num[end] < sum) {
+					// it's tricky here: 
+					// we need to compare (target-currentSum) and (target-minSum)
+					// where (target-currentSum)=sum-num[start]-num[end]
 					if (Math.abs(sum - num[start] - num[end]) < Math.abs(target
 							- min))
 						min = num[start] + num[end] + num[i];
