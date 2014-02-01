@@ -6,6 +6,78 @@ import java.util.LinkedList;
 //You may assume that the maximum length of S is 1000, 
 //and there exists one unique longest palindromic substring.
 public class Solution {
+	// select all possible symmetric point and try expanding left and right
+	public String longestPalindromeExpand(String s) {
+		int len = s.length();
+		if (len == 0)
+			return "";
+		int max = 1;
+		String ret = s.charAt(0) + "";
+		for (int i = 0; i < len; i++) {
+			// symmetric point at i
+			int left = i - 1, right = i + 1;
+			int curLen = 1;
+			while (left >= 0 && right < len
+					&& s.charAt(left) == s.charAt(right)) {
+				left--;
+				right++;
+				curLen += 2;
+			}
+			if (curLen > max) {
+				max = curLen;
+				ret = s.substring(left + 1, right);
+			}
+
+			// symmetric point at between i and i+1
+			left = i;
+			right = i + 1;
+			curLen = 0;
+			while (left >= 0 && right < len
+					&& s.charAt(left) == s.charAt(right)) {
+				left--;
+				right++;
+				curLen += 2;
+			}
+			if (curLen > max) {
+				max = curLen;
+				ret = s.substring(left + 1, right);
+			}
+		}
+		return ret;
+	}
+
+	// or use a edit distance - like DP
+	public String longestPalindromeDP(String s) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = s.length() - 1; i >= 0; i--) {
+			sb.append(s.charAt(i));
+		}
+		String sR = sb.toString();
+		int len = s.length();
+		int[][] dp = new int[len][len];
+		// since one char is definitely a palindrome, 
+		// we just start from there 
+		int maxLen = 1;
+		String ret = "" + s.charAt(0);
+		for (int i = 0; i < len; i++) {
+			dp[i][0] = s.charAt(i) == sR.charAt(0) ? 1 : 0;
+			dp[0][i] = sR.charAt(i) == s.charAt(0) ? 1 : 0;
+		}
+
+		for (int i = 1; i < len; i++) {
+			for (int j = 1; j < len; j++) {
+				// the symmetric point is j - dp[i][j] + 1 == len - 1 - i
+				dp[i][j] = s.charAt(i) == sR.charAt(j) ? dp[i - 1][j - 1] + 1
+						: 0;
+				if ((j - dp[i][j] + 1 == len - 1 - i) && dp[i][j] > maxLen) {
+					ret = sR.substring(j - dp[i][j] + 1, j + 1);
+					maxLen = dp[i][j];
+				}
+			}
+		}
+		return ret;
+	}
+
 	// first build a suffix tree of s, then revert s as sR
 	// then starting from each index of sR, probe as deep as possible
 	//  when probing, keep track of length and starting index
@@ -14,7 +86,7 @@ public class Solution {
 	//   which means the probe ends at the starting of a same substring
 	//   then we find a candidate
 	// O(n^2)
-	public String longestPalindrome(String s) {
+	public String longestPalindromeSuffixTrie(String s) {
 		String lS = s.toLowerCase();
 		TrieNode suffixTreeRoot = TrieNode.buildSuffixTree(lS);
 		StringBuilder sb = new StringBuilder();
@@ -56,9 +128,8 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		String s = "civilwartestingwhetherthatnaptionoranynartionsoconceivedandsodedicatedcanlongendureWeareqmetonagreatbattlefiemldoftzhatwarWehavecometodedicpateaportionofthatfieldasafinalrestingplaceforthosewhoheregavetheirlivesthatthatnationmightliveItisaltogetherfangandproperthatweshoulddothisButinalargersensewecannotdedicatewecannotconsecratewecannothallowthisgroundThebravelmenlivinganddeadwhostruggledherehaveconsecrateditfaraboveourpoorponwertoaddordetractTgheworldadswfilllittlenotlenorlongrememberwhatwesayherebutitcanneverforgetwhattheydidhereItisforusthelivingrathertobededicatedheretotheulnfinishedworkwhichtheywhofoughtherehavethusfarsonoblyadvancedItisratherforustobeherededicatedtothegreattdafskremainingbeforeusthatfromthesehonoreddeadwetakeincreaseddevotiontothatcauseforwhichtheygavethelastpfullmeasureofdevotionthatweherehighlyresolvethatthesedeadshallnothavediedinvainthatthisnationunsderGodshallhaveanewbirthoffreedomandthatgovernmentofthepeoplebythepeopleforthepeopleshallnotperishfromtheearth";
-		//		TrieNode root = TrieNode.buildSuffixTree(s);
-		System.out.println(new Solution().longestPalindrome(s));
+		String s = "aaaaaaaaaaaaaaaaaabbbadsdfew";
+		System.out.println(new Solution().longestPalindromeExpand(s));
 	}
 }
 
