@@ -63,7 +63,7 @@ public class Solution {
 	// node is in one of the lines, create the Line, LineInfo map, check for max
 	// 2 * n^2
 	public int maxPoints2(Point[] points) {
-		HashSet<Line> lines = new HashSet<Line>();
+		HashSet<Line2> lines = new HashSet<Line2>();
 		int len = points.length;
 		for (int i = 0; i < len; i++) {
 			for (int j = i + 1; j < len; j++) {
@@ -74,7 +74,7 @@ public class Solution {
 				if (p1.x == p2.x && p1.y == p2.y) {
 					continue;
 				}
-				Line l = new Line(p1, p2);
+				Line2 l = new Line2(p1, p2);
 				// add the line to set, remove duplicates
 				lines.add(l);
 			}
@@ -82,11 +82,11 @@ public class Solution {
 		if (lines.size() == 0)
 			return points.length;
 		else {
-			Map<Line, Integer> backMap = new HashMap<Line, Integer>();
+			Map<Line2, Integer> backMap = new HashMap<Line2, Integer>();
 			int maxCount = -1;
 			int count = -1;
 			for (Point p : points) {
-				for (Line l : lines) {
+				for (Line2 l : lines) {
 					// if the point is on the line, update backMap
 					if (l.contains(p)) {
 						if (backMap.containsKey(l)) {
@@ -109,9 +109,9 @@ public class Solution {
 
 	public static void main(String[] args) {
 		Point[] pts = new Point[3];
-		pts[0] = new Point(0, 4);
-		pts[1] = new Point(0, 4);
-		pts[2] = new Point(0, 4);
+		pts[0] = new Point(2, 4);
+		pts[1] = new Point(4, 4);
+		pts[2] = new Point(2, 4);
 		// pts[1] = new Point(2, 2);
 		// pts[2] = new Point(0, 0);
 		// pts[3] = new Point(8, 2);
@@ -124,10 +124,61 @@ public class Solution {
 }
 
 class Line {
+	int a = 0, b = 0, c = 0;
+
+	public Line(Point p1, Point p2) {
+		a = p1.y - p2.y;
+		b = p1.x - p2.x;
+		// otherwise it's parralel to X or Y axis
+		if (a != 0 && b != 0)
+			updateAB();
+		else if (a == 0) {
+			a = p1.y;
+			b = 0;
+			c = 0;
+		} else if (b == 0) {
+			a = 0;
+			b = p1.x;
+			c = 0;
+		}
+		c = b * p1.y - a * p1.x;
+	}
+
+	// find GCD of a and b, then divide them by GCD
+	void updateAB() {
+		int big = a > b ? a : b;
+		int small = big == a ? b : a;
+		while (small != 0) {
+			int tmp = small;
+			small = big % small;
+			big = tmp;
+		}
+		// now big is gcd
+		a /= big;
+		b /= big;
+	}
+
+	public boolean equals(Object o) {
+		if (!(o instanceof Line))
+			return false;
+		else if (o == this)
+			return true;
+		Line l = (Line) o;
+		return l.a == a && l.b == b && l.c == c;
+	}
+
+	public int hashCode() {
+		return a * 32 + b * 7 + c;
+	}
+
+}
+
+class Line2 {
 	double tilt;
 	/* where does this line intersect with x axis */
 	double x0 = 0d, y0 = 0d;
-	public Line(Point p1, Point p2) {
+
+	public Line2(Point p1, Point p2) {
 		if (p2.x == p1.x) {
 			tilt = Integer.MAX_VALUE;
 			x0 = p1.x;
@@ -140,6 +191,7 @@ class Line {
 		}
 
 	}
+
 	boolean contains(Point p) {
 		if (tilt == 0) {
 			return y0 == p.y;
@@ -149,13 +201,14 @@ class Line {
 			return tilt * p.x - p.y == tilt * x0;
 		}
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!(obj instanceof Line))
+		if (!(obj instanceof Line2))
 			return false;
-		Line line = (Line) obj;
+		Line2 line = (Line2) obj;
 		return (line.x0 == x0) && (line.tilt == tilt) && (line.y0 == y0);
 	}
 
@@ -164,13 +217,16 @@ class Line {
 		return (int) (tilt * 32 + x0 + y0);
 	}
 }
+
 class Point {
 	int x;
 	int y;
+
 	Point() {
 		x = 0;
 		y = 0;
 	}
+
 	Point(int a, int b) {
 		x = a;
 		y = b;
