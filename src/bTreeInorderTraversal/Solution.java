@@ -16,6 +16,7 @@ public class Solution {
 			} else {
 				ret.add(cur.val);
 				cur = cur.right;
+				// go up to the first non empty right child
 				while (cur == null && !s.isEmpty()) {
 					cur = s.pop();
 					ret.add(cur.val);

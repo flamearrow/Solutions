@@ -2,8 +2,114 @@ package sortList;
 
 //Sort a linked list in O(n log n) time using constant space complexity.
 public class Solution {
-	// merge two sub list per run, sub list size ranges from 1->2->4->...n
 	public ListNode sortList(ListNode head) {
+		int len = 0;
+		ListNode cur = head;
+		while (cur != null) {
+			len++;
+			cur = cur.next;
+		}
+		if (len == 1)
+			return head;
+		ListNode prev = null, ret = head;
+
+		for (int i = 1; i < len; i *= 2) {
+			prev = null;
+			cur = ret;
+			ListNode l1 = cutN(cur, i);
+			ListNode l2 = cutN(l1, i);
+			while (cur != null) {
+				ListNode toMergeLeft = cur;
+				ListNode toMergeRight = l1;
+				ListNode rst = merge(toMergeLeft, toMergeRight);
+				if (prev == null) {
+					if (l1 == null)
+						ret = cur;
+					else
+						ret = cur.val < l1.val ? cur : l1;
+					prev = rst;
+				} else {
+					if (l1 == null)
+						prev.next = cur;
+					else
+						prev.next = cur.val < l1.val ? cur : l1;
+					prev = rst;
+				}
+				cur = l2;
+				l1 = cutN(cur, i);
+				l2 = cutN(l1, i);
+			}
+		}
+		return ret;
+	}
+
+	// returns the node after the tail of a node chain of nodesToCut nodes, and it will cut the chain
+	ListNode cutN(ListNode head, int nodesToCut) {
+		ListNode cur = head;
+		ListNode prev = null;
+		while (cur != null && nodesToCut > 0) {
+			prev = cur;
+			cur = cur.next;
+			nodesToCut--;
+		}
+		if (prev != null) {
+			prev.next = null;
+		}
+		return cur;
+	}
+
+	// return tail
+	ListNode merge(ListNode left, ListNode right) {
+		ListNode prev = null;
+		while (left != null && right != null) {
+			if (left.val < right.val) {
+				if (prev == null) {
+					prev = left;
+					left = left.next;
+				} else {
+					prev.next = left;
+					left = left.next;
+					prev = prev.next;
+				}
+			} else {
+				if (prev == null) {
+					prev = right;
+					right = right.next;
+				} else {
+					prev.next = right;
+					right = right.next;
+					prev = prev.next;
+				}
+			}
+		}
+
+		while (left != null || right != null) {
+			if (left != null) {
+				if (prev == null) {
+					prev = left;
+					left = left.next;
+				} else {
+					prev.next = left;
+					left = left.next;
+					prev = prev.next;
+				}
+			} else {
+				if (prev == null) {
+					prev = right;
+					right = right.next;
+				} else {
+					prev.next = right;
+					right = right.next;
+					prev = prev.next;
+				}
+			}
+		}
+
+		return prev;
+	}
+
+	// merge two sub list per run, sub list size ranges from 1->2->4->...n
+	public ListNode sortList2(ListNode head) {
 		int size = 0;
 		ListNode next = head;
 		while (next != null) {
@@ -105,8 +211,8 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		// int[] input = { 4, 19, 14, 5, -3, 1, 8, 5, 11, 15 };
-		int[] input = { 1 };
+		int[] input = { 4, 19, 14, 5, -3, 1, 8, 5, 11, 15 };
+		//		int[] input = { 6, 1, 3, 7, 9 };
 		ListNode l1 = buildList(input);
 		Solution s = new Solution();
 		printList(s.sortList(l1));
