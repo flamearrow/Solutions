@@ -2,6 +2,17 @@ package divideTwoIntegers;
 
 //Divide two integers without using multiplication, division and mod operator. 
 public class Solution {
+	int divideNew(int dividend, int divisor) {
+		int ret = 0;
+		while (dividend >= divisor) {
+			for (int mod = 1, cur = divisor; cur <= dividend; cur <<= 1, mod <<= 1) {
+				ret += mod;
+				dividend -= cur;
+			}
+		}
+		return ret;
+	}
+
 	// do exponential back off for dividend, then start over for residue
 	int divide(int dividend, int divisor) {
 		long rem = (long) dividend > 0 ? (long) dividend : 0 - (long) dividend;
@@ -81,6 +92,6 @@ public class Solution {
 
 	public static void main(String[] args) {
 		// System.out.println(-2147483648);
-		System.out.println(new Solution().divide(-2147483648, 1));
+		System.out.println(new Solution().divideNew(24, 8));
 	}
 }
