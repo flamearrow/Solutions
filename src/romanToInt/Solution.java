@@ -12,7 +12,45 @@ package romanToInt;
 //
 //Input is guaranteed to be within the range from 1 to 3999.
 public class Solution {
+	// a smarter and easier idea, map all possible values!
+	// this can be used in intToRoman as well
 	public int romanToInt(String s) {
+		int[] integer = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+		String[] roman = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X",
+				"IX", "V", "IV", "I" };
+		int cur = 0;
+		int ret = 0;
+		while (cur < s.length()) {
+			int i = -1;
+			String sub = null;
+			if (cur < s.length() - 1) {
+				sub = s.substring(cur, cur + 2);
+				for (int j = 0; j < roman.length; j++) {
+					if (sub.equals(roman[j])) {
+						i = j;
+						break;
+					}
+				}
+			}
+			if (i > 0) {
+				ret += integer[i];
+				cur += 2;
+			} else {
+				sub = s.substring(cur, cur + 1);
+				for (int j = 0; j < roman.length; j++) {
+					if (sub.equals(roman[j])) {
+						i = j;
+						break;
+					}
+				}
+				ret += integer[i];
+				cur += 1;
+			}
+		}
+		return ret;
+	}
+
+	public int romanToIntOld(String s) {
 		// to be cleaner, search from start, probe for a valid candidate each
 		// time
 		int ret = 0;
@@ -138,5 +176,6 @@ public class Solution {
 	public static void main(String[] args) {
 		String s = "MMMCMXCIX";
 		System.out.println(new Solution().romanToInt(s));
+		System.out.println(new Solution().romanToIntOld(s));
 	}
 }
