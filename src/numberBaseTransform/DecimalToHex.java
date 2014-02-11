@@ -3,6 +3,8 @@ package numberBaseTransform;
 public class DecimalToHex {
 
 	static String decimalToHex(int decimal) {
+		if (decimal == 0)
+			return "0x0";
 		StringBuilder sb = new StringBuilder();
 		// use a table to do fast conversion...
 		String base16 = "0123456789ABCDEF";
@@ -15,6 +17,6 @@ public class DecimalToHex {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(decimalToHex(123456));
+		System.out.println(decimalToHex(0));
 	}
 }
