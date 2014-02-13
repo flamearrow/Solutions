@@ -59,9 +59,47 @@ public class Solution {
 		return -1;
 	}
 
+	public int canCompleteCircuitNew(int[] gas, int[] cost) {
+		// do it like a sliding window
+		int len = gas.length;
+		int[] diff = new int[gas.length];
+		for (int i = 0; i < gas.length; i++) {
+			diff[i] = gas[i] - cost[i];
+		}
+		//maintain a sliding window from start to end and advance end
+		//if after advancing end, sum from start to end became minus, advance start
+		//keep advancing start until the sum is >=0
+		//if after advancing end, sum is >=0, keep advancing end until end = start
+
+		int start = 0, end = 1 % len;
+		int sum = diff[start];
+		// start < len to prevent looping
+		while (start < len) {
+			if (sum < 0) {
+				sum -= diff[start];
+				start = start + 1;
+				if (start == end) {
+					start = end;
+					end = (end + 1) % len;
+					sum = diff[start];
+				}
+			} else {
+				sum += diff[end];
+				end = (end + 1) % len;
+				// when there's only one positive, we advance end, and will never advance end
+				if (end == start)
+					break;
+			}
+		}
+		if (sum >= 0 && start < len)
+			return start;
+		else
+			return -1;
+	}
+
 	public static void main(String[] args) {
-		int[] gas = { 2, 4 };
-		int[] cost = { 3, 4 };
-		System.out.println(new Solution().canCompleteCircuit(gas, cost));
+		int[] gas = { 5 };
+		int[] cost = { 4 };
+		System.out.println(new Solution().canCompleteCircuitNew(gas, cost));
 	}
 }
