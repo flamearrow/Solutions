@@ -73,6 +73,8 @@ public class Solution {
 	// if there's an outlier on an edge, replace all it's connected outliers
 	// with '+'
 	void probeForEdgeBreak(char[][] board, int y, int x) {
+		// queue interfaces:
+		// poll() peek() and offer(e)
 		ArrayDeque<Node> q = new ArrayDeque<Node>();
 		q.add(new Node(y, x));
 		while (!q.isEmpty()) {
