@@ -10,6 +10,18 @@ import java.util.ArrayList;
 //Note:
 //Could you optimize your algorithm to use only O(k) extra space?
 public class Solution {
+	// just add from tail - don't need any buffer
+	public ArrayList<Integer> getRowNew(int rowIndex) {
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+		for (int i = 0; i <= rowIndex; i++) {
+			for (int j = i - 1; j > 0; j--) {
+				ret.set(j, ret.get(j) + ret.get(j - 1));
+			}
+			ret.add(1);
+		}
+		return ret;
+	}
+
 	public ArrayList<Integer> getRow(int rowIndex) {
 		rowIndex++;
 		ArrayList<Integer> ret = new ArrayList<Integer>();
@@ -31,7 +43,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		for (int i : new Solution().getRow(1)) {
+		for (int i : new Solution().getRowNew(4)) {
 			System.out.print(i + " ");
 		}
 	}
