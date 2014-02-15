@@ -21,6 +21,8 @@ package wordSearch;
 public class Solution {
 
 	// naive dfs search would take O(m*n*3^l) time
+	// to avoid using maps: when we probed a node, set board[x][y] to a place holder '#' to mark as visited
+	// then reset it when we failed in further probing
 	public boolean exist(char[][] board, String word) {
 		if (word.length() == 0)
 			return false;
