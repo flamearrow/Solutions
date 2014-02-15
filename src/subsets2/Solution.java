@@ -106,9 +106,42 @@ public class Solution {
 		}
 	}
 
+	public ArrayList<ArrayList<Integer>> subsetsWithDupNew(int[] num) {
+		Arrays.sort(num);
+		boolean[] used = new boolean[num.length];
+		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+		LinkedList<Integer> path = new LinkedList<Integer>();
+		ret.add(new ArrayList<Integer>(path));
+		doProbe(num, 0, path, ret, used);
+		return ret;
+	}
+	
+	// this is real bTree solution!
+	// use or not use, it's a question
+	void doProbe(int[] num, int cur, LinkedList<Integer> path,
+			ArrayList<ArrayList<Integer>> ret, boolean[] used) {
+		if (cur == num.length)
+			return;
+		// don't use num[cur]
+		doProbe(num, cur + 1, path, ret, used);
+		// use num[cur]
+		// note we only add to result when we use
+		// when we don't use, the result is already added in previous level of btree
+		if (cur == 0 || num[cur] != num[cur - 1]
+				|| (cur > 0 && num[cur] == num[cur - 1] && used[cur - 1])) {
+			path.add(num[cur]);
+			ret.add(new ArrayList<Integer>(path));
+			used[cur] = true;
+			doProbe(num, cur + 1, path, ret, used);
+			path.removeLast();
+			used[cur] = false;
+		}
+	}
+
 	public static void main(String[] args) {
-		int[] num = { 1, 1, 2 };
-		ArrayList<ArrayList<Integer>> ret = new Solution().subsetsWithDup2(num);
+		int[] num = { 1, 2, 2 };
+		ArrayList<ArrayList<Integer>> ret = new Solution()
+				.subsetsWithDupNew(num);
 		System.out.println(ret);
 	}
 }
