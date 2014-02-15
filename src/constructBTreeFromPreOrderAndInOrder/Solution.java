@@ -1,5 +1,8 @@
 package constructBTreeFromPreOrderAndInOrder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 //Given preorder and inorder traversal of a tree, construct the binary tree.
 //
 //Note:
@@ -10,6 +13,35 @@ package constructBTreeFromPreOrderAndInOrder;
 // would have same pre and post traversal result
 
 public class Solution {
+	public TreeNode buildTreeNew(int[] preorder, int[] inorder) {
+		if (preorder.length == 0)
+			return null;
+		Map<Integer, Integer> inMap = new HashMap<Integer, Integer>();
+		int len = preorder.length;
+		for (int i = 0; i < len; i++) {
+			inMap.put(inorder[i], i);
+		}
+
+		return doBuild(inorder, 0, len - 1, preorder, 0, inMap);
+	}
+
+	TreeNode doBuild(int[] inorder, int inStart, int inEnd, int[] preorder,
+			int preIndex, Map<Integer, Integer> inMap) {
+		TreeNode root = new TreeNode(preorder[preIndex]);
+		int inIndex = inMap.get(preorder[preIndex]);
+		// there is a left subtree to build
+		if (inIndex > inStart) {
+			root.left = doBuild(inorder, inStart, inIndex - 1, preorder,
+					preIndex + 1, inMap);
+		}
+		//there is a right subtree to build, skip the entire left subtree
+		if (inIndex < inEnd) {
+			root.right = doBuild(inorder, inIndex + 1, inEnd, preorder,
+					preIndex + inIndex - inStart + 1, inMap);
+		}
+		return root;
+	}
+
 	public TreeNode buildTree(int[] preorder, int[] inorder) {
 		return doBuildTree(preorder, inorder, 0, inorder.length - 1, 0);
 	}
@@ -44,8 +76,8 @@ public class Solution {
 
 	public static void main(String[] args) {
 		int[] inorder = { 4, 2, 5, 1, 3 };
-		int[] preorder = { 1, 2, 3, 4, 5 };
-		TreeNode root = new Solution().buildTree(preorder, inorder);
+		int[] preorder = { 1, 2, 4, 5, 3 };
+		TreeNode root = new Solution().buildTreeNew(preorder, inorder);
 		System.out.println(root);
 	}
 }
