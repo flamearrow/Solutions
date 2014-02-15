@@ -13,6 +13,37 @@ import java.util.ArrayList;
 //   2     1         2                 3
 
 public class Solution {
+	// use recursion: use each one as root, recuse its left/right part
+	public ArrayList<TreeNode> generateTreesNew(int n) {
+		return doGenerateNew(1, n);
+	}
+
+	public ArrayList<TreeNode> doGenerateNew(int start, int end) {
+		ArrayList<TreeNode> ret = new ArrayList<TreeNode>();
+		if (start > end) {
+			ret.add(null);
+			return ret;
+		}
+		if (start == end) {
+			ret.add(new TreeNode(start));
+			return ret;
+		}
+		for (int root = start; root <= end; root++) {
+			ArrayList<TreeNode> leftSubs = doGenerateNew(start, root - 1);
+			ArrayList<TreeNode> rightSubs = doGenerateNew(root + 1, end);
+			// link all combinations of left and right
+			for (TreeNode leftSubTree : leftSubs) {
+				for (TreeNode rightSubTree : rightSubs) {
+					TreeNode rootNode = new TreeNode(root);
+					rootNode.left = leftSubTree;
+					rootNode.right = rightSubTree;
+					ret.add(rootNode);
+				}
+			}
+		}
+		return ret;
+	}
+
 	public ArrayList<TreeNode> generateTrees(int n) {
 		ArrayList<TreeNode> ret = new ArrayList<TreeNode>();
 		if (n == 0) {
@@ -73,7 +104,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		ArrayList<TreeNode> trees = new Solution().generateTrees(4);
+		ArrayList<TreeNode> trees = new Solution().generateTreesNew(1);
 		System.out.println(trees);
 	}
 }
