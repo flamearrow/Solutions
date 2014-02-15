@@ -1,5 +1,8 @@
 package scrambleString;
 
+import java.util.HashMap;
+import java.util.Map;
+
 //Given a string s1, we may represent it as a binary tree by partitioning it to two non-empty substrings recursively.
 //
 //Below is one possible representation of s1 = "great":
@@ -71,8 +74,47 @@ public class Solution {
 		return false;
 	}
 
+	Map<String, Boolean> rst = new HashMap<String, Boolean>();
+
+	public boolean isScrambleNew(String s1, String s2) {
+		if (s1 == null && s2 == null)
+			return true;
+		if (s1.length() != s2.length())
+			return false;
+		if (s1.equals(s2))
+			return true;
+		String rstKey = s1 + "_" + s2;
+		if (rst.containsKey(rstKey))
+			return rst.get(rstKey);
+		int len = s1.length();
+		if (len <= 1)
+			return s1.equals(s2);
+		else {
+			for (int i = 1; i < len; i++) {
+				String s1Left1 = s1.substring(0, i);
+				String s1Right1 = s1.substring(i);
+				String s2Left1 = s2.substring(0, i);
+				String s2Right1 = s2.substring(i);
+				if (isScramble(s1Left1, s2Left1)
+						&& isScramble(s1Right1, s2Right1)) {
+					return true;
+				}
+				String s2Left2 = s2.substring(0, len - i);
+				String s2Right2 = s2.substring(len - i);
+				if (isScramble(s1Left1, s2Right2)
+						&& isScramble(s1Right1, s2Left2)) {
+					rst.put(rstKey, true);
+					return true;
+				}
+			}
+			rst.put(rstKey, false);
+			return false;
+		}
+	}
+
 	public static void main(String[] args) {
-		System.out.println(new Solution().isScramble("abcd", "bdac"));
+		System.out.println(new Solution().isScrambleNew("abcdefghijklmnopq",
+				"efghijklmnopqcadb"));
 	}
 
 }
