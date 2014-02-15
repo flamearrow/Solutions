@@ -15,11 +15,45 @@ import java.util.ArrayList;
 //
 //You should return [1,2,3,6,9,8,7,4,5]. 
 public class Solution {
+
+	public ArrayList<Integer> spiralOrder(int[][] matrix) {
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+		int startX = 0, endX = matrix[0].length - 1;
+		int startY = 0, endY = matrix.length - 1;
+		while (true) {
+			for (int i = startX; i <= endX; i++) {
+				ret.add(matrix[startY][i]);
+			}
+			if (endY < ++startY)
+				break;
+			for (int i = startY; i <= endY; i++) {
+				ret.add(matrix[i][endX]);
+			}
+			if (startX > --endX)
+				break;
+			for (int i = endX; i >= startX; i--) {
+				ret.add(matrix[endY][i]);
+			}
+			if (startY > --endY)
+				break;
+			for (int i = endY; i >= startY; i--) {
+				ret.add(matrix[i][startX]);
+			}
+			// when we start a new loop from left to right, need to first check startX then increment
+			// this is the only exception
+			if (endX < startX++)
+				break;
+		}
+		return ret;
+	}
+
 	enum Direction {
 		UP, DOWN, LEFT, RIGHT
 	}
+
 	// use a loop to lock how far we can go, no need to use back array
-	public ArrayList<Integer> spiralOrder(int[][] matrix) {
+	// this is shitty
+	public ArrayList<Integer> spiralOrderShitty(int[][] matrix) {
 		ArrayList<Integer> ret = new ArrayList<Integer>();
 		if (matrix.length == 0)
 			return ret;
@@ -81,7 +115,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		int[][] m = { { 1 }, { 2 }, { 3 } };
+		int[][] m = { { 1, 2 }, { 3, 4 }, { 5, 6 } };
 		ArrayList<Integer> ret = new Solution().spiralOrder(m);
 		for (int i : ret)
 			System.out.println(i);
