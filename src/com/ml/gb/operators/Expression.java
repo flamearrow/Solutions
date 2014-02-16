@@ -16,13 +16,15 @@ public class Expression implements Operator {
 			if (token.equals("+")) {
 				stack.push(new Add(stack.pop(), stack.pop()));
 			} else if (token.equals("-")) {
-				stack.push(new Minus(stack.pop(), stack.pop()));
+				Operator right = stack.pop();
+				Operator left = stack.pop();
+				stack.push(new Minus(left, right));
 			} else if (token.equals("*")) {
 				stack.push(new Multiply(stack.pop(), stack.pop()));
 			} else if (token.equals("/")) {
-				Operator dividor = stack.pop();
-				Operator divident = stack.pop();
-				stack.push(new Divide(divident, dividor));
+				Operator right = stack.pop();
+				Operator left = stack.pop();
+				stack.push(new Divide(left, right));
 			} else {
 				stack.push(new Number(Integer.parseInt(token)));
 			}
