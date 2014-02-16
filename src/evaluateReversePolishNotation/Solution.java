@@ -1,5 +1,7 @@
 package evaluateReversePolishNotation;
 
+import java.util.Stack;
+
 // Evaluate the value of an arithmetic expression in Reverse Polish Notation.
 //
 // Valid operators are +, -, *, /. Each operand may be an integer or another expression.
@@ -10,6 +12,28 @@ package evaluateReversePolishNotation;
 //  ["3","-4","+"]
 
 public class Solution {
+	public int evalRPNStack(String[] tokens) {
+		Stack<Integer> stack = new Stack<Integer>();
+		for (String token : tokens) {
+			if (token.equals("+")) {
+				stack.push(stack.pop() + stack.pop());
+			} else if (token.equals("-")) {
+				int right = stack.pop();
+				int left = stack.pop();
+				stack.push(left - right);
+			} else if (token.equals("*")) {
+				stack.push(stack.pop() * stack.pop());
+			} else if (token.equals("/")) {
+				int right = stack.pop();
+				int left = stack.pop();
+				stack.push(left / right);
+			} else {
+				stack.push(Integer.parseInt(token));
+			}
+		}
+		return stack.pop();
+	}
+
 	public int evalRPN(String[] tokens) {
 		int i = 0, j = 0;
 		int a = 0, b = 0;
@@ -55,7 +79,7 @@ public class Solution {
 
 	public static void main(String[] args) {
 		Solution s = new Solution();
-		String[] tokens = { "3", "-4", "+" };
-		System.err.println(s.evalRPN(tokens));
+		String[] tokens = { "0", "3", "+" };
+		System.err.println(s.evalRPNStack(tokens));
 	}
 }
