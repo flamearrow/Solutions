@@ -36,9 +36,40 @@ public class Solution {
 		return ret;
 	}
 
+	public ArrayList<Integer> grayCodeFancy(int n) {
+		// from n = 1 to 2^n, find the least significant 1, and flip that bit to
+		// the current number
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+		int now = 0;
+		ret.add(now);
+		int max = (1 << n) - 1;
+		for (int i = 1; i <= max; i++) {
+			// to find the least significant 1, use this:
+			// i&(-i)
+			int mask = max & (i & (-i));
+			now = now ^ mask;
+			ret.add(now);
+		}
+		return ret;
+	}
+
 	public static void main(String[] args) {
-		ArrayList<Integer> ret = new Solution().grayCode(0);
-		System.out.println(ret);
+		test(8);
+	}
+
+	public static void test(int len) {
+		ArrayList<Integer> ret = new Solution().grayCode(len);
+		ArrayList<Integer> ret2 = new Solution().grayCodeFancy(len);
+		int size = ret2.size();
+		for (int i = 0; i < size; i++) {
+			// can't just compare ret.get(i) == ret2.get(i)
+			// for some reason it's not singleton!
+			if (ret.get(i).intValue() != ret2.get(i).intValue()) {
+				System.out.println("i=" + i);
+				System.out.print(ret.get(i) - ret2.get(i) + ", ");
+				System.out.println(ret.get(i) == ret2.get(i));
+			}
+		}
 	}
 
 }
