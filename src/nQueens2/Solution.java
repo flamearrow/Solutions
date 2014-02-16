@@ -4,6 +4,53 @@ package nQueens2;
 //
 //Now, instead outputting board configurations, return the total number of distinct solutions.
 public class Solution {
+
+	// this is a fancy bit manipulation solution
+	// it uses a bit vector to represent a line
+	// 10101 means the second and forth one is available
+
+	// to calculate the last 1 of a binary, do b & (-b)
+	// i.e f(1010)=1010&(0110)=0010
+	int fullLine = 0;
+	int fancyRet = 0;
+
+	public int totalNQueensFancy(int n) {
+		fullLine = (1 << n) - 1;
+		probeFancy(0, 0, 0);
+		return fancyRet;
+	}
+
+	// row is a bit vector that represents available slots
+	//  dictated by column
+	// lD and rD are also bit vector that represents available slots
+	//  dictated by left diagonal and right diagonal
+	void probeFancy(int row, int lD, int rD) {
+		int available, occupy;
+		if (row != fullLine) {
+			// occupied is 1, satisfy constraints from row, lD and rD
+			// now available[i]==1 means ith bit is available
+
+			// need to clear higher bits because we are shifting lD and rD
+			available = fullLine & (~(row | lD | rD));
+			while (available != 0) {
+				// find the right most one of available
+				// and occupy it, continue probing
+				occupy = available & (-available);
+				available -= occupy;
+				// which bits are not available in next row? 
+				// 1) the occupied bit in this run plus all previous occupied bit 
+				// 2) all previous occupied left diagonal bit plus current occupied bit LEFT SHIFT 1
+				// 		i.e: previous lD = 0101, occupied = 0010, then next lD would be 1110;
+				// 3) all previous occupied right diagonal bit plus current occupied bit RIGHT SHIFT 1
+				probeFancy(row | occupy, (lD | occupy) << 1, (rD | occupy) >> 1);
+			}
+		}
+		// at some point we have filled the entire row, then we have find a solution
+		else {
+			fancyRet++;
+		}
+	}
+
 	int ret = 0;
 
 	public int totalNQueens(int n) {
@@ -48,6 +95,6 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Solution().totalNQueens(2));
+		System.out.println(new Solution().totalNQueens(5));
 	}
 }
