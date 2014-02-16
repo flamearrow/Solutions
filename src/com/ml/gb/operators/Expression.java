@@ -20,7 +20,9 @@ public class Expression implements Operator {
 			} else if (token.equals("*")) {
 				stack.push(new Multiply(stack.pop(), stack.pop()));
 			} else if (token.equals("/")) {
-				stack.push(new Divide(stack.pop(), stack.pop()));
+				Operator dividor = stack.pop();
+				Operator divident = stack.pop();
+				stack.push(new Divide(divident, dividor));
 			} else {
 				stack.push(new Number(Integer.parseInt(token)));
 			}
