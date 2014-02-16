@@ -4,6 +4,48 @@ package multiplyStrings;
 //
 //Note: The numbers can be arbitrarily large and are non-negative.
 public class Solution {
+	// an more intuitive solution: start from 0, first just add the numbers without considering carry, deal with carry later
+	// i.e 32 * 18
+	// get 3 26 16
+	// convert it to 5 7 6
+	public String multiplyNew(String num1, String num2) {
+		if (num1.equals("0") || num2.equals("0"))
+			return "0";
+		int len1 = num1.length();
+		int len2 = num2.length();
+		int[] rst = new int[len1 + len2];
+		int[] n1 = new int[len1];
+		int[] n2 = new int[len2];
+		for (int i = 0; i < len1; i++) {
+			n1[i] = num1.charAt(i) - '0';
+		}
+		for (int i = 0; i < len2; i++) {
+			n2[i] = num2.charAt(i) - '0';
+		}
+
+		for (int i = 0; i < len1; i++) {
+			for (int j = 0; j < len2; j++) {
+				rst[i + j + 1] += n1[i] * n2[j];
+			}
+		}
+		// 'contract' rst
+		for (int i = len1 + len2 - 1; i >= 0; i--) {
+			// note when i == 0 it can't be over 9, therefore we don't need to check i>0
+			if (rst[i] > 9) {
+				rst[i - 1] += rst[i] / 10;
+			}
+			rst[i] = rst[i] % 10;
+		}
+		StringBuilder sb = new StringBuilder();
+		int start = 0;
+		if (rst[0] == 0)
+			start = 1;
+		for (int i = start; i < rst.length; i++) {
+			sb.append(rst[i]);
+		}
+		return sb.toString();
+
+	}
 
 	// are they integer? - yes
 	public String multiply(String num1, String num2) {
@@ -51,6 +93,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Solution().multiply("123123123123", "123123123123"));
+		System.out.println(new Solution().multiply("32", "15"));
+		System.out.println(new Solution().multiplyNew("32", "15"));
 	}
 }
