@@ -18,6 +18,20 @@ package reverseInteger;
 
 public class Solution {
 	// assume no overflow
+	public int reverseNew(int x) {
+		boolean n = x < 0 ? true : false;
+		if (n)
+			x = -x;
+		int ret = 0;
+		while (x > 0) {
+			ret *= 10;
+			ret += x % 10;
+			x /= 10;
+		}
+		return n ? 0 - ret : ret;
+	}
+
+	// assume no overflow
 	public int reverse(int x) {
 		boolean negative = false;
 		if (x < 0) {
@@ -36,5 +50,6 @@ public class Solution {
 
 	public static void main(String[] args) {
 		System.out.println(new Solution().reverse(-100));
+		System.out.println(new Solution().reverseNew(-100));
 	}
 }
