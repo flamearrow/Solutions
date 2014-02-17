@@ -63,13 +63,16 @@ public class Solution {
 		int size = ret2.size();
 		for (int i = 0; i < size; i++) {
 			// can't just compare ret.get(i) == ret2.get(i)
-			// for some reason it's not singleton!
+			// It may be worth noting that autoboxing is guaranteed to return the same object for 
+			// integral values in the range [-128, 127], but an implementation may, 
+			// at its discretion, cache values outside of that range.
 			if (ret.get(i).intValue() != ret2.get(i).intValue()) {
 				System.out.println("i=" + i);
-				System.out.print(ret.get(i) - ret2.get(i) + ", ");
-				System.out.println(ret.get(i) == ret2.get(i));
+				throw new RuntimeException() {
+					private static final long serialVersionUID = 1L;
+				};
 			}
 		}
+		System.out.println("success");
 	}
-
 }
