@@ -4,8 +4,8 @@ package powXN;
 public class Solution {
 	// non rec b search - avoid stack overflow
 	// i.e 2^5: 5 == 0b101 === 1&0b100 + 0&0b010 + 1&0b001
-	// therefore we have 2^7 = 1*2^4 + 0*2^2 + 1*2^1
-	// can be achieved by looping throw the binary representation of n
+	// therefore we have 2^5 = 1*2^2 * 0*2^1 * 1*2^0
+	// can be achieved by looping through the binary representation of n
 	public double pow(double x, int n) {
 		if (x == 0)
 			return 0;
@@ -20,7 +20,7 @@ public class Solution {
 		}
 		double ret = 1, cur = x;
 		while (n > 0) {
-			// this bit will be taken
+			// this bit will be taken, add an additional one
 			if (n % 2 == 1) {
 				ret *= cur;
 			}
