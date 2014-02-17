@@ -7,6 +7,28 @@ package swapPairs;
 //
 //Your algorithm should use only constant space. You may not modify the values in the list, only nodes itself can be changed.
 public class Solution {
+	// consider normal case first
+	public ListNode swapPairsNew(ListNode head) {
+		if (head == null || head.next == null)
+			return head;
+		ListNode n1 = head, n2 = head.next;
+		ListNode retHead = n2;
+		while (true) {
+			ListNode tmp = n2.next;
+			n2.next = n1;
+			n1.next = tmp;
+			tmp = n1;
+			n1 = n1.next;
+			if (n1 == null)
+				break;
+			n2 = n1.next;
+			if (n2 == null)
+				break;
+			tmp.next = n2;
+		}
+		return retHead;
+	}
+
 	public ListNode swapPairs(ListNode head) {
 		if (head == null)
 			return head;
