@@ -20,6 +20,7 @@ public class Solution {
 		ArrayList<Integer> ret = new ArrayList<Integer>();
 		int startX = 0, endX = matrix[0].length - 1;
 		int startY = 0, endY = matrix.length - 1;
+		// exact same just condition for four directions!
 		while (true) {
 			for (int i = startX; i <= endX; i++) {
 				ret.add(matrix[startY][i]);
@@ -39,9 +40,7 @@ public class Solution {
 			for (int i = endY; i >= startY; i--) {
 				ret.add(matrix[i][startX]);
 			}
-			// when we start a new loop from left to right, need to first check startX then increment
-			// this is the only exception
-			if (endX < startX++)
+			if (endX < ++startX)
 				break;
 		}
 		return ret;
@@ -115,7 +114,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		int[][] m = { { 1, 2 }, { 3, 4 }, { 5, 6 } };
+		int[][] m = { { 1, 2 }, { 3, 4 }, { 5, 6 }, { 7, 8 }, { 9, 10 } };
 		ArrayList<Integer> ret = new Solution().spiralOrder(m);
 		for (int i : ret)
 			System.out.println(i);
