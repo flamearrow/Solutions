@@ -2,6 +2,41 @@ package sortedListToBST;
 
 //Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
 public class Solution {
+	// use a bottom up approach, we'll be able to do it in O(n) time, need to pass the length first
+	// note we need to keep the head static so that it's advancing during the bottom up probing
+	// think about bottom up for a tree traversal problem, keep a universal var to keep track
+	static ListNode head = null;
+
+	public TreeNode sortedListToBSTNew(ListNode head) {
+		if (head == null)
+			return null;
+		Solution.head = head;
+		int len = getLength(head);
+		return doSortNew(0, len - 1);
+	}
+
+	public TreeNode doSortNew(int start, int end) {
+		if (start > end)
+			return null;
+		int mid = (start + end) / 2;
+		TreeNode leftChild = doSortNew(start, mid - 1);
+		// head is updated!
+		TreeNode parent = new TreeNode(head.val);
+		parent.left = leftChild;
+		head = head.next;
+		parent.right = doSortNew(mid + 1, end);
+		return parent;
+	}
+
+	int getLength(ListNode head) {
+		int ret = 0;
+		while (head != null) {
+			head = head.next;
+			ret++;
+		}
+		return ret;
+	}
+
 	// break the original list by having two pointers with different moving speed to find the mid, then recurse
 	// time complexity is n/2 + n/4 *2 + n/8 *4 + ... + n/n * n =  O(nLogn)
 	public TreeNode sortedListToBST(ListNode head) {
@@ -48,10 +83,10 @@ public class Solution {
 		ListNode head = new ListNode(1);
 		head.next = new ListNode(2);
 		head.next.next = new ListNode(3);
-		head.next.next.next = new ListNode(4);
-		// head.next.next.next.next = new ListNode(5);
+		//		head.next.next.next = new ListNode(4);
+		//		head.next.next.next.next = new ListNode(5);
 
-		TreeNode toPrint = new Solution().sortedListToBST(head);
+		TreeNode toPrint = new Solution().sortedListToBSTNew(head);
 		System.out.println(toPrint);
 	}
 
