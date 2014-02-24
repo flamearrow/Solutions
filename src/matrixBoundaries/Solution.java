@@ -1,12 +1,21 @@
 package matrixBoundaries;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 // given a couple of matrices lies on x axis, output their boundaries
 // since all matrices are lying on upper bound of x axis, they can be represented as a line parallel to x axis
 public class Solution {
+	// the idea is to first sort all starting/ending points with its height
+	// then we go from left to right, keep track of all visited heights and keep track of current height
+	// once we find a potential span, we need to create a new height with maximum height possible
+	// to keep track of height, just use a Set to store height, 
+	//	when we met a starting point, add it's height to set 
+	// 	when we met an ending point, remove its height from set
+	// note here to find next highest height it's O(n), we can have a data structure like a heap to implement O(log n) insertion and O(1) retrieval
 	List<Line> findBoundary(List<Line> matrices) {
 		Node[] arr = new Node[matrices.size() * 2];
 		int cur = 0;
@@ -16,64 +25,56 @@ public class Solution {
 		}
 		Arrays.sort(arr);
 		List<Line> ret = new LinkedList<Line>();
-		int start = 0, end = arr.length - 1;
-		while (start < end) {
-			int count = 1;
-			int next = start + 1;
-			// skip if next is shorter than start
-			while (arr[next].yVal <= arr[start].yVal) {
-				// in case we have couple of lines that has same y value
-				if (arr[next].yVal == arr[start].yVal) {
-					if (arr[next].isStart) {
-						count++;
-					} else {
-						count--;
-						if (count == 0)
-							break;
-					}
+		cur = 0;
+		Set<Integer> heights = new HashSet<Integer>();
+		int curHeight = arr[cur].yVal;
+		heights.add(curHeight);
+		while (cur < arr.length - 1) {
+			int next = cur + 1;
+			while (arr[next].yVal < curHeight) {
+				if (arr[next].isStart) {
+					heights.add(arr[next].yVal);
+				} else {
+					heights.remove(arr[next].yVal);
 				}
 				next++;
 			}
-			ret.add(new Line(arr[start].xVal, arr[next].xVal, arr[start].yVal));
+			// now next is pointing to an edge that's higher or equal to cur
+			// note if curHeight < 0, then there's no coverage in this span
+			if (curHeight > 0)
+				ret.add(new Line(arr[cur].xVal, arr[next].xVal, curHeight));
 			if (arr[next].isStart) {
-				start = next;
+				heights.add(arr[next].yVal);
 			} else {
-				start = next + 1;
+				heights.remove(arr[next].yVal);
 			}
-			if (start >= end)
-				break;
-			count = 1;
-			int prev = end - 1;
-			// skip if next is shorter than start
-			while (arr[prev].yVal <= arr[end].yVal) {
-				// in case we have couple of lines that has same y value
-				if (arr[prev].yVal == arr[end].yVal) {
-					if (!arr[prev].isStart) {
-						count++;
-					} else {
-						count--;
-						if (count == 0)
-							break;
-					}
-				}
-				prev--;
-			}
-			ret.add(new Line(arr[prev].xVal, arr[end].xVal, arr[end].yVal));
-			if (!arr[prev].isStart) {
-				end = prev;
-			} else {
-				prev = prev - 1;
-			}
+			cur = next;
+			curHeight = getHeight(heights);
+
 		}
 		return ret;
 	}
 
+	// find the highest height so far, we can have a smarter ds to faster the searching...
+	int getHeight(Set<Integer> heights) {
+		int max = -1;
+		for (int i : heights) {
+			if (i > max) {
+				max = i;
+			}
+		}
+		return max;
+	}
+
 	public static void main(String[] args) {
 		List<Line> input = new LinkedList<Line>();
-		input.add(new Line(1, 4, 2));
-		input.add(new Line(2, 7, 1));
-		input.add(new Line(3, 6, 4));
-		input.add(new Line(5, 8, 3));
+		//		input.add(new Line(1, 4, 2));
+		//		input.add(new Line(2, 7, 1));
+		//		input.add(new Line(3, 6, 4));
+		//		input.add(new Line(5, 8, 3));
+		input.add(new Line(1, 4, 1));
+		input.add(new Line(2, 6, 2));
+		input.add(new Line(3, 5, 3));
 		for (Line l : new Solution().findBoundary(input)) {
 			System.out.println(l.startx + ", " + l.endx + ", " + l.y);
 		}
@@ -104,6 +105,11 @@ class Line {
 	public int hashCode() {
 		return startx + 36 * endx + 7 * y;
 	}
+
+	@Override
+	public String toString() {
+		return "(" + startx + ", " + endx + ", " + y + ")";
+	}
 }
 
 class Node implements Comparable<Node> {
@@ -120,4 +126,5 @@ class Node implements Comparable<Node> {
 	public int compareTo(Node o) {
 		return this.xVal - o.xVal;
 	}
+
 }
