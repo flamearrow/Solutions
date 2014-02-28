@@ -12,34 +12,40 @@ public class Solution {
 	// [1,2,3,4,5,6,7]->[4,5,6,1,2,3,7]
 	// then when the bunch is not big enough, swap what you can
 	// [4,5,6,1,2,3,7]->[4,5,6,7,2,3,1]
-	// now we need to left shift the subarray [2,3,1], use recursion
-	// note if pos == 1 we return immediately to avoid stackoverflow
+	// now we need to left shift 2 bits for the subarray [2,3,1], use recursion
 	void doShift(int[] arr, int pos, int start) {
 		int size = arr.length;
 		pos = pos % size;
 		if (pos == 0)
 			return;
-		int cur = start, prob = cur + pos;
-		while (prob < size) {
+		int cur = start, prob = start + pos;
+		while (prob < arr.length) {
 			int tmp = arr[cur];
 			arr[cur] = arr[prob];
 			arr[prob] = tmp;
 			cur++;
 			prob++;
 		}
-		if (pos == 1)
-			return;
 		int leftOver = pos - (cur - start) % pos;
-		if (leftOver > 0) {
+		if (leftOver < pos) {
 			doShift(arr, leftOver, cur);
 		}
 	}
 
 	public static void main(String[] args) {
-		int[] arr = { 1, 2, 3, 4, 5, 6, 7 };
-		new Solution().shift(arr, 123132);
-		for (int i : arr) {
-			System.out.print(i + " ");
+		int[] arr;
+		for (int j = 0; j < 10; j++) {
+			arr = ini();
+			new Solution().shift(arr, j);
+			for (int i : arr) {
+				System.out.print(i + " ");
+			}
+			System.out.println();
 		}
+	}
+
+	static int[] ini() {
+		int[] ret = { 1, 2, 3, 4, 5, 6 };
+		return ret;
 	}
 }
