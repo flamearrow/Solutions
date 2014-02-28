@@ -1,42 +1,43 @@
 package shiftArray;
 
-//given an array, left shift it for n nodes
-//input: [1,2,3,4,5], 3
-//output: [4,5,1,2,3]
+// e.g [1,2,3,4,5,6,7] , 3
+// would be shifted as [4,5,6,7,1,2,3]
 public class Solution {
-	// separate the getDestIndex() method
 	void shift(int[] arr, int pos) {
-		if (pos < 0)
-			return;
-		int len = arr.length;
-		pos = pos % len;
-		if (pos == 0)
-			return;
-		int left = len;
-		int cur = 0;
-		int pre = arr[cur];
-		int tmp = 0;
-		while (left > 0) {
-			int swapedIndex = getDestIndex(cur, pos, len);
-			tmp = arr[swapedIndex];
-			arr[swapedIndex] = pre;
-			pre = tmp;
-			cur = swapedIndex;
-			left--;
-		}
+		doShift(arr, pos, 0);
 	}
 
-	int getDestIndex(int cur, int pos, int len) {
-		if (cur - pos >= 0) {
-			return cur - pos;
-		} else {
-			return len + cur - pos;
+	// the idea:
+	// swap by bunch:
+	// [1,2,3,4,5,6,7]->[4,5,6,1,2,3,7]
+	// then when the bunch is not big enough, swap what you can
+	// [4,5,6,1,2,3,7]->[4,5,6,7,2,3,1]
+	// now we need to left shift the subarray [2,3,1], use recursion
+	// note if pos == 1 we return immediately to avoid stackoverflow
+	void doShift(int[] arr, int pos, int start) {
+		int size = arr.length;
+		pos = pos % size;
+		if (pos == 0)
+			return;
+		int cur = start, prob = cur + pos;
+		while (prob < size) {
+			int tmp = arr[cur];
+			arr[cur] = arr[prob];
+			arr[prob] = tmp;
+			cur++;
+			prob++;
+		}
+		if (pos == 1)
+			return;
+		int leftOver = pos - (cur - start) % pos;
+		if (leftOver > 0) {
+			doShift(arr, leftOver, cur);
 		}
 	}
 
 	public static void main(String[] args) {
-		int[] arr = { 1, 2, 3, 4, 5 };
-		new Solution().shift(arr, 0);
+		int[] arr = { 1, 2, 3, 4, 5, 6, 7 };
+		new Solution().shift(arr, 123132);
 		for (int i : arr) {
 			System.out.print(i + " ");
 		}
