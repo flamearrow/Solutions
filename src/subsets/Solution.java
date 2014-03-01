@@ -81,9 +81,33 @@ public class Solution {
 		}
 	}
 
+	// a more human readable way, consider this as a btree,
+	// going left is 'take the current element'
+	// going right is 'not to take the current element'
+	// we only add to result when we go left
+	public ArrayList<ArrayList<Integer>> subsets3(int[] num) {
+		Arrays.sort(num);
+		ArrayList<Integer> curSet = new ArrayList<Integer>();
+		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+		ret.add(new ArrayList<Integer>(curSet));
+		probe2(num, 0, curSet, ret);
+		return ret;
+	}
+
+	void probe2(int[] num, int curIndex, ArrayList<Integer> currentPath,
+			ArrayList<ArrayList<Integer>> result) {
+		if (curIndex == num.length)
+			return;
+		currentPath.add(num[curIndex]);
+		result.add(new ArrayList<Integer>(currentPath));
+		probe2(num, curIndex + 1, currentPath, result);
+		currentPath.remove(currentPath.size() - 1);
+		probe2(num, curIndex + 1, currentPath, result);
+	}
+
 	public static void main(String[] args) {
 		int[] num = { 1, 2, 3 };
-		ArrayList<ArrayList<Integer>> ret = new Solution().subsets(num);
+		ArrayList<ArrayList<Integer>> ret = new Solution().subsets3(num);
 		System.out.println(ret);
 	}
 }
