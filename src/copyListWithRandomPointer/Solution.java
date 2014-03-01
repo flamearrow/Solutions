@@ -9,6 +9,61 @@ import java.util.Set;
 //
 //Return a deep copy of the list. 
 public class Solution {
+	// a fancier idea, no need to ues a map
+	// suppose the original list is a->b->c->d with a.rand = d
+	//  in first round, we copy the list using the next field
+	//    a'->b'->c'->d'
+	//  in second round, we link original list and new list
+	//    a->a'->b->b'->c->c'->d->d'
+	//  in third round, we can update a.rand to a'.rand in O(1) : a.rand.next will be a'.rand.ext
+	//  then we recover the list
+	public RandomListNode copyRandomList2(RandomListNode head) {
+		RandomListNode ret = null, cur = head;
+		// round 1st and 2nd
+		while (cur != null) {
+			if (ret == null) {
+				ret = new RandomListNode(cur.label);
+				RandomListNode tmp = cur.next;
+				cur.next = ret;
+				ret.next = tmp;
+			} else {
+				RandomListNode tmp = cur.next;
+				cur.next = new RandomListNode(cur.label);
+				cur.next.next = tmp;
+			}
+			cur = cur.next.next;
+		}
+
+		cur = head;
+		// note 3rd and 4th can't be merged, if we update the next link for a previous node, 
+		//  then cur.next.random = cur.random.next will be broken
+		// 3rd round
+		while (cur != null) {
+			if (cur.random != null) {
+				cur.next.random = cur.random.next;
+			}
+			cur = cur.next.next;
+		}
+
+		// 4th round
+		RandomListNode retCur = null;
+		cur = head;
+		while (cur != null) {
+			if (retCur == null) {
+				retCur = cur.next;
+				cur.next = cur.next.next;
+				cur = cur.next;
+			} else {
+				retCur.next = cur.next;
+				cur.next = cur.next.next;
+				retCur = retCur.next;
+				cur = cur.next;
+			}
+		}
+		return ret;
+
+	}
+
 	public RandomListNode copyRandomList(RandomListNode head) {
 		// use a map to map node pointed to in the ori list and nodes pointing from in the copied list
 		if (head == null)
@@ -67,7 +122,7 @@ public class Solution {
 		n2.random = null;
 		n3.random = n0;
 
-		RandomListNode nc = new Solution().copyRandomList(n0);
+		RandomListNode nc = new Solution().copyRandomList2(n0);
 		System.out.println(nc);
 	}
 }
