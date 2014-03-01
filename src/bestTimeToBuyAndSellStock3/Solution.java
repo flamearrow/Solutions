@@ -7,6 +7,11 @@ package bestTimeToBuyAndSellStock3;
 //Note:
 //You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
 public class Solution {
+	// the idea is to build two arrays similar to the one pair problem for O(n) each, then find the maximum
+	// a more trivial way is to build the prefix array [0-j] in O(n), 
+	//  then for each j, compute the same subproblem for [j+1, n-1]
+	//  this would be a O(n^2) solution, but would be more general, 
+	//  it can be used to solve 3 pair, 4 pair.. k pair problem in O(k^2)
 	public int maxProfit(int[] prices) {
 		if (prices.length < 2)
 			return 0;
