@@ -3,6 +3,8 @@ package epi.twoSumVar;
 // 11.2
 // two sum - but the array is sorted by abs
 //  e.g: {1,-2,3,5,-7,9,10,-12}
+// another variant:
+//  return a pair whose difference is k - have two pointers pointing to end at first and move cursor accordingly
 
 public class Solution {
 	// of course you can always suffer a O(n) space hash table for O(1) search
