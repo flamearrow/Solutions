@@ -2,7 +2,6 @@ package kthLargest;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.PriorityQueue;
 import java.util.TreeSet;
 
 // find the first k smallest number in a 
