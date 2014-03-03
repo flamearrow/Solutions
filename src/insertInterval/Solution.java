@@ -14,6 +14,47 @@ import java.util.ArrayList;
 //
 //This is because the new interval [4,9] overlaps with [3,5],[6,7],[8,10]. 
 public class Solution {
+	// given that the worst case of the following is still O(n)( when we need to merge up to O(n) intervals), 
+	// we can do it naively by looking at intervals one by one and merge if needed
+	public ArrayList<Interval> insert2(ArrayList<Interval> intervals,
+			Interval newInterval) {
+		ArrayList<Interval> ret = new ArrayList<Interval>();
+		boolean endMergedInterval = true;
+		int start = newInterval.start, end = newInterval.end;
+		for (int i = 0; i < intervals.size(); i++) {
+			Interval nextInterval = intervals.get(i);
+			if (nextInterval.start > newInterval.end) {
+				if (endMergedInterval) {
+					ret.add(new Interval(start, end));
+					endMergedInterval = false;
+				}
+				ret.add(new Interval(nextInterval.start, nextInterval.end));
+			} else if (nextInterval.end < newInterval.start) {
+				ret.add(new Interval(nextInterval.start, nextInterval.end));
+			} else {
+				if (nextInterval.start < start) {
+					start = nextInterval.start;
+				}
+				// we find the end of merged interval
+				if (nextInterval.end > newInterval.end) {
+					end = nextInterval.end;
+					ret.add(new Interval(start, end));
+					endMergedInterval = false;
+				}
+				// if the next interval's end is before newInterval's end, 
+				// then we close the merged interval for next interval iN whose start is bigger the newInterval.end
+				else {
+					endMergedInterval = true;
+				}
+			}
+		}
+		// in the case where the interval needs to be added to end
+		if (endMergedInterval) {
+			ret.add(new Interval(start, end));
+		}
+		return ret;
+	}
+
 	public ArrayList<Interval> insert(ArrayList<Interval> intervals,
 			Interval newInterval) {
 		// first use bSearch to find the start interval and end interval based
@@ -116,13 +157,14 @@ public class Solution {
 
 	public static void main(String[] args) {
 		ArrayList<Interval> intervals = new ArrayList<Interval>();
-		intervals.add(new Interval(1, 5));
-		intervals.add(new Interval(6, 7));
-		// intervals.add(new Interval(8, 10));
-		// intervals.add(new Interval(12, 16));
-		Interval newInterval = new Interval(0, 9);
-		new Solution().insert(intervals, newInterval);
-		System.out.println(intervals);
+		//		intervals.add(new Interval(3, 5));
+		//		intervals.add(new Interval(6, 7));
+		//		intervals.add(new Interval(8, 10));
+		//		intervals.add(new Interval(12, 16));
+		Interval newInterval = new Interval(1, 17);
+		ArrayList<Interval> merged = new Solution().insert2(intervals,
+				newInterval);
+		System.out.println(merged);
 	}
 }
 
