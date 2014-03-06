@@ -38,7 +38,6 @@ public class Solution {
 				// the first char doesn't match, then we have no choice but advancing hayCur
 				if (needleCur == 0) {
 					hayCur++;
-					needleCur = 0;
 				}
 				// otherwise we can jump
 				// now partial match length is needleCur
