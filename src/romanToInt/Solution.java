@@ -12,6 +12,31 @@ package romanToInt;
 //
 //Input is guaranteed to be within the range from 1 to 3999.
 public class Solution {
+	
+	
+	static Map<Character, Integer> backMap;
+	static {
+		int[] integer = { 1000, 500, 100, 50, 10, 5, 1 };
+		char[] roman = { 'M', 'D', 'C', 'L', 'X', 'V', 'I' };
+		backMap = new HashMap<Character, Integer>();
+		for (int i = 0; i < integer.length; i++) {
+			backMap.put(roman[i], integer[i]);
+		}
+	}
+	// the best way: just check s[i] and s[i+1], if s[i] >= s[i+1], then we need to add, otherwise we minus
+	int romanToInt2(String roman) {
+		int ret = backMap.get(roman.charAt(roman.length() - 1));
+		for (int i = roman.length() - 2; i >= 0; i--) {
+			char curChar = roman.charAt(i);
+			if (backMap.get(curChar) >= backMap.get(roman.charAt(i + 1))) {
+				ret += backMap.get(curChar);
+			} else {
+				ret -= backMap.get(curChar);
+			}
+		}
+		return ret;
+	}
+	
 	// a smarter and easier idea, map all possible values!
 	// this can be used in intToRoman as well
 	public int romanToInt(String s) {
