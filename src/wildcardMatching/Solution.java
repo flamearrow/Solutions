@@ -38,7 +38,10 @@ public class Solution {
 			return false;
 
 		boolean[][] dp = new boolean[p.length() + 1][s.length() + 1];
-
+		
+		// the really tricky part is to initialize the dp table: we have a dp table of size[plen+1][slen+1]
+		// but we only populates [1][1] to [plen+1][slen+1]
+		// during initialization, we only initialize dp[0][0] to true and the first column
 		dp[0][0] = true;
 		for (i = 1; i < dp.length; i++) {
 			if (p.charAt(i - 1) == '*' && dp[i - 1][0])
@@ -48,30 +51,12 @@ public class Solution {
 		// matches the first i chars of p
 		for (i = 1; i < dp.length; i++) {
 			for (int j = 1; j < dp[0].length; j++) {
-				// if it's star, then we search all previous blocks of current
-				// row
-				// and all previous blocks of previous row
-				// and the upper cell
-				// once any is true, current is true
+				// if it's star, then we search if its upper left corner, upper corner or left corner is true
+				// upper left==true: s=XXa  p=XX*: XX matches, a and * matches
+				// upper==true: s=XX p=XX*: XX matches, * matches an empty char
+				// let==true: s=XXb: XXb matches, XXbc also matches because * can match one more
 				if (p.charAt(i - 1) == '*') {
-					int ptr = j - 1;
-					while (ptr >= 0) {
-						if (dp[i][ptr]) {
-							dp[i][j] = true;
-							break;
-						}
-						ptr--;
-					}
-					if (!dp[i][j]) {
-						ptr = j;
-						while (ptr >= 0) {
-							if (dp[i - 1][ptr]) {
-								dp[i][j] = true;
-								break;
-							}
-							ptr--;
-						}
-					}
+					dp[i][j] = dp[i - 1][j - 1] || dp[i - 1][j] || dp[i][j - 1];
 				}
 				// if current char matches or current pattern is ?, then if
 				// previous matches(dp[i-1][j-1]), current matches
