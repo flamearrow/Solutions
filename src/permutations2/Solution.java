@@ -29,7 +29,7 @@ public class Solution {
 		for (int i = 0; i < num.length; i++) {
 			// since they are sorted, the result of all path starts with num[i]
 			// is subset of that of num[i-1]
-			if (i > 0 && used[i - 1] && num[i] == num[i - 1]) {
+			if (i > 0 && !used[i - 1] && num[i] == num[i - 1]) {
 				continue;
 			}
 			if (!used[i]) {
