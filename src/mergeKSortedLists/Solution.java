@@ -1,9 +1,43 @@
 package mergeKSortedLists;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 //Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.
 public class Solution {
+
+	// use a  priority queue of size k
+	public ListNode mergeKLists2(ArrayList<ListNode> lists) {
+		Comparator<ListNode> minCpt = new Comparator<ListNode>() {
+			@Override
+			public int compare(ListNode arg0, ListNode arg1) {
+				return arg0.val - arg1.val;
+			}
+
+		};
+		// Note priority queue defaults to Natural ordering, poll() always returns the SMALLEST value
+		PriorityQueue<ListNode> heap = new PriorityQueue<ListNode>(
+				lists.size(), minCpt);
+		ListNode ret = null, cur = null;
+		for (int i = 0; i < lists.size(); i++) {
+			heap.add(lists.get(i));
+		}
+		while (!heap.isEmpty()) {
+			ListNode min = heap.poll();
+			if (ret == null) {
+				ret = min;
+				cur = ret;
+			} else {
+				cur.next = min;
+				cur = cur.next;
+			}
+			if (min.next != null)
+				heap.offer(min.next);
+		}
+		return ret;
+	}
+
 	public ListNode mergeKLists(ArrayList<ListNode> lists) {
 		ListNode ret = null;
 		ListNode cur = null;
@@ -56,8 +90,7 @@ public class Solution {
 		lists.add(n1);
 		lists.add(n2);
 		lists.add(n3);
-		lists.add(null);
-		ListNode ret = new Solution().mergeKLists(lists);
+		ListNode ret = new Solution().mergeKLists2(lists);
 		while (ret != null) {
 			System.out.print(ret.val + " ");
 			ret = ret.next;
