@@ -12,6 +12,52 @@ package intToRoman;
 //
 //Input is guaranteed to be within the range from 1 to 3999.
 public class Solution {
+	// use a back string to ease searching...
+	static String codes = "IVXLCDM";
+	String intToRoman2(int i) {
+		StringBuilder sb = new StringBuilder();
+		int cur = 0;
+		while (i > 0) {
+			int value = i % 10;
+			sb.insert(0, getChar(value, cur));
+			i /= 10;
+			cur += 2;
+		}
+		return sb.toString();
+	}
+
+	String getChar(int value, int cur) {
+		if (value == 0)
+			return "";
+		StringBuilder sb = new StringBuilder();
+		// 1-3
+		if (value < 4) {
+			for (int i = 0; i < value; i++) {
+				sb.append(codes.charAt(cur));
+			}
+		}
+		// 4
+		else if (value == 4) {
+			sb.append(codes.charAt(cur));
+			sb.append(codes.charAt(cur + 1));
+		}
+		// 5-8
+		else if (value < 9) {
+			// over five
+			sb.append(codes.charAt(cur + 1));
+			for (int i = 5; i < value; i++) {
+				sb.append(codes.charAt(cur));
+			}
+		}
+		// 9
+		else {
+			sb.append(codes.charAt(cur));
+			sb.append(codes.charAt(cur + 2));
+		}
+
+		return sb.toString();
+	}
+	
 	public String intToRoman(int num) {
 		StringBuilder sb = new StringBuilder();
 		for (int mod = 1000; mod > 0; mod /= 10) {
