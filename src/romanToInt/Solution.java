@@ -1,5 +1,8 @@
 package romanToInt;
 
+import java.util.HashMap;
+import java.util.Map;
+
 //I 	1
 //V 	5
 //X 	10
