@@ -2,7 +2,7 @@ package treeSerialization;
 
 import java.util.LinkedList;
 
-//Serialize and deserialize a tree in a leet code way
+//Serialize and deserialize a tree in a preOrder traversal way
 public class Solution {
 	static String serializeTree(TreeNode root) {
 		StringBuilder sb = new StringBuilder();
@@ -46,6 +46,7 @@ public class Solution {
 		root.left.setRight(4);
 		root.setRight(5);
 		String s = serializeTree(root);
+		System.out.println(s);
 		TreeNode deserializedRoot = deserializeTree(s);
 		System.out.println(deserializedRoot);
 	}
