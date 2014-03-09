@@ -7,6 +7,10 @@ package recoverBST;
 //A solution using O(n) space is pretty straight forward. Could you devise
 // 	a constant space solution? 
 public class Solution {
+	// we use potential Wrong node for the following tree
+	//    2
+	//  3   1
+	// in which case 2 is potential wrong node: it breaks the BST property, but the real wrong nodes are 1 and 3 
 	TreeNode pre = null;
 	TreeNode wrongNode1 = null, wrongNode2 = null;
 	TreeNode potentialWrongNode = null;
