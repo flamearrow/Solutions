@@ -4,6 +4,102 @@ package medianOfTwoSortedArrays;
 //Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).
 
 public class Solution {
+
+	public double findMedianSortedArrays2(int A[], int B[]) {
+		int shortArr[], longArr[];
+		if (A.length > B.length) {
+			shortArr = B;
+			longArr = A;
+		} else {
+			shortArr = A;
+			longArr = B;
+		}
+		int totalLen = A.length + B.length;
+		boolean totalOdd = totalLen % 2 != 0;
+
+		if (shortArr.length == 0) {
+			return totalOdd ? longArr[totalLen / 2]
+					: ((double) longArr[totalLen / 2 - 1] + (double) longArr[totalLen / 2]) / 2;
+		} else if (longArr.length == 0) {
+			return totalOdd ? shortArr[totalLen / 2]
+					: ((double) shortArr[totalLen / 2 - 1] + (double) shortArr[totalLen / 2]) / 2;
+		}
+		int start = 0, end = shortArr.length - 1;
+		int shortPtr = 0, longPtr = 0;
+		while (start <= end) {
+			shortPtr = (start + end) / 2;
+			longPtr = totalLen / 2 - shortPtr - 1;
+			if (findMatch(longArr, shortArr, longPtr, shortPtr)) {
+				if (totalOdd) {
+					return Math.max(longArr[longPtr], shortArr[shortPtr]);
+				} else {
+					// check if two numbers are in the same array
+					if (longArr[longPtr] > shortArr[shortPtr] && longPtr > 0) {
+						return ((double) Math.max(longArr[longPtr - 1],
+								shortArr[shortPtr]) + (double) longArr[longPtr]) / 2;
+					} else if (shortArr[shortPtr] > longArr[longPtr]
+							&& shortPtr > 0) {
+						return ((double) Math.max(shortArr[shortPtr - 1],
+								longArr[longPtr]) + (double) shortArr[shortPtr]) / 2;
+					}
+					return ((double) longArr[longPtr] + (double) shortArr[shortPtr]) / 2;
+				}
+			} else {
+				// shortPtr is too small, need to search right half
+				if (shortArr[shortPtr] < longArr[longPtr]) {
+					start = shortPtr + 1;
+				}
+				// shortPtr is too big, need to search left half
+				else {
+					end = shortPtr - 1;
+				}
+			}
+		}
+		longPtr = totalLen / 2 - shortPtr - 1;
+		// right overflow - all numbers in shortArr are smaller than those in longArr
+		if (shortArr[shortPtr] < longArr[longPtr]) {
+			if (totalOdd) {
+				return longArr[longPtr];
+			} else {
+				// find the biggest two from the three: longArr[longPtr], shortArr[shortPtr], longArr[longPtr-1]
+				if (longPtr > 0) {
+					return ((double) Math.max(shortArr[shortPtr],
+							longArr[longPtr - 1]) + (double) longArr[longPtr]) / 2;
+				} else {
+					return ((double) longArr[longPtr] + (double) shortArr[shortPtr]) / 2;
+				}
+			}
+		}
+		// left overflow - all numbers in shortArr are bigger than those in longArr
+		else {
+			if (totalOdd) {
+				if (longPtr < longArr.length - 1) {
+					return Math.min(longArr[longPtr + 1], shortArr[shortPtr]);
+				} else
+					return shortArr[shortPtr];
+			} else {
+				// find the smallest two from the three: longArr[longPtr], shortArr[shortPtr], longArr[longPtr+1]
+				if (longPtr < longArr.length - 1) {
+					return ((double) Math.min(longArr[longPtr + 1],
+							shortArr[shortPtr]) + (double) longArr[longPtr]) / 2;
+				} else {
+					return ((double) longArr[longPtr] + (double) shortArr[shortPtr]) / 2;
+				}
+			}
+		}
+	}
+
+	boolean findMatch(int[] longArr, int[] shortArr, int longPtr, int shortPtr) {
+		if (longPtr < longArr.length - 1
+				&& longArr[longPtr] <= shortArr[shortPtr]
+				&& shortArr[shortPtr] <= longArr[longPtr + 1]
+				|| shortPtr < shortArr.length - 1
+				&& shortArr[shortPtr] <= longArr[longPtr]
+				&& longArr[longPtr] <= shortArr[shortPtr + 1])
+			return true;
+		return false;
+	}
+
 	// the idea is to keep two pointers in A and B with sum = (m+n)/2,
 	// then do bSearch in A and move pointer in B accordingly
 	// until we find A[aPtr] < B[bPtr] < A[aPtr+1]
@@ -143,8 +239,8 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		int[] A = { 3, 6 };
-		int[] B = { 1, 2, 4, 5 };
-		System.out.println(new Solution().findMedianSortedArrays(A, B));
+		int[] A = { 1, 2, 2 };
+		int[] B = { 1, 2, 3 };
+		System.out.println(new Solution().findMedianSortedArrays2(A, B));
 	}
 }
