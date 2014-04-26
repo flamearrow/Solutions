@@ -4,7 +4,7 @@ package medianOfTwoSortedArrays;
 //Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).
 
 public class Solution {
-
+	// bsearch: start, end, move start or end if necessary
 	public double findMedianSortedArrays2(int A[], int B[]) {
 		int shortArr[], longArr[];
 		if (A.length > B.length) {
