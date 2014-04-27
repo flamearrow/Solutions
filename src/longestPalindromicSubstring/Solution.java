@@ -6,6 +6,41 @@ import java.util.LinkedList;
 //You may assume that the maximum length of S is 1000, 
 //and there exists one unique longest palindromic substring.
 public class Solution {
+
+	public String longestPalindromeExpand2(String s) {
+		if (s == null || s.length() == 0)
+			return "";
+		int symPoint = 2 * s.length() - 1;
+		int longestLen = 1;
+		String ret = s.substring(0, 1);
+		for (int i = 0; i < symPoint; i++) {
+			int len = 0, left = 0, right = 0;
+			// symPoint is a character
+			if (i % 2 == 0) {
+				len = 1;
+				left = i / 2 - 1;
+				right = i / 2 + 1;
+			}
+			// symPoint is a split
+			else {
+				len = 0;
+				left = i / 2;
+				right = i / 2 + 1;
+			}
+			while (left >= 0 && right < s.length()
+					&& s.charAt(left) == s.charAt(right)) {
+				len += 2;
+				left--;
+				right++;
+			}
+			if (len > longestLen) {
+				ret = s.substring(left + 1, left + 1 + len);
+				longestLen = len;
+			}
+		}
+		return ret;
+	}
+
 	// select all possible symmetric point and try expanding left and right
 	public String longestPalindromeExpand(String s) {
 		int len = s.length();
@@ -54,6 +89,7 @@ public class Solution {
 		}
 		String sR = sb.toString();
 		int len = s.length();
+		// dp[i][j] is the length of matching substring of s[0-i] and sR[0-j]
 		int[][] dp = new int[len][len];
 		// since one char is definitely a palindrome, 
 		// we just start from there 
@@ -128,8 +164,8 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		String s = "aaaaaaaaaaaaaaaaaabbbadsdfew";
-		System.out.println(new Solution().longestPalindromeExpand(s));
+		String s = "aabccb";
+		System.out.println(new Solution().longestPalindromeExpand2(s));
 	}
 }
 
