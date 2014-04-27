@@ -1,6 +1,7 @@
 package zigzagConversion;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 //The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
@@ -17,6 +18,38 @@ import java.util.List;
 //
 //convert("PAYPALISHIRING", 3) should return "PAHNAPLSIIGYIR". 
 public class Solution {
+	public String convert2(String s, int nRows) {
+		if (nRows == 1)
+			return s;
+		List<List<Character>> lists = new LinkedList<List<Character>>();
+		for (int i = 0; i < nRows; i++) {
+			lists.add(new LinkedList<Character>());
+		}
+		int curList = 0;
+		boolean down = true;
+		for (int i = 0; i < s.length(); i++) {
+			lists.get(curList).add(s.charAt(i));
+			if (curList == 0) {
+				down = true;
+				curList++;
+			} else if (curList == nRows - 1) {
+				down = false;
+				curList--;
+			} else {
+				if (down)
+					curList++;
+				else
+					curList--;
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		for (List<Character> list : lists) {
+			for (char c : list) {
+				sb.append(c);
+			}
+		}
+		return sb.toString();
+	}
 
 	public String convert(String s, int nRows) {
 		if (nRows == 1)
@@ -53,6 +86,6 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Solution().convert("PAYPALISHIRING", 2));
+		System.out.println(new Solution().convert2("PAYPALISHIRING", 3));
 	}
 }
