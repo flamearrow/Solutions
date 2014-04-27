@@ -15,6 +15,77 @@ package stringToInteger;
 // trailing chars -discarded
 
 public class Solution {
+	enum State {
+		LEADING_SPACE, SIGN, DIGITS
+	}
+
+	public int atoi2(String str) {
+		State s = State.LEADING_SPACE;
+		long ret = 0;
+		boolean pos = true;
+		int cur = 0;
+		while (cur < str.length()) {
+			switch (s) {
+			case LEADING_SPACE:
+				if (str.charAt(cur) == ' ') {
+					cur++;
+				} else if (str.charAt(cur) == '+' || str.charAt(cur) == '-') {
+					s = State.DIGITS;
+					pos = str.charAt(cur) == '-' ? false : true;
+					cur++;
+				} else if (isDigit(str.charAt(cur))) {
+					s = State.DIGITS;
+				}
+				// invalid
+				else {
+					return 0;
+				}
+				break;
+			case SIGN:
+				if (isDigit(str.charAt(cur))) {
+					s = State.DIGITS;
+					cur++;
+				}
+				// invalid
+				else {
+					return 0;
+				}
+				break;
+			case DIGITS:
+				if (isDigit(str.charAt(cur))) {
+					s = State.DIGITS;
+					ret = ret * 10 + str.charAt(cur) - '0';
+					if (pos && ret >= Integer.MAX_VALUE) {
+						return Integer.MAX_VALUE;
+					} else if (!pos && (0 - ret) <= Integer.MIN_VALUE) {
+						return Integer.MIN_VALUE;
+					}
+					cur++;
+				} else {
+					if (pos) {
+						return (int) ret;
+					} else {
+						return 0 - (int) ret;
+					}
+				}
+				break;
+			default:
+			}
+		}
+		// if we reach here, the last char of string is a digit
+		if (pos) {
+			return (int) ret;
+		} else {
+			return 0 - (int) ret;
+		}
+	}
+
+	boolean isDigit(char c) {
+		if (c < '0' || c > '9')
+			return false;
+		return true;
+	}
+
 	// use a little state machine, cheating by trimming the string and use Long.parseLong()
 	// we can use a counter adder to replace Long.parseLong(), when counter overflows, return the edge.
 	public static final int STATUS_START = 0;
@@ -66,6 +137,6 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Solution().atoi("2147483648"));
+		System.out.println(new Solution().atoi2(""));
 	}
 }
