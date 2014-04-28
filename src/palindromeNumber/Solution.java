@@ -2,6 +2,21 @@ package palindromeNumber;
 
 //Determine whether an integer is a palindrome. Do this without extra space.
 public class Solution {
+	public boolean isPalindrome2(int x) {
+		if (x < 0)
+			return false;
+		long abs = x;
+		long rev = 0;
+		while (abs > 0) {
+			rev = rev * 10 + abs % 10;
+			abs /= 10;
+		}
+		if (rev < Integer.MIN_VALUE || rev > Integer.MAX_VALUE)
+			return false;
+		else
+			return (int) rev == x;
+	}
+
 	public boolean isPalindrome(int x) {
 		if (x < 0)
 			return false;
@@ -23,9 +38,10 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		for (int i = 0; i < 10000; i++) {
-			if (new Solution().isPalindrome(i))
-				System.out.println(i);
-		}
+		System.out.println(new Solution().isPalindrome2(12345432));
+		//		for (int i = 0; i < 10000; i++) {
+		//			if (new Solution().isPalindrome(i))
+		//				System.out.println(i);
+		//		}
 	}
 }
