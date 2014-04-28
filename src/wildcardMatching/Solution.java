@@ -18,6 +18,74 @@ package wildcardMatching;
 //isMatch("ab", "?*")  true
 //isMatch("aab", "c*a*b")  false
 public class Solution {
+	public boolean isMatch2(String s, String p) {
+		return doMatch2(s, p, 0, 0);
+	}
+
+	boolean doMatch2(String s, String p, int sPtr, int pPtr) {
+		if (sPtr == s.length() && pPtr == p.length())
+			return true;
+		if (sPtr == s.length() && p.charAt(pPtr) == '*')
+			return doMatch2(s, p, sPtr, pPtr + 1);
+		if (sPtr == s.length() || pPtr == p.length())
+			return false;
+		if (p.charAt(pPtr) == '*') {
+			while (sPtr <= s.length()) {
+				if (doMatch2(s, p, sPtr, pPtr + 1))
+					return true;
+				else
+					sPtr++;
+			}
+			return false;
+		} else {
+			return matches2(s.charAt(sPtr), p.charAt(pPtr))
+					&& doMatch2(s, p, sPtr + 1, pPtr + 1);
+		}
+	}
+
+	boolean matches2(char sChar, char pChar) {
+		if (pChar == '?')
+			return true;
+		else
+			return sChar == pChar;
+	}
+
+	public boolean isMatchDP(String s, String p) {
+		if (s.length() != 0 && p.length() == 0)
+			return false;
+		int len = 0;
+		while (len < p.length() && p.charAt(len) == '*') {
+			len++;
+		}
+		if (len == p.length())
+			return true;
+
+		int plenNoStar = 0;
+		for (char c : p.toCharArray())
+			if (c != '*')
+				plenNoStar++;
+		if (plenNoStar > s.length())
+			return false;
+
+		boolean[][] dp = new boolean[p.length() + 1][s.length() + 1];
+		dp[0][0] = true;
+		// set the first column to 0 for pairs like "cb" "*?*"
+		for (int i = 1; i < dp.length; i++) {
+			if (p.charAt(i - 1) == '*' && dp[i - 1][0])
+				dp[i][0] = true;
+		}
+		for (int i = 1; i <= p.length(); i++) {
+			for (int j = 1; j <= s.length(); j++) {
+				if (p.charAt(i - 1) == '*') {
+					dp[i][j] = dp[i][j - 1] || dp[i - 1][j] || dp[i - 1][j - 1];
+				} else {
+					dp[i][j] = matches2(s.charAt(j - 1), p.charAt(i - 1))
+							&& dp[i - 1][j - 1];
+				}
+			}
+		}
+		return dp[p.length()][s.length()];
+	}
 
 	// do a 2D dp, O(mn)
 	public boolean isMatch(String s, String p) {
@@ -38,7 +106,7 @@ public class Solution {
 			return false;
 
 		boolean[][] dp = new boolean[p.length() + 1][s.length() + 1];
-		
+
 		// the really tricky part is to initialize the dp table: we have a dp table of size[plen+1][slen+1]
 		// but we only populates [1][1] to [plen+1][slen+1]
 		// during initialization, we only initialize dp[0][0] to true and the first column
@@ -84,9 +152,12 @@ public class Solution {
 	boolean doMatch(String s, int indexS, String p, int indexP) {
 		if (indexS == s.length() && indexP == p.length())
 			return true;
-		else if (indexS == s.length() || indexP == p.length()) {
+		if (indexS == s.length() && p.charAt(indexP) == '*')
+			return doMatch(s, indexS, p, indexP + 1);
+		if (indexS == s.length() || indexP == p.length()) {
 			return false;
 		}
+
 		if (p.charAt(indexP) == '?' || s.charAt(indexS) == p.charAt(indexP)) {
 			return doMatch(s, indexS + 1, p, indexP + 1);
 		} else if (p.charAt(indexP) == '*') {
@@ -108,8 +179,15 @@ public class Solution {
 		}
 	}
 
+	//	isMatch("aa","a") → false
+	//	isMatch("aa","aa") → true
+	//	isMatch("aaa","aa") → false
+	//	isMatch("aa", "*") → true
+	//	isMatch("aa", "a*") → true
+	//	isMatch("ab", "?*") → true
+	//	isMatch("aab", "c*a*b") → false
 	public static void main(String[] args) {
-		// System.out.println(new Solution().isMatch("", "**"));
-		System.out.println(new Solution().isMatch("hi", "*?"));
+		System.out.println(new Solution().isMatchDP("cb", "*?*"));
+		//		System.out.println(new Solution().isMatch("hi", "*?"));
 	}
 }
