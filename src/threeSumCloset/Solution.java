@@ -12,6 +12,28 @@ import java.util.Arrays;
 public class Solution {
 
 	// a smarter solution would be mimic the three sum problem, where we mimic a two sum approach
+	public int threeSumClosest2(int[] num, int target) {
+		int minDiff = Integer.MAX_VALUE;
+		int minSum = 0;
+		Arrays.sort(num);
+		for (int i = 0; i < num.length - 2; i++) {
+			int start = i + 1, end = num.length - 1;
+			while (start < end) {
+				int sum = num[i] + num[start] + num[end];
+				if (Math.abs(sum - target) < minDiff) {
+					minSum = sum;
+					minDiff = Math.abs(sum - target);
+				}
+				// note sum can never be equal to target
+				if (sum > target)
+					end--;
+				else
+					start++;
+			}
+		}
+		return minSum;
+	}
+
 	public int threeSumClosest(int[] num, int target) {
 		int min = num[0] + num[1] + num[2];
 		Arrays.sort(num);
@@ -76,6 +98,6 @@ public class Solution {
 	public static void main(String[] args) {
 		int[] num = { 0, 2, 1, -3 };
 		int target = 1;
-		System.out.println(new Solution().threeSumClosest(num, target));
+		System.out.println(new Solution().threeSumClosest2(num, target));
 	}
 }
