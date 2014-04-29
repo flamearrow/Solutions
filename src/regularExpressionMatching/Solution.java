@@ -20,6 +20,37 @@ package regularExpressionMatching;
 //isMatch("aab", "c*a*b") -> true
 
 public class Solution {
+	public boolean isMatch2(String s, String p) {
+		return doMatch2(s, p, 0, 0);
+	}
+
+	boolean doMatch2(String s, String p, int sP, int pP) {
+		if (sP == s.length() && pP == p.length())
+			return true;
+		// pattern ends but string doesn't end, false
+		if (pP >= p.length())
+			return false;
+		if ((pP == p.length() - 1) || (pP + 1) < p.length()
+				&& p.charAt(pP + 1) != '*') {
+			// string ends, patten doesn't end with star, false
+			if (sP >= s.length())
+				return false;
+			return matches(s.charAt(sP), p.charAt(pP))
+					&& doMatch2(s, p, sP + 1, pP + 1);
+		}
+		// we find a star
+		else {
+			if (doMatch2(s, p, sP, pP + 2))
+				return true;
+			while (sP < s.length() && matches(s.charAt(sP), p.charAt(pP))) {
+				sP++;
+				if (doMatch2(s, p, sP, pP + 2))
+					return true;
+			}
+			return false;
+		}
+	}
+
 	// naive recursion
 	// note the tricky edge case is when s hits tail
 	// but p is still at a start position
@@ -87,8 +118,8 @@ public class Solution {
 		// isMatch("ab", ".*") -> true
 		// isMatch("aab", "c*a*b") -> true
 
-		String s = "";
-		String p = "a*b*";
-		System.out.println(new Solution().isMatch(s, p));
+		String s = "ab";
+		String p = ".*bb";
+		System.out.println(new Solution().isMatch2(s, p));
 	}
 }
