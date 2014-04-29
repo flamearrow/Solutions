@@ -12,8 +12,29 @@ package intToRoman;
 //
 //Input is guaranteed to be within the range from 1 to 3999.
 public class Solution {
+	// map all special cases, not we need to map 9xx and 4xx
+	// the idea is always find the biggest number to append to sb
+	public String intToRoman3(int num) {
+		int[] nums = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+		String[] symbols = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X",
+				"IX", "V", "IV", "I" };
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		while (num > 0) {
+			int times = num / nums[i];
+			num -= times * nums[i];
+			while (times > 0) {
+				sb.append(symbols[i]);
+				times--;
+			}
+			i++;
+		}
+		return sb.toString();
+	}
+
 	// use a back string to ease searching...
 	static String codes = "IVXLCDM";
+
 	String intToRoman2(int i) {
 		StringBuilder sb = new StringBuilder();
 		int cur = 0;
@@ -57,7 +78,7 @@ public class Solution {
 
 		return sb.toString();
 	}
-	
+
 	public String intToRoman(int num) {
 		StringBuilder sb = new StringBuilder();
 		for (int mod = 1000; mod > 0; mod /= 10) {
@@ -120,6 +141,6 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Solution().intToRoman(0));
+		System.out.println(new Solution().intToRoman3(2014));
 	}
 }
