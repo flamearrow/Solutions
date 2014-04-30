@@ -3,6 +3,44 @@ package implementStrStr;
 //implement strstr()
 //Returns a pointer to the first occurrence of needle in haystack, or null if needle is not part of haystack.
 public class Solution {
+	public String strStr2(String haystack, String needle) {
+		if (needle.length() == 0)
+			return haystack;
+		int[] skipList = buildSkipList2(needle);
+		int hPtr = 0, nPtr = 0;
+		// hPtr+nPtr is the advancing ptr
+		while (hPtr + nPtr < haystack.length()) {
+			if (haystack.charAt(hPtr + nPtr) == needle.charAt(nPtr)) {
+				nPtr++;
+				if (nPtr == needle.length())
+					return haystack.substring(hPtr);
+			} else {
+				// skipLen = matched length - skipLen[nPtr-1]
+				if (nPtr > 0) {
+					int skipLen = nPtr - skipList[nPtr-1];
+					hPtr += skipLen;
+					nPtr -= skipLen;
+				} 
+				// no match, advance hPtr
+				else {
+					hPtr++;
+					nPtr = 0;
+				}
+			}
+		}
+		return null;
+	}
+
+	int[] buildSkipList2(String needle) {
+		int[] ret = new int[needle.length()];
+		for (int i = 1; i < needle.length(); i++) {
+			int prevLen = ret[i - 1];
+			if (needle.charAt(i) == needle.charAt(prevLen)) {
+				ret[i] = prevLen + 1;
+			}
+		}
+		return ret;
+	}
 	// naive
 	public String strStr(String haystack, String needle) {
 		if (needle.length() == 0)
