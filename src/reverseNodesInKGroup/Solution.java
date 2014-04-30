@@ -15,6 +15,45 @@ package reverseNodesInKGroup;
 //
 //For k = 3, you should return: 3->2->1->4->5
 public class Solution {
+	public ListNode reverseKGroup2(ListNode head, int k) {
+		if (head == null)
+			return null;
+		if (head.next == null)
+			return head;
+		ListNode start = head, end = head, pre = null;
+		ListNode ret = head;
+		int left = k - 1;
+		while (end != null) {
+			// found a group
+			if (left == 0) {
+				left = k - 1;
+				if (pre == null) {
+					ret = end;
+				} else {
+					pre.next = end;
+				}
+				pre = start;
+				ListNode c = start.next;
+				while (c != end) {
+					ListNode next = c.next;
+					c.next = start;
+					start = c;
+					c = next;
+				}
+				// now c == end
+				ListNode next = c.next;
+				c.next = start;
+				start = next;
+				pre.next = start;
+				end = start;
+			} else {
+				left--;
+				end = end.next;
+			}
+		}
+		return ret;
+	}
+
 	// don't use recursion to reverse a list
 	// iterative reverse requires three pointers, pre cur and next
 	public ListNode reverseKGroup(ListNode head, int k) {
@@ -54,8 +93,9 @@ public class Solution {
 
 	public static void main(String[] args) {
 		ListNode head = new ListNode(1);
-		head.setNext(2).setNext(3).setNext(4).setNext(5).setNext(6).setNext(7);
-		ListNode ret = new Solution().reverseKGroup(head, 8);
+		//		head.setNext(2).setNext(3).setNext(4).setNext(5).setNext(6).setNext(7)
+		//				.setNext(8);
+		ListNode ret = new Solution().reverseKGroup2(head, 1);
 		while (ret != null) {
 			System.out.print(ret.val + " ");
 			ret = ret.next;
