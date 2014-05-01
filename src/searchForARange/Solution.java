@@ -11,6 +11,64 @@ package searchForARange;
 //Given [5, 7, 7, 8, 8, 10] and target value 8,
 //return [3, 4]. 
 public class Solution {
+	public int[] searchRange2(int[] A, int target) {
+		int start = 0, end = A.length - 1;
+		// first bSearch: check existence
+		while (start <= end) {
+			int mid = (start + end) / 2;
+			if (A[mid] == target)
+				break;
+			if (A[mid] > target) {
+				end = mid - 1;
+			} else {
+				start = mid + 1;
+			}
+		}
+		if (start > end) {
+			int[] ret = { -1, -1 };
+			return ret;
+		}
+		// second bSearch: check left bound
+		int left = -1, right = -1;
+		start = 0;
+		end = A.length - 1;
+
+		while (start <= end) {
+			int mid = (start + end) / 2;
+			if (A[mid] == target && (mid == 0 || A[mid - 1] != target)) {
+				left = mid;
+				break;
+			}
+			if (A[mid] >= target) {
+				end = mid - 1;
+			} else {
+				start = mid + 1;
+			}
+		}
+
+		// third bSearch: check right bound
+		start = 0;
+		end = A.length - 1;
+
+		while (start <= end) {
+			int mid = (start + end) / 2;
+			if (A[mid] == target
+					&& (mid == A.length - 1 || A[mid + 1] != target)) {
+				right = mid;
+				break;
+			}
+			if (A[mid] <= target) {
+				start = mid + 1;
+			} else {
+				end = mid - 1;
+			}
+		}
+		int[] ret = new int[2];
+		ret[0] = left;
+		ret[1] = right;
+		return ret;
+	}
+
 	public int[] searchRange(int[] A, int target) {
 		int start = -1, end = -1;
 		int left = 0, right = A.length - 1;
