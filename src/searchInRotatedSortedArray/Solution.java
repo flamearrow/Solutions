@@ -1,6 +1,35 @@
 package searchInRotatedSortedArray;
 
 public class Solution {
+	// 1) bSerarch end is the actual last index
+	// 2) while loop needs check equal i.e (start<=end) - think about a single element array
+	public int search2(int[] A, int target) {
+		int start = 0, end = A.length - 1;
+		while (start <= end) {
+			int mid = (start + end) / 2;
+			if (A[mid] == target)
+				return mid;
+			// left sorted
+			if (A[start] <= A[mid]) {
+				// go left
+				if (A[start] <= target && target < A[mid]) {
+					end = mid - 1;
+				} else {
+					start = mid + 1;
+				}
+			}
+			// right sorted
+			else {
+				// go right
+				if (A[mid] < target && target <= A[end]) {
+					start = mid + 1;
+				} else {
+					end = mid - 1;
+				}
+			}
+		}
+		return -1;
+	}
 
 	public int search(int[] A, int target) {
 		// don't recurse when you can use while!
@@ -81,9 +110,10 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		int[] A = { 3, 1 };
+		int[] A = { 1 };
+		System.out.println(new Solution().search2(A, 0));
 		// int target = 3;
-		for (int target : A)
-			System.out.println(new Solution().search(A, target));
+		//		for (int target : A)
+		//			System.out.println(new Solution().search(A, target));
 	}
 }
