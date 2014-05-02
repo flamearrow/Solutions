@@ -4,6 +4,39 @@ package multiplyStrings;
 //
 //Note: The numbers can be arbitrarily large and are non-negative.
 public class Solution {
+	public String multiply2(String num1, String num2) {
+		if (num1.equals("0") || num2.equals("0"))
+			return "0";
+		int len1 = num1.length();
+		int len2 = num2.length();
+		int[] rst = new int[len1 + len2 - 1];
+		for (int ptr1 = 0; ptr1 < len1; ptr1++) {
+			for (int ptr2 = 0; ptr2 < len2; ptr2++) {
+				// starting position
+				int cur = rst.length - (len2 - ptr2) - (len1 - 1 - ptr1);
+				rst[cur] += (num1.charAt(ptr1) - '0')
+						* (num2.charAt(ptr2) - '0');
+			}
+		}
+		// straighten the number
+		int carray = 0;
+		for (int i = rst.length - 1; i >= 0; i--) {
+			int tmpRst = rst[i] + carray;
+			rst[i] = tmpRst % 10;
+			if (tmpRst > 9) {
+				carray = tmpRst / 10;
+			} else {
+				carray = 0;
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		if (carray > 0)
+			sb.append(carray);
+		for (int i : rst)
+			sb.append(i);
+		return sb.toString();
+	}
+
 	// an more intuitive solution: start from 0, first just add the numbers without considering carry, deal with carry later
 	// i.e 32 * 18
 	// get 3 26 16
@@ -93,7 +126,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Solution().multiply("32", "15"));
-		System.out.println(new Solution().multiplyNew("32", "15"));
+		System.out.println(new Solution().multiply2("123", "28"));
+		System.out.println(new Solution().multiply("123", "28"));
 	}
 }
