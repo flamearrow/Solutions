@@ -21,6 +21,43 @@ import java.util.LinkedList;
 //[2, 6]
 //[1, 1, 6] 
 public class Solution {
+	public ArrayList<ArrayList<Integer>> combinationSum3(int[] num, int target) {
+		Arrays.sort(num);
+		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+		boolean[] used = new boolean[num.length];
+		doProbe(num, target, 0, new LinkedList<Integer>(), used, ret);
+		return ret;
+	}
+
+	void doProbe(int[] num, int left, int curIndex,
+			LinkedList<Integer> curPath, boolean[] used,
+			ArrayList<ArrayList<Integer>> ret) {
+		if (left == 0) {
+			ret.add(new ArrayList<Integer>(curPath));
+			return;
+		}
+		if (curIndex == num.length)
+			return;
+		// use current index
+		// note when checking reaching 0, should use '=' 
+		if (left >= num[curIndex]) {
+			// 1 1 1 2 3
+			// we only keep using 1 if previous 1 is already used
+			if (curIndex == 0
+					|| (num[curIndex] != num[curIndex - 1])
+					|| (num[curIndex] == num[curIndex - 1] && used[curIndex - 1])) {
+				used[curIndex] = true;
+				curPath.add(num[curIndex]);
+				doProbe(num, left - num[curIndex], curIndex + 1, curPath, used,
+						ret);
+				used[curIndex] = false;
+				curPath.removeLast();
+			}
+		}
+		// don't use current index
+		doProbe(num, left, curIndex + 1, curPath, used, ret);
+	}
+
 	// similar to the dup one, but we need to recurse in two ways
 	// note when we need to resolve dup, always try to use a boolean array to
 	// mark visited
@@ -61,9 +98,9 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		int[] num = { 8, 7, 4, 3 };
+		int[] num = { 4, 3, 3, 5, 2 };
 		int target = 11;
-		ArrayList<ArrayList<Integer>> ret = new Solution().combinationSum2(num,
+		ArrayList<ArrayList<Integer>> ret = new Solution().combinationSum3(num,
 				target);
 		System.out.println(ret);
 
