@@ -12,6 +12,33 @@ package jumpGame2;
 //The minimum number of jumps to reach the last index is 2. 
 //(Jump 1 step from index 0 to 1, then 3 steps to the last index.) 
 public class Solution {
+	
+	public int jump2(int[] A) {
+	        if(A.length == 1)
+	            return 0;
+	        int ret = 1;
+	        int maxReachable = A[0], curReachable = A[0];
+	        for(int i = 0; i < A.length; i++) {
+	           int tmpReachable = A[i] + i;
+	           // we're at most one step away from solution
+	           if(tmpReachable >= A.length - 1) {
+	               return curReachable >= A.length - 1 ? ret : ret + 1;
+	           }
+	           // update the furthest we can reach
+	           if(tmpReachable > maxReachable) {
+	               maxReachable = tmpReachable;
+	           }
+	           
+	           // if we need another step, update the furthest we can reach after doing another step
+	           if(i >= curReachable) {
+	                curReachable = maxReachable;
+	                ret++;
+	           }
+	           
+	        }
+        	return -1;
+	}
+	
 	// greedy O(n)
 	// search from start to end, i means now we are at point i
 	// start min from 0, we only increment min if we found 
