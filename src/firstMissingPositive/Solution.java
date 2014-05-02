@@ -8,6 +8,35 @@ package firstMissingPositive;
 //
 //Your algorithm should run in O(n) time and uses constant space. 
 public class Solution {
+	public int firstMissingPositive2(int[] A) {
+		// i should be at A[i-1]
+		int cur = 0;
+		while (cur < A.length) {
+			int current = A[cur];
+			if (current > A.length - 1 || (current - 1) == cur || current <= 0) {
+				cur++;
+			}
+			// swap and don't increase cur
+			else {
+				int tmp = A[current - 1];
+				A[current - 1] = A[cur];
+				A[cur] = tmp;
+				// note if the two numbers are the same skip
+				// otherwise will hit infinite loop
+				if (A[current - 1] == A[cur])
+					cur++;
+			}
+		}
+		cur = 0;
+		while (cur < A.length) {
+			if (A[cur] != cur + 1)
+				return cur + 1;
+			else
+				cur++;
+		}
+		return cur + 1;
+	}
+
 	// modify the array, let A[0] = 1, A[1] = 2, A[2] = 3, ... then find the first i where A[i] != i+1
 	public int firstMissingPositive(int[] A) {
 		int len = A.length;
