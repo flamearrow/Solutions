@@ -1,14 +1,58 @@
 package mergeIntervals;
 
 import java.util.ArrayList;
-//Given a collection of intervals, merge all overlapping intervals.
-//
-//For example,
-//Given [1,3],[2,6],[8,10],[15,18],
-//return [1,6],[8,10],[15,18]. 
-// they are not sorted
+import java.util.Collections;
+import java.util.Stack;
 
 public class Solution {
+	class Node implements Comparable<Node> {
+		int index;
+		boolean start;
+
+		public Node(int index, boolean start) {
+			this.index = index;
+			this.start = start;
+		}
+
+		public int compareTo(Node n) {
+			if (index == n.index) {
+				// start should always go first
+				// so (1, 4), (4, 5) will be merged
+				if (start)
+					return -1;
+				else
+					return 1;
+			} else
+				return index - n.index;
+		}
+	}
+
+	// a stack implementation, note we defined a node object that's comparable
+	//  when two nodes have same index, the STARTING node should precede end node
+	//  so that intervals like [1, 4] and [4, 5] will be merged
+	public ArrayList<Interval> merge2(ArrayList<Interval> intervals) {
+		ArrayList<Interval> ret = new ArrayList<Interval>();
+		ArrayList<Node> nodes = new ArrayList<Node>();
+		for (Interval i : intervals) {
+			nodes.add(new Node(i.start, true));
+			nodes.add(new Node(i.end, false));
+		}
+		Collections.sort(nodes);
+		Stack<Node> s = new Stack<Node>();
+		for (Node n : nodes) {
+			if (n.start)
+				s.push(n);
+			else {
+				if (s.size() == 1) {
+					ret.add(new Interval(s.pop().index, n.index));
+				} else {
+					s.pop();
+				}
+			}
+		}
+		return ret;
+	}
+
 	// a slighted modified O(n^2) solution, can be optimized to O(nlogn) if we
 	// sort the array in advance
 	public ArrayList<Interval> merge(ArrayList<Interval> intervals) {
@@ -46,12 +90,12 @@ public class Solution {
 
 	public static void main(String[] args) {
 		ArrayList<Interval> intervals = new ArrayList<Interval>();
-		// intervals.add(new Interval(2, 3));
-		// intervals.add(new Interval(5, 5));
+		intervals.add(new Interval(0, 0));
+		intervals.add(new Interval(1, 4));
 		// intervals.add(new Interval(2, 2));
 		// intervals.add(new Interval(3, 4));
 		// intervals.add(new Interval(3, 4));
-		new Solution().merge(intervals);
+		new Solution().merge2(intervals);
 		System.out.println(intervals);
 	}
 }
