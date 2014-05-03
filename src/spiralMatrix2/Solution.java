@@ -13,9 +13,57 @@ package spiralMatrix2;
 //]
 
 public class Solution {
+	// don't use direction enum
+	public int[][] generateMatrix2(int n) {
+		int[][] ret = new int[n][n];
+		int curX = 0, curY = 0;
+		int cur = 1;
+		while (true) {
+			while (curY < n && ret[curX][curY] == 0) {
+				ret[curX][curY] = cur;
+				curY++;
+				cur++;
+			}
+			// back a step
+			curY--;
+			curX++;
+			if (curX >= n || ret[curX][curY] > 0)
+				break;
+			while (curX < n && ret[curX][curY] == 0) {
+				ret[curX][curY] = cur;
+				curX++;
+				cur++;
+			}
+			curX--;
+			curY--;
+			if (curY < 0 || ret[curX][curY] > 0)
+				break;
+			while (curY >= 0 && ret[curX][curY] == 0) {
+				ret[curX][curY] = cur;
+				curY--;
+				cur++;
+			}
+			curY++;
+			curX--;
+			if (curX < 0 || ret[curX][curY] > 0)
+				break;
+			while (curX >= 0 && ret[curX][curY] == 0) {
+				ret[curX][curY] = cur;
+				curX--;
+				cur++;
+			}
+			curX++;
+			curY++;
+			if (curY >= n || ret[curX][curY] > 0)
+				break;
+		}
+		return ret;
+	}
+
 	enum Direction {
 		LEFT, RIGHT, UP, DOWN
 	}
+
 	// the newly created array itself is a marker
 	public int[][] generateMatrix(int n) {
 		int[][] ret = new int[n][n];
