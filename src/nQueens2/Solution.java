@@ -5,6 +5,35 @@ package nQueens2;
 //Now, instead outputting board configurations, return the total number of distinct solutions.
 public class Solution {
 
+	int result;
+
+	public int totalNQueensFancy2(int n) {
+		int fullLine = (1 << n) - 1;
+		probeNQueens(0, 0, 0, fullLine);
+		return result;
+	}
+
+	public void probeNQueens(int lineMask, int leftMask, int rightMask,
+			int fullLine) {
+		if (lineMask == fullLine) {
+			result++;
+			return;
+		}
+		int available = (~(lineMask | leftMask | rightMask)) & fullLine;
+		while (available > 0) {
+			// right most set bit
+			int currentUse = available & (-available);
+			// remove this from available
+			available ^= currentUse;
+			// for diagnose conflicts, 
+			// we need to consider 
+			// 1) the left/right bit of all previous left/right conflicts
+			// 2) the left/right bit of current set bit
+			probeNQueens(lineMask | currentUse, (currentUse | leftMask) << 1,
+					(currentUse | rightMask) >> 1, fullLine);
+		}
+	}
+
 	// this is a fancy bit manipulation solution
 	// it uses a bit vector to represent a line
 	// 10101 means the second and forth one is available
@@ -95,6 +124,6 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Solution().totalNQueens(5));
+		System.out.println(new Solution().totalNQueensFancy2(2));
 	}
 }
