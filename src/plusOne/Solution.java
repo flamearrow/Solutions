@@ -2,6 +2,26 @@ package plusOne;
 
 //Given a number represented as an array of digits, plus one to the number.
 public class Solution {
+	// System.arraycopy() is lower case, and it's signature is
+	// arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
+	public int[] plusOne2(int[] digits) {
+		int carry = 1;
+		int curIndex = digits.length - 1;
+		while (curIndex >= 0) {
+			int cur = digits[curIndex] + carry;
+			digits[curIndex] = cur % 10;
+			carry = cur / 10;
+			curIndex--;
+		}
+		if (carry == 1) {
+			int[] ret = new int[digits.length + 1];
+			ret[0] = 1;
+			System.arraycopy(digits, 0, ret, 1, digits.length);
+			return ret;
+		} else
+			return digits;
+	}
+
 	public int[] plusOne(int[] digits) {
 		int carry = 1;
 		int cur = 0;
