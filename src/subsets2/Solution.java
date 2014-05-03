@@ -115,7 +115,7 @@ public class Solution {
 		doProbe(num, 0, path, ret, used);
 		return ret;
 	}
-	
+
 	// this is real bTree solution!
 	// use or not use, it's a question
 	void doProbe(int[] num, int cur, LinkedList<Integer> path,
@@ -141,7 +141,36 @@ public class Solution {
 	public static void main(String[] args) {
 		int[] num = { 1, 2, 2 };
 		ArrayList<ArrayList<Integer>> ret = new Solution()
-				.subsetsWithDupNew(num);
+				.subsetsWithDup222(num);
 		System.out.println(ret);
+	}
+
+	public ArrayList<ArrayList<Integer>> subsetsWithDup222(int[] num) {
+		Arrays.sort(num);
+		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+		LinkedList<Integer> curPath = new LinkedList<Integer>();
+		ret.add(new ArrayList<Integer>());
+		boolean[] used = new boolean[num.length];
+		doProbe2(0, num, used, curPath, ret);
+		return ret;
+	}
+
+	void doProbe2(int curIndex, int[] num, boolean[] used,
+			LinkedList<Integer> curPath, ArrayList<ArrayList<Integer>> ret) {
+		if (curIndex == num.length)
+			return;
+		// not use current one
+		doProbe2(curIndex + 1, num, used, curPath, ret);
+
+		// try use current one
+		if (curIndex > 0 && num[curIndex] == num[curIndex - 1]
+				&& !used[curIndex - 1])
+			return;
+		curPath.add(num[curIndex]);
+		used[curIndex] = true;
+		ret.add(new ArrayList<Integer>(curPath));
+		doProbe2(curIndex + 1, num, used, curPath, ret);
+		curPath.removeLast();
+		used[curIndex] = false;
 	}
 }
