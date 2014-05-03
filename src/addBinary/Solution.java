@@ -57,6 +57,7 @@ public class Solution {
 	// CS101!!:
 	// add result: a^b
 	// carry result: a&b
+	// note carry result can't be conjuncted e.g 'a&b&c' screws up
 	public String addBinary(String a, String b) {
 		int carry = 0;
 		int aEnd = a.length() - 1;
