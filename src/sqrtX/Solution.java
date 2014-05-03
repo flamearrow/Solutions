@@ -7,25 +7,23 @@ public class Solution {
 	public int sqrt(int x) {
 		if (x <= 1)
 			return x;
-		int left = 0, right = x / 2;
+		int left = 0, right = x;
 		while (left <= right) {
 			int mid = (left + right) / 2;
-			if (mid == 0)
-				mid++;
-			if (x / mid > mid) {
-				left = mid + 1;
-			} else if (x / mid < mid) {
-				right = mid - 1;
-			} else {
+			if (x/mid == mid)
 				return mid;
+			if (x/mid > mid)
+				left = mid + 1;
+			else {
+				right = mid - 1;
 			}
 		}
-		return left - 1;
+		return left-1;
 	}
 
 	public static void main(String[] args) {
-		// for (int i = 0; i <= Integer.MAX_VALUE; i++)
-		int i = Integer.MAX_VALUE;
-		System.out.println(i + " : " + new Solution().sqrt(i));
+		for (int i = 0; i <= 100; i++)
+			//		int i = 100;
+			System.out.println(i + " : " + new Solution().sqrt(i));
 	}
 }
