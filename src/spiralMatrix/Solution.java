@@ -15,12 +15,14 @@ import java.util.ArrayList;
 //
 //You should return [1,2,3,6,9,8,7,4,5]. 
 public class Solution {
-
+	// cleaner solution:
+	// use four start/end pointers to lock bound
+	// update bounds of next direction after we've done one direction, break if necessary
+	// all bounds check conditions are the same
 	public ArrayList<Integer> spiralOrder(int[][] matrix) {
 		ArrayList<Integer> ret = new ArrayList<Integer>();
 		int startX = 0, endX = matrix[0].length - 1;
 		int startY = 0, endY = matrix.length - 1;
-		// exact same just condition for four directions!
 		while (true) {
 			for (int i = startX; i <= endX; i++) {
 				ret.add(matrix[startY][i]);
