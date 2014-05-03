@@ -7,6 +7,52 @@ package addBinary;
 //b = "1"
 //Return "100". 
 public class Solution {
+	// String index always starts with 0
+	// just do the stupid way to calculate carry and result of three int: add them, then compare them with 1 
+	// when returning a char from int, need to do (char)('0'+intYouCal);
+	// carry spells as 'carry' but not 'carray'
+	public String addBinary2(String a, String b) {
+		int aIndex = a.length() - 1;
+		int bIndex = b.length() - 1;
+		StringBuilder sb = new StringBuilder();
+		char carry = '0';
+		while (aIndex >= 0 && bIndex >= 0) {
+			char rst = calculate(a.charAt(aIndex), b.charAt(bIndex), carry);
+			carry = calculateCarry(a.charAt(aIndex), b.charAt(bIndex), carry);
+			sb.insert(0, rst);
+			aIndex--;
+			bIndex--;
+		}
+		if (aIndex >= 0 || bIndex >= 0) {
+			int leftIndex = aIndex >= 0 ? aIndex : bIndex;
+			String leftString = aIndex >= 0 ? a : b;
+			while (leftIndex >= 0) {
+				char rst = calculate(leftString.charAt(leftIndex), '0', carry);
+				carry = calculateCarry(leftString.charAt(leftIndex), '0', carry);
+				sb.insert(0, rst);
+				leftIndex--;
+			}
+		}
+		if (carry == '1')
+			sb.insert(0, carry);
+		return sb.toString();
+	}
+
+	char calculate(char a, char b, char carry) {
+		int ia = a - '0';
+		int ib = b - '0';
+		int iCarry = carry - '0';
+		return (char) ('0' + (ia ^ ib ^ iCarry));
+	}
+
+	char calculateCarry(char a, char b, char carry) {
+		int ia = a - '0';
+		int ib = b - '0';
+		int iCarry = carry - '0';
+		int ret = ia + ib + iCarry > 1 ? 1 : 0;
+		return (char) ('0' + ret);
+	}
+
 	// !!
 	// CS101!!:
 	// add result: a^b
@@ -53,6 +99,6 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Solution().addBinary("111", "111"));
+		System.out.println(new Solution().addBinary2("0", "0"));
 	}
 }
