@@ -17,6 +17,26 @@ package searchA2DMatrix;
 //
 //Given target = 3, return true.
 public class Solution {
+	// no need for temp Node class, we can derive x and y coordinates on the fly
+	public boolean searchMatrix2(int[][] matrix, int target) {
+		int width = matrix[0].length;
+		int start = 0;
+		int end = matrix.length * width - 1;
+		while (start <= end) {
+			int mid = (start + end) / 2;
+			int midX = mid / width;
+			int midY = mid % width;
+			if (matrix[midX][midY] == target)
+				return true;
+			if (matrix[midX][midY] > target) {
+				end = mid - 1;
+			} else {
+				start = mid + 1;
+			}
+		}
+		return false;
+	}
+
 	// just like a binary search, we need to come up with a way to calculate mid
 	public boolean searchMatrix(int[][] matrix, int target) {
 		if (matrix.length == 0)
