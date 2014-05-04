@@ -25,6 +25,7 @@ public class Solution {
 	//  when s ends with 0x or 26+, we can't recursively call s[0, s.length()-2]
 	// note we need to wrap a method to check "" for 0 for original S
 	// and "" for 1 for recursive call
+	// recursion is top down - easier to implement
 	public int numDecodings2(String s) {
 		if (s == null || s.equals(""))
 			return 0;
@@ -58,6 +59,7 @@ public class Solution {
 	// 			1) if s[i] != '0', then we have dp[i-1] ways( every split[i-1] plus a single s[i] )
 	// 			2) if s[i-1] and s[i] can form a valid number (from 10 to 26) then we have another dp[i-2] ways( every split[i-2] plust s[i-1]s[i])
 	// 			note we need to rule out when s[i] == 0 but s[i-1] == 1 or 2, in this case we only take 2), because '0' can't be used as a seperator decode
+	// dp is bottom up
 	public int numDecodings(String s) {
 		if (s.length() == 0)
 			return 0;
