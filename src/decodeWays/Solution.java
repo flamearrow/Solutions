@@ -1,5 +1,8 @@
 package decodeWays;
 
+import java.util.HashMap;
+import java.util.Map;
+
 //A message containing letters from A-Z is being encoded to numbers using the following mapping:
 //
 //'A' -> 1
@@ -13,6 +16,42 @@ package decodeWays;
 //
 //The number of ways decoding "12" is 2.
 public class Solution {
+	// there are 26 characters
+	Map<String, Integer> back = new HashMap<String, Integer>();
+
+	// there are 26 characters
+	// just a recursive call
+	//  when s ends with 0, we can't recursively call s[0, s.length()-1]
+	//  when s ends with 0x or 26+, we can't recursively call s[0, s.length()-2]
+	// note we need to wrap a method to check "" for 0 for original S
+	// and "" for 1 for recursive call
+	public int numDecodings2(String s) {
+		if (s == null || s.equals(""))
+			return 0;
+		return doRecur(s);
+	}
+
+	int doRecur(String s) {
+		if (back.containsKey(s)) {
+			return back.get(s);
+		}
+		if (s.length() == 0)
+			return 1;
+		if (s.length() == 1)
+			return s.equals("0") ? 0 : 1;
+		int ret = 0;
+		ret += s.charAt(s.length() - 1) == '0' ? 0 : doRecur(s.substring(0,
+				s.length() - 1));
+		int lastTwoDigits = Integer.parseInt(s.substring(s.length() - 2,
+				s.length()));
+		if (lastTwoDigits < 10 || lastTwoDigits > 26)
+			ret += 0;
+		else
+			ret += doRecur(s.substring(0, s.length() - 2));
+		back.put(s, ret);
+		return ret;
+	}
+
 	// use a dp table dp[i] means from s[0 to i] how many ways to decode
 	// dp[i] is calculated by dp[i-1] and dp[i-2]
 	//  division would be
@@ -49,7 +88,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Solution().numDecodings("1234"));
+		System.out.println(new Solution().numDecodings2("10"));
 	}
 
 }
