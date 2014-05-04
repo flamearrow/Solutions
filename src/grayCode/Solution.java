@@ -52,9 +52,19 @@ public class Solution {
 		}
 		return ret;
 	}
+	
+	// another rule: i^(i>>1)
+	public ArrayList<Integer> grayCodeNew(int n) {
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+		int loop = 1 << n;
+		for (int i = 0; i < loop; i++) {
+			ret.add(i ^ (i >> 1));
+		}
+		return ret;
+	}
 
 	public static void main(String[] args) {
-		test(8);
+		test(3);
 	}
 
 	public static void test(int len) {
@@ -62,6 +72,7 @@ public class Solution {
 		ArrayList<Integer> ret2 = new Solution().grayCodeFancy(len);
 		int size = ret2.size();
 		for (int i = 0; i < size; i++) {
+			System.out.println(ret.get(i));
 			// can't just compare ret.get(i) == ret2.get(i)
 			// It may be worth noting that autoboxing is guaranteed to return the same object for 
 			// integral values in the range [-128, 127], but an implementation may, 
