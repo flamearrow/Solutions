@@ -3,6 +3,50 @@ package largestRectangleInHistogram;
 import java.util.Stack;
 
 public class Solution {
+	public int largestRectangleArea2(int[] height) {
+		if (height.length == 0)
+			return 0;
+		Stack<Node2> s = new Stack<Node2>();
+		s.push(new Node2(0, height[0]));
+		int ret = Integer.MIN_VALUE;
+		for (int i = 1; i < height.length; i++) {
+			if (s.peek().height < height[i]) {
+				s.push(new Node2(i, height[i]));
+			} else if (s.peek().height > height[i]) {
+				Node2 prev = null;
+				while (!s.isEmpty() && s.peek().height > height[i]) {
+					prev = s.pop();
+					int area = (i - prev.index) * prev.height;
+					if (area > ret)
+						ret = area;
+				}
+				if (s.isEmpty()) {
+					s.push(new Node2(0, height[i]));
+				} else {
+					s.push(new Node2(prev.index, height[i]));
+				}
+			} else
+				//if(height[i] == curHeight)
+				continue;
+		}
+		while (!s.isEmpty()) {
+			Node2 prev = s.pop();
+			int area = (height.length - prev.index) * prev.height;
+			if (area > ret)
+				ret = area;
+		}
+		return ret;
+	}
+
+	class Node2 {
+		int index, height;
+
+		public Node2(int argIndex, int argVal) {
+			index = argIndex;
+			height = argVal;
+		}
+	}
+
 	// a naive solution: for each histogram, search from any previous to
 	// current, note we update minV each time we see a smaller one, then
 	// calculate the largest
@@ -87,7 +131,6 @@ public class Solution {
 		return maxArea;
 	}
 
-
 	class Node {
 		int height, index;
 
@@ -103,8 +146,8 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		int[] arr = { 3, 2, 1 };
-		int rst = new Solution().largestRectangleArea(arr);
+		int[] arr = { 1 };
+		int rst = new Solution().largestRectangleArea2(arr);
 		System.out.println(rst);
 	}
 }
