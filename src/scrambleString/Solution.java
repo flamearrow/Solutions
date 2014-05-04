@@ -112,9 +112,35 @@ public class Solution {
 		}
 	}
 
+	Map<String, Boolean> back = new HashMap<String, Boolean>();
+
+	public boolean isScramble2(String s1, String s2) {
+		if (back.containsKey(s1 + " " + s2))
+			return back.get(s1 + " " + s2);
+
+		int len = s1.length();
+		if (len == 1)
+			return s1.equals(s2);
+		for (int i = 1; i <= s1.length(); i++) {
+			String s1Left = s1.substring(0, i);
+			String s1Right = s1.substring(i, len);
+			String s2Left1 = s2.substring(0, i);
+			String s2Right1 = s2.substring(i);
+			String s2Left2 = s2.substring(0, len - i);
+			String s2Right2 = s2.substring(len - i);
+			if (isScramble(s1Left, s2Left1) && isScramble(s1Right, s2Right1)
+					|| isScramble(s1Left, s2Right2)
+					&& isScramble(s1Right, s2Left2)) {
+				back.put(s1 + " " + s2, true);
+				return true;
+			}
+		}
+		back.put(s1 + " " + s2, false);
+		return false;
+	}
+
 	public static void main(String[] args) {
-		System.out.println(new Solution().isScrambleNew("abcdefghijklmnopq",
-				"efghijklmnopqcadb"));
+		System.out.println(new Solution().isScramble2("rgaet", "great"));
 	}
 
 }
