@@ -19,10 +19,30 @@ package validNumber;
 // "20E9" is it valid? -true
 // "2E01" is it valid? -true
 // ".1" is it valid? -true
-// "3." is it valid? -ture
+// "3." is it valid? -ture - this is shitty
 // "." -false
 // "46.e3"
 public class Solution {
+
+	public boolean isNumberRegex(String s) {
+		// regex 101:
+		// [mlgb] chose one from m, l, g, b
+		// ?: match 0 or 1 times
+		// *: match 0 or more times
+		// +: match 1 or more times
+		// {10}: match 10 times
+		// (regex1|regex2|regex3) match regex1 or regex2 or regex3, can append {10} to match 10 times
+		// \\d match digits
+		// \\D match non digits
+		// \\w match word chars a-zA-Z_0-9
+		// \\W match non word chars
+		String regex = "[+-]?(\\d+|\\d*\\.\\d+)(e[+-]?\\d+)?";
+		// the commented one passed oj, but it regards "3." as a valid number
+		// String regex = "[+-]?(\\d+|\\d+\\.\\d*|\\d*\\.\\d+)(e[+-]?\\d+)?";
+		return s.trim().matches(regex);
+	}
+
+	// this is shitty
 	// state transfer, what's valid for next char?
 	// digit - state1
 	// space - state2
@@ -137,8 +157,10 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		String[] ss = { "1e+1e1", "1e1.1", "1e-1.1", "1e-11", "1e11", "1e+11" };
-		for (String s : ss)
-			System.out.println(new Solution().isNumber(s));
+		//		String[] ss = { "1e+1e1", "1e1.1", "1e-1.1", "1e-11", "1e11", "1e+11" };
+		//		for (String s : ss)
+		//			System.out.println(new Solution().isNumber(s));
+		String s = "  .2e81";
+		System.out.println(new Solution().isNumberRegex(s));
 	}
 }
