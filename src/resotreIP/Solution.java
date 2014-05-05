@@ -10,6 +10,39 @@ import java.util.LinkedList;
 //
 //return ["255.255.11.135", "255.255.111.35"]. (Order does not matter)
 public class Solution {
+
+	public ArrayList<String> restoreIpAddresses2(String s) {
+		ArrayList<String> ret = new ArrayList<String>();
+		ArrayList<String> curPath = new ArrayList<String>(4);
+		doProbe(ret, curPath, s);
+		return ret;
+	}
+
+	void doProbe(ArrayList<String> ret, ArrayList<String> curPath, String s) {
+		int left = 4 - curPath.size();
+		if (left == 0) {
+			if (s.length() > 0)
+				return;
+			String newRst = curPath.get(0) + "." + curPath.get(1) + "."
+					+ curPath.get(2) + "." + curPath.get(3);
+			ret.add(newRst);
+			return;
+		}
+		if (s.length() == 0)
+			return;
+		for (int i = 1; i <= s.length() && i < 4; i++) {
+			String newInt = s.substring(0, i);
+			// 010 is not a valid candidate
+			if (newInt.length() > 1 && newInt.charAt(0) == '0')
+				continue;
+			if (Integer.parseInt(newInt) <= 255) {
+				curPath.add(newInt);
+				doProbe(ret, curPath, s.substring(i));
+				curPath.remove(curPath.size() - 1);
+			}
+		}
+	}
+
 	ArrayList<String> ret = new ArrayList<String>();
 
 	// a similar solution with the dictionary partitioning, use probe
@@ -58,7 +91,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		ArrayList<String> ret = new Solution().restoreIpAddresses("0000");
+		ArrayList<String> ret = new Solution().restoreIpAddresses2("1231111");
 		for (String s : ret)
 			System.out.println(s);
 	}
