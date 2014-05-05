@@ -13,6 +13,33 @@ import java.util.Map;
 // would have same pre and post traversal result
 
 public class Solution {
+	public TreeNode buildTree2(int[] preorder, int[] inorder) {
+		Map<Integer, Integer> indexMap = new HashMap<Integer, Integer>();
+		for (int i = 0; i < inorder.length; i++) {
+			indexMap.put(inorder[i], i);
+		}
+		return doBuildTree2(preorder, 0, preorder.length - 1, inorder, 0,
+				inorder.length - 1, indexMap);
+	}
+	
+	// we're using some redundant params, but this is easier to construct...
+	public TreeNode doBuildTree2(int[] preorder, int preStart, int preEnd,
+			int[] inorder, int inStart, int inEnd,
+			Map<Integer, Integer> indexMap) {
+		if (inStart > inEnd)
+			return null;
+		TreeNode root = new TreeNode(preorder[preStart]);
+		int inIndex = indexMap.get(preorder[preStart]);
+		int leftSubCnt = inIndex - inStart;
+		int rightSubCnt = inEnd - inIndex;
+		root.left = doBuildTree(preorder, preStart + 1, preStart + leftSubCnt,
+				inorder, inStart, inIndex - 1, indexMap);
+		root.right = doBuildTree(preorder, preStart + leftSubCnt + 1, preStart
+				+ leftSubCnt + rightSubCnt, inorder, inIndex + 1, inEnd,
+				indexMap);
+		return root;
+	}
+	
 	public TreeNode buildTreeNew(int[] preorder, int[] inorder) {
 		if (preorder.length == 0)
 			return null;
