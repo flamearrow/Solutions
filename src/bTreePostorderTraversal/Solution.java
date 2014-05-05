@@ -4,6 +4,37 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class Solution {
+	// when doing post traversal, the idea is to judge if we are going from up or from bottom
+	// we do this by compare if current node's left or right sub child is just visited,
+	// if it is visited, then we're going from bottom, otherwise we're going from up
+	public ArrayList<Integer> postorderTraversal2(TreeNode root) {
+		TreeNode cur = root, pre = new TreeNode(-1);
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+		Stack<TreeNode> s = new Stack<TreeNode>();
+		while (cur != null) {
+			if ((cur.left != null || cur.right != null) && pre != cur.left
+					&& pre != cur.right) {
+				s.push(cur);
+				cur = cur.left != null ? cur.left : cur.right;
+			} else {
+				ret.add(cur.val);
+				pre = cur;
+				if (s.isEmpty())
+					cur = null;
+				else if (cur == s.peek().left) {
+					if (s.peek().right == null) {
+						cur = s.pop();
+					} else {
+						cur = s.peek().right;
+					}
+				} else {
+					cur = s.isEmpty() ? null : s.pop();
+				}
+			}
+		}
+		return ret;
+	}
+
 	// from low to high
 	public ArrayList<Integer> postorderTraversal(TreeNode root) {
 		ArrayList<Integer> ret = new ArrayList<Integer>();
@@ -47,8 +78,12 @@ public class Solution {
 		n.right.right.setLeft(9);
 		n.left.left.setLeft(7);
 		n.left.setRight(8);
+		for (int i : new Solution().postorderTraversal2(n)) {
+			System.out.print(i + " ");
+		}
+		System.out.println();
 		for (int i : new Solution().postorderTraversal(n)) {
-			System.out.println(i);
+			System.out.print(i + " ");
 		}
 	}
 }
