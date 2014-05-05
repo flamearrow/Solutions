@@ -4,6 +4,30 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class Solution {
+	// we only push current to stack when we go left, if we go right don't push
+	public ArrayList<Integer> preorderTraversal2(TreeNode root) {
+		TreeNode cur = root;
+		Stack<TreeNode> s = new Stack<TreeNode>();
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+		while (cur != null) {
+			ret.add(cur.val);
+			if (cur.left != null || cur.right != null) {
+				if (cur.left == null) {
+					cur = cur.right;
+				} else {
+					s.push(cur);
+					cur = cur.left;
+				}
+			} else {
+				while (cur.right == null && !s.isEmpty()) {
+					cur = s.pop();
+				}
+				cur = cur.right;
+			}
+		}
+		return ret;
+	}
+
 	// from high to low
 	public ArrayList<Integer> preorderTraversal(TreeNode root) {
 		ArrayList<Integer> ret = new ArrayList<Integer>();
@@ -35,10 +59,10 @@ public class Solution {
 
 	public static void main(String[] args) {
 		TreeNode n = new TreeNode(1);
-		n.setLeft(4).setLeft(2);
+		//		n.setLeft(4).setLeft(2);
 		n.setRight(3);
-		for (int i : new Solution().preorderTraversal(n)) {
-			System.out.println(i);
+		for (int i : new Solution().preorderTraversal2(n)) {
+			System.out.print(i + " ");
 		}
 	}
 }
