@@ -5,6 +5,15 @@ package maxDepthOfBTree;
 //The maximum depth is the number of nodes along the longest path 
 // from the root node down to the farthest leaf node.
 public class Solution {
+	
+	public int maxDepth2(TreeNode root) {
+		if (root == null)
+			return 0;
+		int leftDepth = maxDepth2(root.left);
+		int rightDepth = maxDepth2(root.right);
+		return 1 + (leftDepth > rightDepth ? leftDepth : rightDepth);
+	}
+	
 	public int maxDepth(TreeNode root) {
 		if (root == null)
 			return 0;
