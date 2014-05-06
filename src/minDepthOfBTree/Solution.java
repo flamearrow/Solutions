@@ -7,6 +7,32 @@ import java.util.Queue;
 //
 //The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
 public class Solution {
+	// BFS using a count
+	public int minDepth2(TreeNode root) {
+		if (root == null)
+			return 0;
+		int depth = 1;
+		Queue<TreeNode> q = new LinkedList<TreeNode>();
+		q.offer(root);
+		int cnt = 1;
+		while (!q.isEmpty()) {
+			TreeNode next = q.poll();
+			if (next.left == null && next.right == null) {
+				return depth;
+			}
+			if (next.left != null)
+				q.offer(next.left);
+			if (next.right != null)
+				q.offer(next.right);
+			if (--cnt == 0) {
+				depth++;
+				cnt = q.size();
+			}
+		}
+		// can't reach here
+		return -1;
+	}
+
 	// this is faster
 	public int minDepthBFS(TreeNode root) {
 		if (root == null)
