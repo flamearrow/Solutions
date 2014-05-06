@@ -13,6 +13,17 @@ package pathSum;
 //        7    2      1
 //return true, as there exist a root-to-leaf path 5->4->11->2 which sum is 22.
 public class Solution {
+
+	public boolean hasPathSum2(TreeNode root, int sum) {
+		return root != null && doProbe(root, sum);
+	}
+
+	boolean doProbe(TreeNode root, int sum) {
+		return (root.left == null && root.right == null && root.val == sum)
+				|| (root.left != null) && doProbe(root.left, sum - root.val)
+				|| (root.right != null) && doProbe(root.right, sum - root.val);
+	}
+
 	public boolean hasPathSum(TreeNode root, int sum) {
 		if (root == null)
 			return false;
@@ -30,6 +41,12 @@ public class Solution {
 			return probe(root.right, currentSum + root.val, targetSum)
 					|| probe(root.left, currentSum + root.val, targetSum);
 		}
+	}
+
+	public static void main(String[] args) {
+		TreeNode root = new TreeNode(1);
+		root.left = new TreeNode(2);
+		boolean b = new Solution().hasPathSum2(root, 1);
 	}
 }
 
