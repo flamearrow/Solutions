@@ -2,6 +2,44 @@ package sortedListToBST;
 
 //Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
 public class Solution {
+	ListNode currentPtr;
+	public TreeNode sortedListToBST2(ListNode head) {
+		currentPtr = head;
+		int length = calLength(head);
+		return doRecover(length);
+	}
+	
+	// we can only use one single parameter to bound recursion
+	// doRecover(n) returns the tree constructed by the currentPtr and next (n-1) nodes after
+	//  then it's responsible for advancing currentPtr forward to point to the nth nodes after currentPtr
+	TreeNode doRecover(int length) {
+		if (length == 0)
+			return null;
+		if (length == 1) {
+			TreeNode ret = new TreeNode(currentPtr.val);
+			currentPtr = currentPtr.next;
+			return ret;
+		}
+
+		TreeNode left = doRecover(length / 2);
+		TreeNode cur = new TreeNode(currentPtr.val);
+		currentPtr = currentPtr.next;
+		TreeNode right = doRecover(length - length / 2 - 1);
+		cur.left = left;
+		cur.right = right;
+		return cur;
+	}
+
+	int calLength(ListNode head) {
+		int ret = 0;
+		ListNode cur = head;
+		while (cur != null) {
+			ret++;
+			cur = cur.next;
+		}
+		return ret;
+	}
+
 	// use a bottom up approach, we'll be able to do it in O(n) time, need to pass the length first
 	// note we need to keep the head static so that it's advancing during the bottom up probing
 	// think about bottom up for a tree traversal problem, keep a universal var to keep track
