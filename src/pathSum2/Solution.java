@@ -20,6 +20,39 @@ import java.util.LinkedList;
 //   [5,8,4,5]
 //]
 public class Solution {
+	public ArrayList<ArrayList<Integer>> pathSum2(TreeNode root, int sum) {
+		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+		if (root == null)
+			return ret;
+		LinkedList<Integer> curPath = new LinkedList<Integer>();
+		doProbe(ret, curPath, root, sum);
+		return ret;
+	}
+
+	void doProbe(ArrayList<ArrayList<Integer>> ret,
+			LinkedList<Integer> curPath, TreeNode root, int sum) {
+		if (root.left == null && root.right == null) {
+			if (root.val == sum) {
+				curPath.add(root.val);
+				ret.add(new ArrayList<Integer>(curPath));
+				curPath.removeLast();
+			}
+			return;
+		}
+
+		if (root.left != null) {
+			curPath.add(root.val);
+			doProbe(ret, curPath, root.left, sum - root.val);
+			curPath.removeLast();
+		}
+
+		if (root.right != null) {
+			curPath.add(root.val);
+			doProbe(ret, curPath, root.right, sum - root.val);
+			curPath.removeLast();
+		}
+	}
+
 	ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
 
 	public ArrayList<ArrayList<Integer>> pathSum(TreeNode root, int sum) {
