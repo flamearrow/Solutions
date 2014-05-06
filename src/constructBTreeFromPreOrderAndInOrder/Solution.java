@@ -21,7 +21,7 @@ public class Solution {
 		return doBuildTree2(preorder, 0, preorder.length - 1, inorder, 0,
 				inorder.length - 1, indexMap);
 	}
-	
+
 	// we're using some redundant params, but this is easier to construct...
 	public TreeNode doBuildTree2(int[] preorder, int preStart, int preEnd,
 			int[] inorder, int inStart, int inEnd,
@@ -32,14 +32,14 @@ public class Solution {
 		int inIndex = indexMap.get(preorder[preStart]);
 		int leftSubCnt = inIndex - inStart;
 		int rightSubCnt = inEnd - inIndex;
-		root.left = doBuildTree(preorder, preStart + 1, preStart + leftSubCnt,
+		root.left = doBuildTree2(preorder, preStart + 1, preStart + leftSubCnt,
 				inorder, inStart, inIndex - 1, indexMap);
-		root.right = doBuildTree(preorder, preStart + leftSubCnt + 1, preStart
+		root.right = doBuildTree2(preorder, preStart + leftSubCnt + 1, preStart
 				+ leftSubCnt + rightSubCnt, inorder, inIndex + 1, inEnd,
 				indexMap);
 		return root;
 	}
-	
+
 	public TreeNode buildTreeNew(int[] preorder, int[] inorder) {
 		if (preorder.length == 0)
 			return null;
