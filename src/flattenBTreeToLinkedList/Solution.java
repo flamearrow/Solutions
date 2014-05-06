@@ -30,7 +30,7 @@ public class Solution {
 	//   2   5
 	//  / \   \
 	// 3   4   6
-		
+
 	//      1
 	//       \
 	//        2
@@ -40,7 +40,7 @@ public class Solution {
 	//		      5
 	//             \
 	//              6          
-	
+
 	//  1
 	//   \
 	//    2
@@ -53,7 +53,8 @@ public class Solution {
 	//           \
 	//            6
 	public void flatten(TreeNode root) {
-		if(root == null) return;
+		if (root == null)
+			return;
 		TreeNode left = root.left;
 		if (left != null) {
 			TreeNode right = root.right;
@@ -93,14 +94,33 @@ public class Solution {
 		}
 	}
 
+	public void flatten2(TreeNode root) {
+		if (root == null)
+			return;
+		TreeNode cur = root;
+		while (cur.left != null || cur.right != null) {
+			if (cur.left != null) {
+				TreeNode left = cur.left;
+				TreeNode right = cur.right;
+				TreeNode tail = left;
+				while (tail.right != null)
+					tail = tail.right;
+				cur.right = cur.left;
+				tail.right = right;
+				cur.left = null;
+			}
+			cur = cur.right;
+		}
+	}
+
 	public static void main(String[] args) {
 		TreeNode root = new TreeNode(1);
-//		root.left = new TreeNode(2);
-//		root.left.right = new TreeNode(3);
-//		root.left.right = new TreeNode(4);
-//		root.right = new TreeNode(5);
-//		root.right.right = new TreeNode(6);
-		new Solution().flatten(root);
+		root.left = new TreeNode(2);
+		root.left.right = new TreeNode(3);
+		root.left.right = new TreeNode(4);
+		root.right = new TreeNode(5);
+		root.right.right = new TreeNode(6);
+		new Solution().flatten2(root);
 		System.out.println(root);
 
 	}
