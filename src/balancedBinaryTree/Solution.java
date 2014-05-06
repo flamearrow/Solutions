@@ -4,7 +4,38 @@ package balancedBinaryTree;
 //
 //For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
 public class Solution {
-	// top-down solution, we only need O(logn) time
+
+	// bottom-up solution, O(log n), check the result of sub tree
+	//  if it's not balanced, return false directly
+	class Rst {
+		int height;
+		boolean succeed;
+
+		public Rst(int argHeight, boolean argSucceed) {
+			height = argHeight;
+			succeed = argSucceed;
+		}
+	}
+
+	public boolean isBalanced3(TreeNode root) {
+		return doProbe(root).succeed;
+	}
+
+	Rst doProbe(TreeNode root) {
+		if (root == null)
+			return new Rst(0, true);
+		Rst left = doProbe(root.left);
+		if (!left.succeed)
+			return new Rst(-1, false);
+		Rst right = doProbe(root.right);
+		if (!right.succeed)
+			return new Rst(-1, false);
+		if (Math.abs(left.height - right.height) <= 1)
+			return new Rst(Math.max(left.height, right.height) + 1, true);
+		return new Rst(-1, false);
+	}
+
+	// top-down solution
 	public boolean isBalancedNew(TreeNode root) {
 		int rst = doCheck(root);
 		if (rst >= 0)
