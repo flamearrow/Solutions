@@ -32,9 +32,26 @@ import java.util.Queue;
 // / \  / \
 //4->5->6->7 -> NULL
 public class Solution {
-	
+
+	// this is a FULL btree, if cur.next.left == null, 
+	//  then cur.next.right should also be null
+	public void connect2(TreeLinkNode root) {
+		if (root == null)
+			return;
+		if (root.left != null) {
+			root.left.next = root.right;
+		}
+		if (root.right != null) {
+			root.right.next = root.next == null ? null : root.next.left;
+		}
+		connect(root.left);
+		connect(root.right);
+	}
+
 	// a handy way to bfs a tree with the awareness of level is to add a separator at the end of each level,
 	// can just new a dummy separator node and use == to judge level...
+	//  there's a handier way: just keep a count for number of nodes in level starting with 1(root), 
+	//  decrement it when polling a node, when it drops to 0 reset to q.size()
 	public void connect(TreeLinkNode root) {
 		if (root == null)
 			return;
@@ -70,7 +87,7 @@ public class Solution {
 		root.left.right = new TreeLinkNode(5);
 		root.right.left = new TreeLinkNode(6);
 		root.right.right = new TreeLinkNode(7);
-		new Solution().connect(root);
+		new Solution().connect2(root);
 		short t = '\n';
 		System.out.println(t);
 	}
