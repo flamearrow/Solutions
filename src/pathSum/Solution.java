@@ -46,7 +46,7 @@ public class Solution {
 	public static void main(String[] args) {
 		TreeNode root = new TreeNode(1);
 		root.left = new TreeNode(2);
-		boolean b = new Solution().hasPathSum2(root, 1);
+		new Solution().hasPathSum2(root, 1);
 	}
 }
 
