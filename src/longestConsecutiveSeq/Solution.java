@@ -1,6 +1,9 @@
 package longestConsecutiveSeq;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 //Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
 //
@@ -10,6 +13,41 @@ import java.util.HashMap;
 //
 //Your algorithm should run in O(n) complexity.
 public class Solution {
+	public int longestConsecutive2(int[] num) {
+		Set<Integer> back = new HashSet<Integer>();
+		for (int i : num)
+			back.add(i);
+		int ret = -1;
+		while (!back.isEmpty()) {
+			int i = removeOneValueFromSet(back);
+			int curLen = 1;
+			int cur = i;
+			// probe up
+			while (back.contains(cur + 1)) {
+				back.remove(cur + 1);
+				curLen++;
+				cur++;
+			}
+			cur = i;
+			// probe down
+			while (back.contains(cur - 1)) {
+				back.remove(cur - 1);
+				curLen++;
+				cur--;
+			}
+			if (curLen > ret)
+				ret = curLen;
+		}
+		return ret;
+	}
+
+	int removeOneValueFromSet(Set<Integer> set) {
+		Iterator<Integer> itr = set.iterator();
+		int ret = itr.next();
+		set.remove(ret);
+		return ret;
+	}
+
 	public int longestConsecutive(int[] num) {
 		// backMap stores: item -> length of sequence containing this item
 		HashMap<Integer, Integer> backMap = new HashMap<Integer, Integer>();
