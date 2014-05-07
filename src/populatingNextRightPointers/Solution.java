@@ -1,6 +1,7 @@
 package populatingNextRightPointers;
 
 import java.util.ArrayDeque;
+import java.util.LinkedList;
 import java.util.Queue;
 
 //Given a binary tree
@@ -75,6 +76,28 @@ public class Solution {
 			} else {
 				q.poll();
 				q.offer(separator);
+			}
+		}
+	}
+
+	// BFS using count
+	public void connect3(TreeLinkNode root) {
+		if (root == null)
+			return;
+		Queue<TreeLinkNode> q = new LinkedList<TreeLinkNode>();
+		q.offer(root);
+		int cnt = 1;
+		while (!q.isEmpty()) {
+			TreeLinkNode cur = q.poll();
+			if (cur.left != null)
+				q.offer(cur.left);
+			if (cur.right != null)
+				q.offer(cur.right);
+
+			if (--cnt > 0) {
+				cur.next = q.peek();
+			} else {
+				cnt = q.size();
 			}
 		}
 	}
