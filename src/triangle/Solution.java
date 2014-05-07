@@ -18,6 +18,31 @@ import java.util.ArrayList;
 //Bonus point if you are able to do this using only O(n) extra space, where n is the total number of rows in the triangle.
 
 public class Solution {
+	public int minimumTotal2(ArrayList<ArrayList<Integer>> triangle) {
+		int[][] buffer = new int[triangle.size()][triangle.get(
+				triangle.size() - 1).size()];
+		for (int i = 0; i < buffer.length; i++) {
+			for (int j = 0; j < buffer[0].length; j++) {
+				buffer[i][j] = Integer.MAX_VALUE;
+			}
+		}
+		return doProbe(triangle, 0, 0, buffer);
+	}
+
+	int doProbe(ArrayList<ArrayList<Integer>> triangle, int lvl, int i,
+			int[][] buffer) {
+		if (lvl == triangle.size() - 1)
+			return triangle.get(lvl).get(i);
+		if (buffer[lvl][i] != Integer.MAX_VALUE)
+			return buffer[lvl][i];
+		// just probe i and i+1 in next level if applicable
+		int lValue = doProbe(triangle, lvl + 1, i, buffer);
+		int rValue = doProbe(triangle, lvl + 1, i + 1, buffer);
+		int min = (lValue < rValue ? lValue : rValue)
+				+ triangle.get(lvl).get(i);
+		buffer[lvl][i] = min;
+		return min;
+	}
 
 	// since we're just checking the left and right child, after looking at it
 	// once, we won't visit the same node again,
