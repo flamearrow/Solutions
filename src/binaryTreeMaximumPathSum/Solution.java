@@ -16,6 +16,29 @@ import java.util.Map;
 //
 //Return 6. 
 public class Solution {
+	int ret = Integer.MIN_VALUE;
+
+	public int maxPathSum2(TreeNode root) {
+		ret = root.val;
+		probeMaxPath(root);
+		return ret;
+	}
+
+	int probeMaxPath(TreeNode root) {
+		if (root == null)
+			return 0;
+		int leftPath = probeMaxPath(root.left);
+		int rightPath = probeMaxPath(root.right);
+		int maxPath = Math.max(root.val, root.val + leftPath);
+		maxPath = Math.max(maxPath, root.val + rightPath);
+		int maxRet = Math.max(root.val, root.val + leftPath);
+		maxRet = Math.max(maxRet, root.val + rightPath);
+		maxRet = Math.max(maxRet, root.val + leftPath + rightPath);
+		if (maxRet > ret)
+			ret = maxRet;
+		return maxPath;
+	}
+
 	int max = Integer.MIN_VALUE;
 	Map<TreeNode, Integer> pathLens = new HashMap<TreeNode, Integer>();
 
