@@ -1,7 +1,10 @@
 package wordLadder;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
@@ -23,6 +26,51 @@ import java.util.Set;
 //All words have the same length.
 //All words contain only lowercase alphabetic characters.
 public class Solution {
+	public int ladderLength2(String start, String end, HashSet<String> dict) {
+		Queue<String> q = new LinkedList<String>();
+		Set<String> visited = new HashSet<String>();
+		q.offer(start);
+		int lvl = 1;
+		int cnt = 1;
+		while (!q.isEmpty()) {
+			String cur = q.poll();
+			if (cur.equals(end)) {
+				return lvl;
+			}
+
+			for (String child : getChildren(cur, dict)) {
+				if (!visited.contains(child)) {
+					q.offer(child);
+					visited.add(child);
+				}
+			}
+
+			if (--cnt == 0) {
+				lvl++;
+				cnt = q.size();
+			}
+		}
+		return -1;
+	}
+
+	List<String> getChildren(String cur, HashSet<String> dict) {
+		char[] arr = cur.toCharArray();
+		List<String> ret = new ArrayList<String>();
+		for (int i = 0; i < arr.length; i++) {
+			for (char c = 'a'; c <= 'z'; c++) {
+				// note here we need to recover arr[i] to its original value after done
+				char original = arr[i];
+				arr[i] = c;
+				String next = new String(arr);
+				if (!next.equals(cur) && dict.contains(next)) {
+					ret.add(next);
+				}
+				arr[i] = original;
+			}
+		}
+		return ret;
+	}
+
 	public int ladderLength(String start, String end, HashSet<String> dict) {
 		Queue<String> q = new ArrayDeque<String>();
 		Set<String> visited = new HashSet<String>();
@@ -139,14 +187,14 @@ public class Solution {
 		// dict.add("ab");
 		dict.add("hot");
 		dict.add("dog");
-		dict.add("cog");
-		dict.add("tot");
-		dict.add("hop");
-		dict.add("pot");
 		dict.add("dot");
-		dict.add("hog");
-		System.out
-				.println(new Solution().ladderLengthNaive("hot", "dig", dict));
-		System.out.println(new Solution().ladderLength("hot", "dig", dict));
+		//		dict.add("cog");
+		//		dict.add("tot");
+		//		dict.add("hop");
+		//		dict.add("pot");
+		//		dict.add("hog");
+		//		System.out
+		//				.println(new Solution().ladderLengthNaive("hot", "hot", dict));
+		System.out.println(new Solution().ladderLength2("hot", "dog", dict));
 	}
 }
