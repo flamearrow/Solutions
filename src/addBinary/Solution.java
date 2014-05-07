@@ -22,6 +22,7 @@ public class Solution {
 			sb.insert(0, rst);
 			aIndex--;
 			bIndex--;
+			
 		}
 		if (aIndex >= 0 || bIndex >= 0) {
 			int leftIndex = aIndex >= 0 ? aIndex : bIndex;
