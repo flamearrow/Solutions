@@ -12,6 +12,36 @@ import java.util.Stack;
 //  ["3","-4","+"]
 
 public class Solution {
+	public int evalRPN2(String[] tokens) {
+		Stack<String> s = new Stack<String>();
+		for (String str : tokens) {
+			if (str.matches("-?\\d+"))
+				s.push(str);
+			else {
+				String second = s.pop();
+				String first = s.pop();
+				s.push(getRst(first, second, str));
+			}
+		}
+		return Integer.parseInt(s.pop());
+	}
+
+	String getRst(String first, String second, String opr) {
+		int firstI = Integer.parseInt(first);
+		int secondI = Integer.parseInt(second);
+		int rst = 0;
+		if (opr.equals("+")) {
+			rst = firstI + secondI;
+		} else if (opr.equals("-")) {
+			rst = firstI - secondI;
+		} else if (opr.equals("*")) {
+			rst = firstI * secondI;
+		} else if (opr.equals("/")) {
+			rst = firstI / secondI;
+		}
+		return "" + rst;
+	}
+
 	public int evalRPNStack(String[] tokens) {
 		Stack<Integer> stack = new Stack<Integer>();
 		for (String token : tokens) {
