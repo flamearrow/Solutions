@@ -8,8 +8,61 @@ import java.util.Random;
 //  the end position are dictated by input length%3
 // there's still some performance enhancement could be done
 public class Base64Codec {
-	static String BASE64TABLE = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/";
+	// the base table starts with upper case chars
+	static String BASE64TABLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 	static char TERMINAL_CHAR = '=';
+
+	// note if len%3 == 2 we pad "="
+	//      if len%3 == 1 we pad "=="
+	// it's also find to pad with other special string, this is just a conversion, i.e other code is using the same padding
+	// the left over bits are shift to the most significant bits of a 6 bits
+	String encode2(String input) {
+		char[] bytes = input.toCharArray();
+		int len = bytes.length;
+		boolean padOne = bytes.length % 3 == 2;
+		boolean padTwo = bytes.length % 3 == 1;
+
+		int curByte = 0, curBit = 0;
+		int termByte = len - 1, terBit = padOne ? 4 : (padTwo ? 6 : 8);
+
+		StringBuilder sb = new StringBuilder();
+
+		int next = 0;
+		while (curByte != termByte || curBit != terBit) {
+			next = 0;
+			for (int i = 0; i < 6; i++) {
+				next <<= 1;
+				next |= (((bytes[curByte] & (1 << (7 - curBit))) > 0) ? 1 : 0);
+				curBit++;
+				if (curBit == 8) {
+					curBit = 0;
+					curByte++;
+				}
+			}
+			sb.append(BASE64TABLE.charAt(next));
+			if (curByte == bytes.length)
+				break;
+		}
+
+		if (padOne) {
+			next = ((bytes[termByte] & 0x0f) << 2);
+			sb.append(BASE64TABLE.charAt(next));
+			sb.append(TERMINAL_CHAR);
+		}
+
+		if (padTwo) {
+			next = ((bytes[termByte] & 0x03) << 4);
+			sb.append(BASE64TABLE.charAt(next));
+			sb.append(TERMINAL_CHAR);
+			sb.append(TERMINAL_CHAR);
+		}
+
+		return sb.toString();
+	}
+
+	String decode2(String input) {
+		return "";
+	}
 
 	// padding strategy:
 	// if the length of input is not multiple of 3, pad (len % 3) special chars in the end, use = here
@@ -137,11 +190,11 @@ public class Base64Codec {
 
 	public static void main(String[] args) {
 		Base64Codec codec = new Base64Codec();
-		String encoded = codec.encode("mlgbmlgb");
+		String encoded = codec.encode2("m");
 		System.out.println(encoded);
 		String decoded = codec.decode(encoded);
 		System.out.println(decoded);
-		doTest();
+		//		doTest();
 	}
 
 	static void doTest() {
