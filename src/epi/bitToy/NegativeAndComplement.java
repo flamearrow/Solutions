@@ -1,6 +1,6 @@
 package epi.bitToy;
 
-public class Solution {
+public class NegativeAndComplement {
 	// -i and ~(i-1) equates
 	static void doStuff() {
 		for (int i = 0; i < 100; i++) {
