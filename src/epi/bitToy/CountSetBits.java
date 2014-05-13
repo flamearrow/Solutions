@@ -19,6 +19,7 @@ public class CountSetBits {
 		// only when i == 0 would (i&-i) == 0
 		while ((lastBit = (i & -i)) > 0) {
 			ret++;
+			// use xor to clear a set bit
 			i ^= lastBit;
 		}
 		return ret;
