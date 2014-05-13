@@ -41,6 +41,14 @@ public class Solution {
 	}
 
 	static void doQuickSort(int[] array, int left, int right) {
+		// note after rearrange(), we can make sure array[left to index-1] are all smaller than pivot
+		// but it's not guranteed array[index] == pivot
+		// e.g for {5,7,1,6,3}
+		// after first round it becomes {3,1,7,6,5} and returns 2
+		//  it means array[0-1] are smaller than the pivot(5) it picked in the rearrange call
+		//  but it does NOT mean 5 would be at index 2
+		// after the call, we only know in array all numbers from array[left, index-1] are smaller 
+		//  than those from array[index, right] - thus we recurse on two haves
 		int index = rearrange(array, left, right);
 		if (left < index - 1)
 			doQuickSort(array, left, index - 1);
@@ -48,7 +56,7 @@ public class Solution {
 			doQuickSort(array, index, right);
 
 	}
-
+	
 	static int rearrange(int[] array, int left, int right) {
 		int pivot = array[left];
 		while (left <= right) {
