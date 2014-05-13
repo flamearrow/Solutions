@@ -7,6 +7,19 @@ import java.util.Random;
 // to encode/decode, first we need to find the ending bit/char of encoding, decoding
 //  the end position are dictated by input length%3
 // there's still some performance enhancement could be done
+
+// basic idea of Base64Codec:
+//  Encoding: Treat the input string as a sequence of 8-bit chars, take 6-bit for each round until there's no more. 
+//  Each 6 bit can be mapped to a char in BASE64TABLE. 
+//  There might be 3 scenarios:
+//    len%3 == 0: in this case the end of last 6 bit would end at the last input char
+//    len%3 == 1: in this case the end of last 6 bit would end at the second bit of last input char
+//    len%3 == 2: in this case the end of last 6 bit would end at the fifth bit of last input char
+//  We pad certain number of '=' for the later two scenarios 
+//    make sure shifting the left over bits to the most significant bits to the last valid six-bit
+// 
+//  Decoding: The reverse way: first convert the string into a array of int ranging from 0 to 63
+//    then read each 8-bit and convert them back into a char  
 public class Base64Codec {
 	// the base table starts with upper case chars
 	static String BASE64TABLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -60,8 +73,40 @@ public class Base64Codec {
 		return sb.toString();
 	}
 
+	// we need to first convert input back to an int array so that we get the correct bits
 	String decode2(String input) {
-		return "";
+		byte[] bytes = input.getBytes();
+		int len = input.length();
+		int[] indices = new int[len];
+		for (int i = 0; i < len; i++) {
+			indices[i] = BASE64TABLE.indexOf((char) bytes[i]);
+		}
+		boolean padOne = false, padTwo = false;
+		if (len > 1 && bytes[len - 2] == '=') {
+			padTwo = true;
+		} else if (bytes[len - 1] == '=') {
+			padOne = true;
+		}
+
+		int lastChar = padOne ? len - 2 : padTwo ? len - 3 : len;
+		int lastBit = padOne ? 4 : padTwo ? 2 : 0;
+		int curInt = 0, curBit = 0;
+		StringBuilder sb = new StringBuilder();
+		// when reading, make sure we always read 8x bits
+		while (curInt != lastChar || curBit != lastBit) {
+			char next = 0;
+			for (int i = 0; i < 8; i++) {
+				next <<= 1;
+				next |= ((indices[curInt] >> (5 - curBit)) & 1);
+				curBit++;
+				if (curBit == 6) {
+					curBit = 0;
+					curInt++;
+				}
+			}
+			sb.append(next);
+		}
+		return sb.toString();
 	}
 
 	// padding strategy:
@@ -177,6 +222,7 @@ public class Base64Codec {
 			for (int i = 0; i < 8; i++) {
 				nextChar <<= 1;
 				nextChar |= getBit(rawArr[curInt], curBit);
+				//				nextChar |= ((rawArr[curInt] >> (5 - curBit)) & 1);
 				curBit++;
 				if (curBit == 6) {
 					curBit = 0;
@@ -190,11 +236,11 @@ public class Base64Codec {
 
 	public static void main(String[] args) {
 		Base64Codec codec = new Base64Codec();
-		String encoded = codec.encode2("m");
+		String encoded = codec.encode2("mlg");
 		System.out.println(encoded);
-		String decoded = codec.decode(encoded);
+		String decoded = codec.decode2(encoded);
 		System.out.println(decoded);
-		//		doTest();
+		doTest();
 	}
 
 	static void doTest() {
@@ -206,8 +252,8 @@ public class Base64Codec {
 			int tenth = len / 10;
 			for (int i = 1; i < len; i++) {
 				original = generateRandomString(i);
-				encoded = codec.encode(original);
-				decoded = codec.decode(encoded);
+				encoded = codec.encode2(original);
+				decoded = codec.decode2(encoded);
 				assertEquals(encoded, decoded, original);
 				if (i % tenth == 0) {
 					System.out.println(i / tenth + "0% done... ");
