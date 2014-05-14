@@ -21,6 +21,85 @@ import java.util.ArrayList;
 //   "justification.  "
 //]
 public class Solution {
+	class StringTooLongException extends RuntimeException {
+		private static final long serialVersionUID = 1L;
+	}
+
+	public ArrayList<String> fullJustify2(String[] words, int L) {
+		int curLen = 0;
+		ArrayList<String> ret = new ArrayList<String>();
+		LinkedList<String> curStrs = new LinkedList<String>();
+		for (String str : words) {
+			if (curStrs.size() == 0) {
+				if (str.length() <= L) {
+					curStrs.add(str);
+					curLen += str.length();
+				} else {
+					throw new StringTooLongException();
+				}
+			} else {
+				if (curLen + 1 + str.length() <= L) {
+					curStrs.add(str);
+					curLen += 1 + str.length();
+				} else {
+					ret.add(buildNewLine(curStrs, L));
+					curStrs.clear();
+					curStrs.add(str);
+					curLen = str.length();
+				}
+			}
+		}
+		if (curStrs.size() > 0)
+			ret.add(buildLastLine(curStrs, L));
+		return ret;
+	}
+
+	String buildNewLine(LinkedList<String> curStrs, int L) {
+		if (curStrs.size() == 1) {
+			return buildLastLine(curStrs, L);
+		}
+		StringBuilder sb = new StringBuilder();
+		int len = calLen(curStrs);
+		int spaceCnt = (L - len) / (curStrs.size() - 1);
+		int additionalSpaceCnt = (L - len) % (curStrs.size() - 1);
+		boolean first = true;
+		for (String s : curStrs) {
+			if (!first) {
+				for (int i = 0; i < spaceCnt; i++)
+					sb.append(' ');
+				if (additionalSpaceCnt-- > 0)
+					sb.append(' ');
+			}
+			first = false;
+			sb.append(s);
+		}
+		return sb.toString();
+	}
+
+	int calLen(LinkedList<String> curStrs) {
+		int ret = 0;
+		for (String s : curStrs)
+			ret += s.length();
+		return ret;
+	}
+
+	String buildLastLine(LinkedList<String> curStrs, int L) {
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		for (String str : curStrs) {
+			if (!first) {
+				sb.append(' ');
+			}
+			first = false;
+			sb.append(str);
+		}
+		int padSpace = L - sb.length();
+		for (int i = 0; i < padSpace; i++) {
+			sb.append(' ');
+		}
+		return sb.toString();
+	}
+	
 	public ArrayList<String> fullJustify(String[] words, int L) {
 		int start = 0, end = 0;
 		int curLen = L;
