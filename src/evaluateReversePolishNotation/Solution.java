@@ -12,6 +12,35 @@ import java.util.Stack;
 //  ["3","-4","+"]
 
 public class Solution {
+	//	  ["2", "1", "+", "3", "*"] -> ((2 + 1) * 3) -> 9
+	//	  ["4", "13", "5", "/", "+"] -> (4 + (13 / 5)) -> 6
+	// return the string
+	public static String inRPN(String[] tokens) {
+		Stack<String> s = new Stack<String>();
+		for (String str : tokens) {
+			if (isOperator(str)) {
+				String can2 = s.pop();
+				String can1 = s.pop();
+				String newCan = can1 + str + can2;
+				if (isMinusPlus(str)) {
+					newCan = "(" + newCan + ")";
+				}
+				s.push(newCan);
+			} else {
+				s.push(str);
+			}
+		}
+		return s.pop();
+	}
+
+	static boolean isOperator(String s) {
+		return isMinusPlus(s) || s.equals("*") || s.equals("/");
+	}
+
+	static boolean isMinusPlus(String s) {
+		return s.equals("+") || s.equals("-");
+	}
+	
 	public int evalRPN2(String[] tokens) {
 		Stack<String> s = new Stack<String>();
 		for (String str : tokens) {
