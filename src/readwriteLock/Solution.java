@@ -6,6 +6,12 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * Readwrite lock can be used to enforce multiple read and exclusive write
+ * note when we do lock.lock() and lock.unlock(), make sure wrap this in a try{} finally{lock.unlock()} method
+ * @author Chen
+ *
+ */
 public class Solution {
 }
 
