@@ -8,6 +8,45 @@ import java.util.Set;
 // Given n points on a 2D plane, find the maximum number of points 
 // that lie on the same straight line.
 public class Solution {
+	
+	
+	public int maxPoints(Point[] points) {
+		Map<Line, Set<Integer>> map = new HashMap<Line, Set<Integer>>();
+		boolean allSameNodes = true;
+		int max = 0;
+		for (int i = 0; i < points.length; i++) {
+			for (int j = i + 1; j < points.length; j++) {
+				if (points[i].x == points[j].x && points[i].y == points[j].y) {
+					continue;
+				} else {
+					allSameNodes = false;
+					Line newLine = new Line(points[i], points[j]);
+					Set<Integer> newSet = null;
+					if (map.containsKey(newLine)) {
+						newSet = map.get(newLine);
+						newSet.add(i);
+						newSet.add(j);
+					} else {
+						newSet = new HashSet<Integer>();
+						newSet.add(i);
+						newSet.add(j);
+						map.put(newLine, newSet);
+					}
+					if (newSet.size() > max) {
+						max = newSet.size();
+					}
+				}
+			}
+		}
+		if (allSameNodes)
+			return points.length;
+		else
+			return max;
+
+	}
+
+	
+	
 	// the idea:
 	// just go over the n^2 nodes once,
 	// have a HashMaps storing line and point INDEX on the line
@@ -215,6 +254,70 @@ class Line2 {
 	@Override
 	public int hashCode() {
 		return (int) (tilt * 32 + x0 + y0);
+	}
+}
+
+class Line3 {
+	int a, b, c;
+	// the is the real correct representation of a line
+	// ax + by + c = 0
+	// note when we calculate a and b their sign should be opposite
+	public Line(Point p1, Point p2) {
+		a = p2.y - p1.y;
+		b = p1.x - p2.x;
+		if (a != 0 && b != 0) {
+			// note there's no 'divide by zero' issue here
+			// as long as there's one number that's not 0
+			int gcd = gcd(a, b);
+			a /= gcd;
+			b /= gcd;
+			// we need always make a positive
+			// so that we don't mess up a=-1, b=1 and a=1, b=-1
+			if (a < 0) {
+				a = -a;
+				b = -b;
+			}
+			c = 0 - a * p1.x - b * p1.y;
+		} else {
+			// (2, 5), (2, 6) -> x=2: a = 1, b = 0, c = 2
+			if (a == 0) {
+				c = p1.x;
+				a = 1;
+				b = 0;
+			}
+			// (3, 9), (6, 9) -> y=9: a = 0, b = 1, c = 9 
+			else {
+				c = p1.y;
+				a = 0;
+				b = 1;
+			}
+		}
+	}
+
+	private int gcd(int a, int b) {
+		int bigger = a > b ? a : b;
+		int smaller = bigger == a ? b : a;
+		while (smaller != 0) {
+			int tmp = smaller;
+			smaller = bigger % smaller;
+			bigger = tmp;
+		}
+		return bigger;
+	}
+
+	@Override
+	public int hashCode() {
+		return (a << 3) | (b << 2) | (c << 1);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (!(o instanceof Line))
+			return false;
+		Line l = (Line) o;
+		return l.a == a && l.b == b && l.c == c;
 	}
 }
 
