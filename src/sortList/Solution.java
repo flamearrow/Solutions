@@ -2,6 +2,29 @@ package sortList;
 
 //Sort a linked list in O(n log n) time using constant space complexity.
 public class Solution {
+	
+	public ListNode sortList(ListNode head) {
+		int len = getLen(head);
+
+		return doSort(head, len);
+	}
+
+	public ListNode doSort(ListNode head, int len) {
+		ListNode firstHalf = doSort(head, len / 2);
+		ListNode secondHalf = doSort(head, len - len / 2);
+		return merge(firstHalf, secondHalf);
+	}
+
+	int getLen(ListNode head) {
+		int ret = 0;
+		ListNode cur = head;
+		while (cur != null) {
+			ret++;
+			cur = cur.next;
+		}
+		return ret;
+	}
+	
 	public ListNode sortList(ListNode head) {
 		int len = 0;
 		ListNode cur = head;
