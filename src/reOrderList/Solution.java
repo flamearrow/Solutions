@@ -1,7 +1,7 @@
 package reOrderList;
 
-//Given a singly linked list L: L0¡úL1¡ú¡­¡úLn-1¡úLn,
-//reorder it to: L0¡úLn¡úL1¡úLn-1¡úL2¡úLn-2¡ú¡­
+//Given a singly linked list L: L0ï¿½ï¿½L1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ln-1ï¿½ï¿½Ln,
+//reorder it to: L0ï¿½ï¿½Lnï¿½ï¿½L1ï¿½ï¿½Ln-1ï¿½ï¿½L2ï¿½ï¿½Ln-2ï¿½ï¿½ï¿½ï¿½
 //
 //You must do this in-place without altering the nodes' values.
 //
@@ -9,6 +9,40 @@ package reOrderList;
 //Given {1,2,3,4}, reorder it to {1,4,2,3}.
 
 public class Solution {
+	// brute force: get second half, reverse it, link with first half
+	public void reorderList2(ListNode head) {
+		if (head == null)
+			return;
+		ListNode slow = head, fast = head;
+		while (fast.next != null && fast.next.next != null) {
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+		// now slow.next is the head of second half
+		ListNode secHalf = slow.next;
+		slow.next = null;
+		secHalf = reverse2(secHalf);
+		// now merge head and secHalf
+		ListNode prev = head;
+		while (secHalf != null) {
+			ListNode next = prev.next;
+			prev.next = secHalf;
+			secHalf = secHalf.next;
+			prev.next.next = next;
+			prev = next;
+		}
+	}
+
+	ListNode reverse2(ListNode secHalf) {
+		ListNode cur = secHalf, prev = null;
+		while (cur != null) {
+			ListNode next = cur.next;
+			cur.next = prev;
+			prev = cur;
+			cur = next;
+		}
+		return prev;
+	}
 	public void reorderList(ListNode head) {
 		if (head == null || head.next == null)
 			return;
