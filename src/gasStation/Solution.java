@@ -9,6 +9,41 @@ package gasStation;
 //Note:
 //The solution is guaranteed to be unique. 
 public class Solution {
+	
+	// need to find a starting point where the sum of path are never negative
+	//  do this in a sliding window
+	public int canCompleteCircuit2(int[] gas, int[] cost) {
+		int[] diff = new int[gas.length];
+		for (int i = 0; i < cost.length; i++) {
+			diff[i] = gas[i] - cost[i];
+		}
+
+		int start = 0, end = 0, sum = 0;
+		while (start < gas.length) {
+			if (sum < 0) {
+				sum -= diff[start];
+				start++;
+				if (start > end)
+					end = start;
+			} else {
+				sum += diff[end];
+				end = (end + 1) % gas.length;
+				// we find a circle!
+				if (end == start) {
+					// the entire cycle's sum >= 0, find one
+					if (sum >= 0) {
+						return start;
+					}
+					// the entire cycle's sum < 0, there's no path
+					else {
+						return -1;
+					}
+				}
+			}
+		}
+		return -1;
+	}
+	
 	// naive implementation: starting with each starting point to try if we can
 	// circle
 	// would be a O(n^2) algorithm
