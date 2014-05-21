@@ -2,6 +2,42 @@ package insertionSortList;
 
 //Sort a linked list using insertion sort.
 public class Solution {
+	// just break the list into two parts, sorted and unsorted
+	// initially sorted has one node, 
+	//  in each loop take one from unsorted and insert into sorted
+	public ListNode insertionSortList2(ListNode head) {
+		if (head == null)
+			return null;
+		ListNode ret = head;
+		ListNode cur = head.next;
+		// initially ret has only one node
+		ret.next = null;
+
+		// insert cur into ret;
+		while (cur != null) {
+			ListNode nextNode = cur.next;
+			ListNode ptr = ret, prev = null;
+			while (ptr != null && ptr.val < cur.val) {
+				prev = ptr;
+				ptr = ptr.next;
+			}
+			// now cur should be after prev and before ptr
+			if (prev != null) {
+				prev.next = cur;
+				cur.next = ptr;
+			}
+			// cur should be the new head of ret
+			else {
+				cur.next = ptr;
+				ret = cur;
+			}
+			// move to next node
+			cur = nextNode;
+		}
+
+		return ret;
+	}
+	
 	public ListNode insertionSortList(ListNode head) {
 		if (head == null)
 			return null;
