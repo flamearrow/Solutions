@@ -1,5 +1,6 @@
 package deepItr;
 
+
 //"Program an iterator for a List which may include nodes or List  
 // i.e.  * {0,{1,2}, 3 ,{4,{5, 6}}} Iterator returns 0 - 1 - 2 - 3 - 4 - 5 - 6"
 
