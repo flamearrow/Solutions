@@ -10,7 +10,7 @@ import java.util.Set;
 public class Solution {
 	
 	
-	public int maxPoints(Point[] points) {
+	public int maxPoints3(Point[] points) {
 		Map<Line, Set<Integer>> map = new HashMap<Line, Set<Integer>>();
 		boolean allSameNodes = true;
 		int max = 0;
@@ -262,7 +262,7 @@ class Line3 {
 	// the is the real correct representation of a line
 	// ax + by + c = 0
 	// note when we calculate a and b their sign should be opposite
-	public Line(Point p1, Point p2) {
+	public Line3(Point p1, Point p2) {
 		a = p2.y - p1.y;
 		b = p1.x - p2.x;
 		if (a != 0 && b != 0) {
