@@ -2,17 +2,59 @@ package sortList;
 
 //Sort a linked list in O(n log n) time using constant space complexity.
 public class Solution {
-	
-	public ListNode sortList(ListNode head) {
-		int len = getLen(head);
+	ListNode currentNode = null;
 
-		return doSort(head, len);
+	// link list can also be accessed in O(1) time in recursion by use a global pointer
+	public ListNode sortList3(ListNode head) {
+		if (head == null)
+			return null;
+		int len = getLen(head);
+		currentNode = head;
+		return doSort3(len);
 	}
 
-	public ListNode doSort(ListNode head, int len) {
-		ListNode firstHalf = doSort(head, len / 2);
-		ListNode secondHalf = doSort(head, len - len / 2);
-		return merge(firstHalf, secondHalf);
+	public ListNode doSort3(int len) {
+		// when len=1 we are actually touching the list
+		// first move ptr to next node, then break the old link
+		// we'll rebuild the correct link in merge method
+		if (len == 1) {
+			ListNode ret = currentNode;
+			currentNode = currentNode.next;
+			ret.next = null;
+			return ret;
+		}
+		ListNode firstHalf = doSort3(len / 2);
+		ListNode secondHalf = doSort3(len - len / 2);
+		return merge3(firstHalf, secondHalf);
+	}
+
+	// return two merged list
+	ListNode merge3(ListNode firstHalf, ListNode secondHalf) {
+		ListNode ret = null, cur = null;
+		ListNode firstPtr = firstHalf, secondPtr = secondHalf;
+		while (firstPtr != null && secondPtr != null) {
+			ListNode nextNode = firstPtr.val < secondPtr.val ? firstPtr
+					: secondPtr;
+			if (ret == null) {
+				ret = nextNode;
+			} else {
+				cur.next = nextNode;
+			}
+			cur = nextNode;
+			if (nextNode == firstPtr) {
+				firstPtr = firstPtr.next;
+			} else {
+				secondPtr = secondPtr.next;
+			}
+		}
+
+		ListNode remain = firstPtr == null ? secondPtr : firstPtr;
+		while (remain != null) {
+			cur.next = remain;
+			cur = cur.next;
+			remain = remain.next;
+		}
+		return ret;
 	}
 
 	int getLen(ListNode head) {
@@ -24,7 +66,7 @@ public class Solution {
 		}
 		return ret;
 	}
-	
+
 	public ListNode sortList(ListNode head) {
 		int len = 0;
 		ListNode cur = head;
@@ -234,11 +276,11 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		int[] input = { 4, 19, 14, 5, -3, 1, 8, 5, 11, 15 };
-		//		int[] input = { 6, 1, 3, 7, 9 };
+		//		int[] input = { 4, 19, 14, 5, -3, 1, 8, 5, 11, 15 };
+		int[] input = { 1 };
 		ListNode l1 = buildList(input);
 		Solution s = new Solution();
-		printList(s.sortList(l1));
+		printList(s.sortList3(l1));
 	}
 
 	static ListNode buildList(int[] input) {
@@ -255,7 +297,7 @@ public class Solution {
 	static void printList(ListNode head) {
 		ListNode cur = head;
 		while (cur != null) {
-			System.err.println(cur.val);
+			System.out.println(cur.val);
 			cur = cur.next;
 		}
 	}
