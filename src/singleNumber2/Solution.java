@@ -5,6 +5,44 @@ package singleNumber2;
 //Note:
 //Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory? 
 public class Solution {
+	
+	// just use three ints to buffer seen bits
+	// note to test if a bit is set, we need to check (mask & num) != 0, checking (mask&num)>0 will break!
+	public int singleNumber3(int[] A) {
+		int ones = A[0], twos = 0, threes = 0;
+		for (int i = 1; i < A.length; i++) {
+			for (int shift = 0; shift < 32; shift++) {
+				int curBit = 0;
+				// A[i] has curBit set
+				// note we need to check the result != 0, as opposed to > 0
+				if (((curBit = (1 << shift)) & A[i]) != 0) {
+					// if 'ones' has this bit set, push it to 'twos'
+					// if 'twos' has this bit set, push it to 'threes'
+					// if 'threes' has this bit set, push it to 'ones'
+					if ((ones & curBit) != 0) {
+						// clear from ones, add to twos
+						ones ^= curBit;
+						twos |= curBit;
+					} else if ((twos & curBit) != 0) {
+						// clear from twos, add to threes
+						twos ^= curBit;
+						threes |= curBit;
+					} else if ((threes & curBit) != 0) {
+						// clear from threes, add to ones
+						threes ^= curBit;
+						ones |= curBit;
+					}
+					// this bit doesn't appear in ones/twos/threes, it's a new bit, add it to ones
+					else {
+						ones |= curBit;
+					}
+				}
+
+			}
+		}
+		return ones;
+	}
+	
 	// have 3 bitmaps of 32 bit, representing at ith bit we have seen
 	// one/two/three '1's so far
 	// i.e
