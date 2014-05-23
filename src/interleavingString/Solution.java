@@ -10,7 +10,34 @@ package interleavingString;
 //When s3 = "aadbbcbcac", return true.
 //When s3 = "aadbbbaccc", return false.
 public class Solution {
+	public boolean isInterleave2(String s1, String s2, String s3) {
+		if (s1.length() + s2.length() != s3.length())
+			return false;
+		boolean[][] dp = new boolean[s1.length() + 1][s2.length() + 1];
+		dp[0][0] = true;
+		int cur = 1;
+		//note for the first column and row of dp, we need to match the longest prefix
+		while (cur <= s1.length() && s1.charAt(cur - 1) == s3.charAt(cur - 1)) {
+			dp[cur][0] = true;
+			cur++;
+		}
+		cur = 1;
+		while (cur <= s2.length() && s2.charAt(cur - 1) == s3.charAt(cur - 1)) {
+			dp[0][cur] = true;
+			cur++;
+		}
 
+		for (int i = 1; i <= s1.length(); i++) {
+			for (int j = 1; j <= s2.length(); j++) {
+				if (dp[i - 1][j] && s1.charAt(i - 1) == s3.charAt(i + j - 1)
+						|| dp[i][j - 1]
+						&& s2.charAt(j - 1) == s3.charAt(i + j - 1)) {
+					dp[i][j] = true;
+				}
+			}
+		}
+		return dp[s1.length()][s2.length()];
+	}
 	// dp
 	public boolean isInterleave(String s1, String s2, String s3) {
 		if (s1.length() + s2.length() != s3.length())
