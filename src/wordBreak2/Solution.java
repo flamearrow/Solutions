@@ -14,7 +14,87 @@ import java.util.Set;
 //A solution is ["cats and dog", "cat sand dog"].
 
 public class Solution {
+	
+	public ArrayList<String> wordBreak2(String s, Set<String> dict) {
+		Node[] nodes = new Node[s.length()];
+		for (int i = 0; i < s.length(); i++) {
+			if (dict.contains(s.substring(0, i + 1))) {
+				addNewNode(nodes, i, -1);
+			}
+			for (int j = 0; j < i; j++) {
+				if (nodes[j] != null
+						&& dict.contains(s.substring(j + 1, i + 1))) {
+					addNewNode(nodes, i, j);
+				}
+			}
+		}
+		return buildTree(s, nodes);
+	}
 
+	ArrayList<String> buildTree(String s, Node[] nodes) {
+		ArrayList<String> ret = new ArrayList<String>();
+		LinkedList<String> cur = new LinkedList<String>();
+		doProbe(ret, nodes, nodes.length - 1, cur, s);
+		return ret;
+	}
+
+	void doProbe(ArrayList<String> ret, Node[] nodes, int curIndex,
+			LinkedList<String> cur, String s) {
+		Node curNode = nodes[curIndex];
+		while (curNode != null) {
+			if (curNode.prevIndex == -1) {
+				cur.add(s.substring(0, curIndex + 1));
+				addToRst(cur, ret);
+				cur.removeLast();
+			} else {
+				cur.add(s.substring(curNode.prevIndex + 1, curIndex + 1));
+				doProbe(ret, nodes, curNode.prevIndex, cur, s);
+				cur.removeLast();
+			}
+			curNode = curNode.next;
+		}
+	}
+
+	void addToRst(LinkedList<String> cur, ArrayList<String> ret) {
+		if (cur.size() == 1) {
+			ret.add(cur.getFirst());
+			return;
+		}
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		for (String s : cur) {
+			if (first) {
+				sb.insert(0, s);
+				first = false;
+			} else {
+				sb.insert(0, ' ');
+				sb.insert(0, s);
+			}
+		}
+		ret.add(sb.toString());
+	}
+
+	private void addNewNode(Node[] nodes, int index, int prev) {
+		if (nodes[index] == null) {
+			nodes[index] = new Node(prev);
+		} else {
+			Node cur = nodes[index];
+			while (cur.next != null) {
+				cur = cur.next;
+			}
+			cur.next = new Node(prev);
+		}
+	}
+
+	static class Node {
+		int prevIndex = -1;
+		Node next = null;
+
+		public Node(int prevIndex) {
+			this.prevIndex = prevIndex;
+		}
+	}
+	
 	public ArrayList<String> wordBreakRec(String s, Set<String> dict) {
 		// the node in dp will represent going back n spot we can create A word
 		// null if not able to create
