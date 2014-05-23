@@ -19,7 +19,52 @@ package wordSearch;
 
 // AKA boggle
 public class Solution {
+	// Note 1): When the current board[x][y] doesn't match wrod.charAt(index)
+	// 				we need to treat it 2 ways: 
+	// 				*) if it's in the middle of the word, we return 
+	//  			*) if it's at the start of the word, we start with next char in the board
+	// Note 2): When jumping to the next block, we increase y first, x second
+	// 				need to terminate the loop when y and x both jump back to 0
+	public boolean exist2(char[][] board, String word) {
+		return doProbe(0, 0, board, new boolean[board.length][board[0].length],
+				word, 0);
+	}
 
+	private boolean doProbe(int x, int y, char[][] board, boolean[][] visited,
+			String word, int index) {
+		if (index == word.length())
+			return true;
+		int width = board[0].length;
+		int height = board.length;
+		if (y >= width || y < 0 || x >= height || x < 0 || visited[x][y])
+			return false;
+		visited[x][y] = true;
+		if (board[x][y] == word.charAt(index)
+				&& (doProbe(x + 1, y, board, visited, word, index + 1)
+						|| doProbe(x, y + 1, board, visited, word, index + 1)
+						|| doProbe(x - 1, y, board, visited, word, index + 1) || doProbe(
+							x, y - 1, board, visited, word, index + 1))) {
+			return true;
+		} else {
+			visited[x][y] = false;
+			// we only go to next block when we are at start
+			// if we break in the middle of word, just keep going back
+			if (index == 0) {
+				y = (y + 1) % width;
+				if (y == 0) {
+					x = (x + 1) % height;
+					// we're done the entire matrix
+					if (x == 0)
+						return false;
+				}
+				return doProbe(x, y, board, visited, word, 0);
+			} else {
+				return false;
+			}
+		}
+	}
+	
+	
 	// naive dfs search would take O(m*n*3^l) time
 	// to avoid using maps: when we probed a node, set board[x][y] to a place holder '#' to mark as visited
 	// then reset it when we failed in further probing
