@@ -21,7 +21,96 @@ import java.util.ArrayDeque;
 //X O X X
 
 public class Solution {
+	
+	// cheat
+	//  1) mark all 'O's to '1' if they are connected to an edge
+	//  2) flip all left over 'O's
+	//  3) change all '1' back to 'O'
+	public void solve2(char[][] board) {
+		int height = board.length;
+		if (height == 0)
+			return;
+		int width = board[0].length;
+		for (int i = 0; i < width; i++) {
+			if (board[0][i] == 'O') {
+				markOnesItr(board, 0, i);
+			}
+			if (board[height - 1][i] == 'O') {
+				markOnesItr(board, height - 1, i);
+			}
+		}
 
+		for (int i = 0; i < height; i++) {
+			if (board[i][0] == 'O') {
+				markOnesItr(board, i, 0);
+			}
+			if (board[i][width - 1] == 'O') {
+				markOnesItr(board, i, width - 1);
+			}
+		}
+
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				if (board[i][j] == '1') {
+					board[i][j] = 'O';
+				} else if (board[i][j] == 'O') {
+					board[i][j] = 'X';
+				}
+
+			}
+		}
+	}
+
+	// do it iteratively to avoid stack overflow
+	// BFS
+	void markOnesItr(char[][] board, int x, int y) {
+		Queue<Node> q = new LinkedList<Node>();
+		int width = board[0].length;
+		int height = board.length;
+		q.offer(new Node(x, y));
+		while (!q.isEmpty()) {
+			Node next = q.poll();
+			board[next.x][next.y] = '1';
+			if (next.x + 1 >= 0 && next.x + 1 < height
+					&& board[next.x + 1][next.y] == 'O') {
+				q.offer(new Node(next.x + 1, next.y));
+			}
+			if (next.x - 1 >= 0 && next.x - 1 < height
+					&& board[next.x - 1][next.y] == 'O') {
+				q.offer(new Node(next.x - 1, next.y));
+			}
+			if (next.y + 1 >= 0 && next.y + 1 < width
+					&& board[next.x][next.y + 1] == 'O') {
+				q.offer(new Node(next.x, next.y + 1));
+			}
+			if (next.y - 1 >= 0 && next.y - 1 < width
+					&& board[next.x][next.y - 1] == 'O') {
+				q.offer(new Node(next.x, next.y - 1));
+			}
+		}
+	}
+
+	static class Node {
+		int x, y;
+
+		public Node(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+
+	void markOnes(char[][] board, int x, int y) {
+		if (x < 0 || x >= board.length || y < 0 || y >= board[0].length
+				|| board[x][y] != 'O') {
+			return;
+		}
+		board[x][y] = '1';
+		markOnes(board, x - 1, y);
+		markOnes(board, x + 1, y);
+		markOnes(board, x, y - 1);
+		markOnes(board, x, y + 1);
+	}
+	
 	// the tricky solution:
 	// first start with any of the four edges, replace all connected O-s with
 	// '+'s
