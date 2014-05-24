@@ -1,6 +1,6 @@
 package permutationSequence;
 
-//The set [1,2,3,¡­,n] contains a total of n! unique permutations.
+//The set [1,2,3,ï¿½ï¿½,n] contains a total of n! unique permutations.
 //
 //By listing and labeling all of the permutations in order,
 //We get the following sequence (ie, for n = 3):
@@ -15,6 +15,18 @@ package permutationSequence;
 //
 //Note: Given n will be between 1 and 9 inclusive.
 public class Solution {
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	boolean[] map = new boolean[9];
 
 	public String getPermutation(int n, int k) {
