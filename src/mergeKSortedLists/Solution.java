@@ -6,6 +6,37 @@ import java.util.PriorityQueue;
 
 //Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.
 public class Solution {
+	public ListNode mergeKLists3(ArrayList<ListNode> lists) {
+        if(lists.size() == 0)
+            return null;
+        ListNode ret = null, prev = null;
+        PriorityQueue<ListNode> heap = new PriorityQueue<ListNode>(lists.size(), new Comparator<ListNode>(){
+            public int compare(ListNode l1, ListNode l2) {
+                return l1.val - l2.val;
+            }
+        });
+        for(ListNode node : lists) {
+        	// offer() will throw NPE for inserting null
+        	// do the precheck here
+            if(node != null)
+                heap.offer(node);
+        }
+        while(!heap.isEmpty()) {
+            ListNode cur = heap.poll();
+            if(prev == null) {
+                ret = cur;
+                prev = cur;
+            } else {
+                prev.next = cur;
+                prev = cur;
+            }
+            if(cur.next != null) {
+                cur = cur.next;
+                heap.offer(cur);
+            }
+        }
+        return ret; 
+    }
 
 	// use a  priority queue of size k
 	public ListNode mergeKLists2(ArrayList<ListNode> lists) {
