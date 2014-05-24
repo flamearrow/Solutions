@@ -4,6 +4,24 @@ package removeElement;
 //
 //The order of elements can be changed. It doesn't matter what you leave beyond the new length. 
 public class Solution {
+
+	public int removeElement2(int[] A, int elem) {
+		if (A.length == 0)
+			return 0;
+		int start = 0, end = A.length - 1;
+		while (start <= end) {
+			if (A[start] == elem) {
+				int tmp = A[end];
+				A[end] = A[start];
+				A[start] = tmp;
+				end--;
+			} else {
+				start++;
+			}
+		}
+		return start;
+	}
+
 	public int removeElement(int[] A, int elem) {
 		int start = 0, end = A.length - 1;
 		while (start < end) {
