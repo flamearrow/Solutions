@@ -11,6 +11,29 @@ import java.util.Map;
 //
 //Note: All inputs will be in lower-case.
 public class Solution {
+	public ArrayList<String> anagrams2(String[] strs) {
+		Map<String, List<String>> backMap = new HashMap<String, List<String>>();
+		ArrayList<String> ret = new ArrayList<String>();
+		for (String s : strs) {
+			String key = sortStr(s);
+			if (!backMap.containsKey(key)) {
+				backMap.put(key, new LinkedList<String>());
+			}
+			backMap.get(key).add(s);
+		}
+		for (Map.Entry<String, List<String>> entry : backMap.entrySet()) {
+			if (entry.getValue().size() > 1)
+				ret.addAll(entry.getValue());
+		}
+		return ret;
+	}
+
+	String sortStr(String s) {
+		char[] cc = s.toCharArray();
+		Arrays.sort(cc);
+		return new String(cc);
+	}
+
 	// the trick is we don't really need O(n^2) to iterate
 	// just do a O(n) iteration, use a map<String, List<String>> to store
 	// signature and the actual string
@@ -63,8 +86,8 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		String[] strs = { "", "" };
-		ArrayList<String> ret = new Solution().anagrams(strs);
-		System.err.println(ret);
+		String[] strs = { "abc", "bcd", "bca", "dbc" };
+		ArrayList<String> ret = new Solution().anagrams2(strs);
+		System.out.println(ret);
 	}
 }
