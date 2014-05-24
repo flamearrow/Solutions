@@ -12,6 +12,25 @@ package removeNthNodeFromEndOfList;
 //Given n will always be valid.
 //Try to do this in one pass. 
 public class Solution {
+	public ListNode removeNthFromEnd2(ListNode head, int n) {
+		ListNode prob = head;
+		for (int i = 0; i < n; i++) {
+			prob = prob.next;
+		}
+		ListNode ret = head, prev = null;
+		while (prob != null) {
+			prob = prob.next;
+			prev = ret;
+			ret = ret.next;
+		}
+		if (prev == null)
+			return ret.next;
+		else {
+			prev.next = prev.next.next;
+		}
+		return head;
+	}
+
 	public ListNode removeNthFromEnd(ListNode head, int n) {
 		ListNode pre = head, cur = head;
 		while (n > 0) {
