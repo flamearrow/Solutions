@@ -9,6 +9,43 @@ import java.util.Set;
 //
 //Return a deep copy of the list. 
 public class Solution {
+	
+	public RandomListNode copyRandomList3(RandomListNode head) {
+		RandomListNode ret = null, cur = head;
+		while (cur != null) {
+			RandomListNode nextNode = new RandomListNode(cur.label);
+			RandomListNode oriNext = cur.next;
+			cur.next = nextNode;
+			nextNode.next = oriNext;
+			if (ret == null) {
+				ret = nextNode;
+			}
+			cur = oriNext;
+		}
+		cur = head;
+
+		// copy over the random pointers first
+		while (cur != null) {
+			if (cur.random != null) {
+				cur.next.random = cur.random.next;
+			}
+			cur = cur.next.next;
+		}
+
+		cur = head;
+		RandomListNode prev = null;
+		while (cur != null) {
+			RandomListNode retNext = cur.next;
+			cur.next = retNext.next;
+			if (prev != null) {
+				prev.next = retNext;
+			}
+			prev = retNext;
+			cur = cur.next;
+		}
+		return ret;
+	}
+	
 	// a fancier idea, no need to ues a map
 	// suppose the original list is a->b->c->d with a.rand = d
 	//  in first round, we copy the list using the next field
