@@ -2,6 +2,27 @@ package divideTwoIntegers;
 
 //Divide two integers without using multiplication, division and mod operator. 
 public class Solution {
+	public int divide3(int dividend, int divisor) {
+		// Math.abs(int) will return -2147483648 for -2147483648
+		long left = Math.abs((long) dividend);
+		int rst = 0;
+		long tmpRst = 1;
+		long curDivisor = divisor;
+		long posDivisor = Math.abs((long) divisor);
+		while (left >= posDivisor) {
+			curDivisor = posDivisor;
+			tmpRst = 1;
+			while (left >= curDivisor) {
+				rst += tmpRst;
+				left -= curDivisor;
+				curDivisor <<= 1;
+				tmpRst <<= 1;
+			}
+		}
+		boolean positive = dividend > 0 && divisor > 0 || dividend < 0
+				&& divisor < 0;
+		return positive ? rst : 0 - rst;
+	}
 	public int divide2(int dividend, int divisor) {
 		int ret = 0;
 		while (dividend >= divisor) {
