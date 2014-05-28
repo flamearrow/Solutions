@@ -14,21 +14,21 @@ public class Solution {
 		root.left.left.left.setRight(10).setLeft(11).setLeft(12);
 		root.setRight(13).setRight(14).setLeft(15);
 		root.right.right.setRight(16);
-		//		Iterator<IterableTreeNode> itr = root.iterator();
-		//		while (itr.hasNext())
-		//			System.out.print(itr.next().val + " ");
+		Iterator<IterableTreeNode> itr = root.iterator();
+		while (itr.hasNext())
+			System.out.print(itr.next().val + " ");
 
-		IterableTreeNode bst = new IterableTreeNode(5);
-		bst.setLeft(3).setLeft(1);
-		bst.left.setRight(4);
-		bst.setRight(7).setLeft(6);
-		bst.right.setRight(8);
-		bst.setLeft(4).setLeft(3).setLeft(2).setLeft(1);
-		//		bst.setRight(6).setRight(7).setRight(8).setRight(9).setRight(10);
-		Iterator<IterableTreeNode> bstItr = bst.bstIterator();
-		while (bstItr.hasNext()) {
-			System.out.print(bstItr.next().val + " ");
-		}
+		//		IterableTreeNode bst = new IterableTreeNode(5);
+		//		bst.setLeft(3).setLeft(1);
+		//		bst.left.setRight(4);
+		//		bst.setRight(7).setLeft(6);
+		//		bst.right.setRight(8);
+		//		bst.setLeft(4).setLeft(3).setLeft(2).setLeft(1);
+		//		//		bst.setRight(6).setRight(7).setRight(8).setRight(9).setRight(10);
+		//		Iterator<IterableTreeNode> bstItr = bst.bstIterator();
+		//		while (bstItr.hasNext()) {
+		//			System.out.print(bstItr.next().val + " ");
+		//		}
 	}
 }
 
@@ -60,7 +60,7 @@ class IterableTreeNode implements Iterable<IterableTreeNode> {
 
 	@Override
 	public Iterator<IterableTreeNode> iterator() {
-		return new StackTreeIterator(this);
+		return new StackTreeIterator2(this);
 	}
 
 	public Iterator<IterableTreeNode> bstIterator() {
@@ -141,21 +141,14 @@ class BSTIterator implements Iterator<IterableTreeNode> {
 
 }
 
-// This iterator works for any bTree
-// The idea is to use a stack to keep track of which nodes need to be visited next.
-// the next node is either _next or the top of stack. _next is kept track of when we go up
-// and whenever we go right, we need to push the entire left branch of right subtree,
-//  there're two scenarios we go right: 
-//   1) cur.right!=null 
-//   2) cur is bottom most, we go up and up.right!=null - need to record _next here
-class StackTreeIterator implements Iterator<IterableTreeNode> {
+// always return the head of the stack.
+// when the next value's right child!=null, 
+// push the entire left branch of that right child
+class StackTreeIterator2 implements Iterator<IterableTreeNode> {
 	Stack<IterableTreeNode> _s;
-	IterableTreeNode _next = null;
 
-	StackTreeIterator(IterableTreeNode root) {
+	public StackTreeIterator2(IterableTreeNode root) {
 		_s = new Stack<IterableTreeNode>();
-		_next = null;
-		// initialize
 		IterableTreeNode cur = root;
 		while (cur != null) {
 			_s.push(cur);
@@ -165,47 +158,27 @@ class StackTreeIterator implements Iterator<IterableTreeNode> {
 
 	@Override
 	public boolean hasNext() {
-		return _next != null || !_s.isEmpty();
+		return !_s.isEmpty();
 	}
 
 	@Override
 	public IterableTreeNode next() {
-		if (_next != null) {
-			IterableTreeNode ret = _next;
-			_next = null;
-			return ret;
-		} else {
-			if (_s.isEmpty())
-				return null;
-			IterableTreeNode ret = _s.pop();
-			// note ret.left is already visited
-			if (ret.right != null) {
-				IterableTreeNode cur = ret.right;
-				while (cur != null) {
-					_s.push(cur);
-					cur = cur.left;
-				}
-			}
-			// go up
-			else {
-				if (!_s.isEmpty() && _s.peek().left == ret) {
-					_next = _s.pop();
-					IterableTreeNode cur = _next.right;
-					while (cur != null) {
-						_s.push(cur);
-						cur = cur.left;
-					}
-				}
-			}
-			return ret;
+		if (_s.isEmpty())
+			throw new MLGB();
+		IterableTreeNode next = _s.pop();
+		IterableTreeNode cur = next.right;
+		while (cur != null) {
+			_s.push(cur);
+			cur = cur.left;
 		}
+		return next;
 	}
 
 	@Override
 	public void remove() {
 		throw new MLGB();
-	}
 
+	}
 }
 
 class MLGB extends RuntimeException {
