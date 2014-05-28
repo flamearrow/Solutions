@@ -3,6 +3,7 @@ package threeSum;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 //Given an array S of n integers, are there elements a, b, c in S such that a + b + c = 0? 
 // Find all unique triplets in the array which gives the sum of zero.
@@ -19,7 +20,7 @@ import java.util.LinkedList;
 //    (-1, -1, 2)
 
 public class Solution {
-	
+
 	public List<List<Integer>> threeSum2(int[] num) {
 		Arrays.sort(num);
 		List<List<Integer>> ret = new LinkedList<List<Integer>>();
@@ -54,7 +55,7 @@ public class Solution {
 		}
 		return ret;
 	}
-	
+
 	// a smarter solution: first sort the array, then mimic two sum
 	public ArrayList<ArrayList<Integer>> threeSum(int[] num) {
 		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
