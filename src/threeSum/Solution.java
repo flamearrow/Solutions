@@ -19,6 +19,42 @@ import java.util.LinkedList;
 //    (-1, -1, 2)
 
 public class Solution {
+	
+	public List<List<Integer>> threeSum2(int[] num) {
+		Arrays.sort(num);
+		List<List<Integer>> ret = new LinkedList<List<Integer>>();
+		int i = 0;
+		while (i < num.length - 2) {
+			int target = 0 - num[i];
+			int start = i + 1, end = num.length - 1;
+			while (start < end) {
+				if (num[start] + num[end] > target) {
+					end--;
+				} else if (num[start] + num[end] < target) {
+					start++;
+				} else {
+					List<Integer> newList = new LinkedList<Integer>();
+					newList.add(num[i]);
+					newList.add(num[start]);
+					newList.add(num[end]);
+					ret.add(newList);
+					int left = num[start];
+					int right = num[end];
+					while (start < num.length && num[start] == left) {
+						start++;
+					}
+					while (end >= 0 && num[end] == right) {
+						end--;
+					}
+				}
+			}
+			int cur = num[i];
+			while (i < num.length - 2 && num[i] == cur)
+				i++;
+		}
+		return ret;
+	}
+	
 	// a smarter solution: first sort the array, then mimic two sum
 	public ArrayList<ArrayList<Integer>> threeSum(int[] num) {
 		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
