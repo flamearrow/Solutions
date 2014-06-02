@@ -1,4 +1,4 @@
-package wordLadderII;
+package wordLadder2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +35,7 @@ import java.util.Set;
 //    All words contain only lowercase alphabetic characters.
 
 public class Solution2 {
-  //doesn't pass oj because TLE, but shows the idea
+	//doesn't pass oj because TLE, but shows the idea
 	public static void main(String[] args) {
 		String start = "hit", end = "cog";
 		Set<String> dict = new HashSet<String>();
@@ -45,7 +45,7 @@ public class Solution2 {
 		dict.add("lot");
 		dict.add("log");
 
-		System.out.println(new Solution().findLaddersMap(start, end, dict));
+		System.out.println(new Solution2().findLaddersMap(start, end, dict));
 	}
 
 	public List<List<String>> findLaddersMap(String start, String end,
