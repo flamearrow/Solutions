@@ -38,7 +38,11 @@ public class Solution {
 
 
 	public static void main(String[] args) {
-		for (int i = 0; i < 728; i++)
-			System.out.println(i + " : " + convert(i));
+		for (int i = 0; i < 100; i++) {
+			System.out.print(convert(i) + " ");
+			System.out.println(convert2(i));
+
+		}
+
 	}
 }
