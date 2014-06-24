@@ -22,6 +22,21 @@ public class Solution {
 		return sb.toString();
 	}
 
+
+	static String convert2(int i) {
+		if (i < 1)
+			return "a";
+		i += 1;
+		StringBuilder sb = new StringBuilder();
+		while (i > 26) {
+			sb.insert(0, table.charAt(i % 26));
+			i /= 26;
+		}
+		sb.insert(0, table.charAt(i % 26));
+		return sb.toString();
+	}
+
+
 	public static void main(String[] args) {
 		for (int i = 0; i < 728; i++)
 			System.out.println(i + " : " + convert(i));
