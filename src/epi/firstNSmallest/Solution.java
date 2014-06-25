@@ -42,7 +42,7 @@ public class Solution {
 
 	static void doQuickSort(int[] array, int left, int right) {
 		// note after rearrange(), we can make sure array[left to index-1] are all smaller than pivot
-		// but it's not guranteed array[index] == pivot
+		// but it's not guaranteed array[index] == pivot
 		// e.g for {5,7,1,6,3}
 		// after first round it becomes {3,1,7,6,5} and returns 2
 		//  it means array[0-1] are smaller than the pivot(5) it picked in the rearrange call
