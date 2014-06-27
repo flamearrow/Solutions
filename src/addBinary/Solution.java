@@ -7,6 +7,47 @@ package addBinary;
 //b = "1"
 //Return "100". 
 public class Solution {
+	public String addBinary3(String a, String b) {
+		int aPtr = a.length() - 1;
+		int bPtr = b.length() - 1;
+		int carry = 0;
+		StringBuilder sb = new StringBuilder();
+		while (aPtr >= 0 && bPtr >= 0) {
+			int rst = doCal(a.charAt(aPtr), b.charAt(bPtr), carry);
+			if (rst > 1) {
+				rst -= 2;
+				carry = 1;
+			} else {
+				carry = 0;
+			}
+			sb.insert(0, rst);
+			aPtr--;
+			bPtr--;
+		}
+
+		String leftStr = aPtr >= 0 ? a : b;
+		int leftPtr = aPtr >= 0 ? aPtr : bPtr;
+		while (leftPtr >= 0) {
+			int rst = doCal(leftStr.charAt(leftPtr), '0', carry);
+			if (rst > 1) {
+				rst -= 2;
+				carry = 1;
+			} else {
+				carry = 0;
+			}
+			sb.insert(0, rst);
+			leftPtr--;
+		}
+
+		if (carry > 0)
+			sb.insert(0, carry);
+		return sb.toString();
+	}
+
+	int doCal(char c1, char c2, int carry) {
+		return c1 - '0' + c2 - '0' + carry;
+	}
+
 	// String index always starts with 0
 	// just do the stupid way to calculate carry and result of three int: add them, then compare them with 1 
 	// when returning a char from int, need to do (char)('0'+intYouCal);
@@ -22,7 +63,7 @@ public class Solution {
 			sb.insert(0, rst);
 			aIndex--;
 			bIndex--;
-			
+
 		}
 		if (aIndex >= 0 || bIndex >= 0) {
 			int leftIndex = aIndex >= 0 ? aIndex : bIndex;
@@ -101,6 +142,6 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Solution().addBinary2("0", "0"));
+		System.out.println(new Solution().addBinary3("11", "1"));
 	}
 }
