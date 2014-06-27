@@ -1,6 +1,7 @@
 package pascalTriangle2;
 
 import java.util.ArrayList;
+import java.util.List;
 
 //Given an index k, return the kth row of the Pascal's triangle.
 //
@@ -10,6 +11,20 @@ import java.util.ArrayList;
 //Note:
 //Could you optimize your algorithm to use only O(k) extra space?
 public class Solution {
+
+	public List<Integer> getRow2(int rowIndex) {
+		List<Integer> ret = new ArrayList<Integer>();
+		ret.add(1);
+		for (int i = 0; i < rowIndex; i++) {
+			// add 1 to tail
+			ret.add(ret.size(), 1);
+			for (int j = ret.size() - 2; j > 0; j--) {
+				ret.set(j, ret.get(j) + ret.get(j - 1));
+			}
+		}
+		return ret;
+	}
+
 	// just add from tail - don't need any buffer
 	public ArrayList<Integer> getRowNew(int rowIndex) {
 		ArrayList<Integer> ret = new ArrayList<Integer>();
@@ -43,7 +58,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		for (int i : new Solution().getRowNew(4)) {
+		for (int i : new Solution().getRow2(0)) {
 			System.out.print(i + " ");
 		}
 	}
