@@ -1,8 +1,14 @@
 package addToAPrime;
 
+import java.util.Arrays;
+
 // Given a set of numbers [1-N], find the number of subsets such that sum of subset is a prime
 public class Solution {
-	
+
+	// Using current to predict future values:
+	// dp[i][j]:  
+	// 	if not use j, we have dp[i-1][j] ways
+	//  if use j, we contribute to dp[i][j+i] A ways where A = dp[i][j-1]
 	static int getNumSubsets2(int n) {
 		int max = (1 + n) * n / 2;
 		boolean[] primeMask = createPrimeMask(max);
@@ -27,18 +33,41 @@ public class Solution {
 
 		// now dp[n][1-max] would contain the number of subsets that first n numbers add to [1-max]
 		int ret = 0;
-		for (int k = 1; k <= max; k++) {
+		for (int k = 2; k <= max; k++) {
 			if (primeMask[k]) {
 				ret += dp[n][k];
 			}
 		}
 		return ret;
 	}
-	
-	
+
+	static boolean[] createPrimeMask(int max) {
+		boolean[] ret = new boolean[max + 1];
+		Arrays.fill(ret, true);
+		int cur = 2;
+		while (cur < ret.length) {
+			for (int i = cur * cur; i < ret.length; i += cur) {
+				ret[i] = false;
+			}
+			cur++;
+			while (cur < ret.length && !ret[cur]) {
+				cur++;
+			}
+		}
+		return ret;
+	}
+
 	// dp[i][j] means the number of ways to add to number j in first i numbers
 	// after filling out dp table, we need to go through dp[n][0-maxSum] for all dp[n][mlgb] where mlgb is prime 
 	// we add the number of ways
+
+	// Using previous to calculate current:
+	// dp[i][j]:
+	//	if not use i, we have dp[i-1][j] ways ... 1
+	//  if use i, we have dp[i-1][j-i] ways   ... 2
+	// add 1 and 2
+	// need to check j>=i, if not then just consider 1
+	// this is similar to knapsack problem
 	static int getNumSubsets(int n) {
 		int maxSum = (n + 1) * n / 2;
 		// cross off all non prime from 0 to maxSum+1
@@ -95,7 +124,8 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(getNumSubsets(30));
+		System.out.println(getNumSubsets(3));
+		System.out.println(getNumSubsets2(3));
 	}
 
 }
