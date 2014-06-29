@@ -1,5 +1,6 @@
 package decodeWays;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,32 @@ import java.util.Map;
 //
 //The number of ways decoding "12" is 2.
 public class Solution {
+
+	public int numDecodings3(String s) {
+		if (s.length() == 0)
+			return 0;
+		int[] buff = new int[s.length()];
+		Arrays.fill(buff, -1);
+		return probe(s, s.length() - 1, buff);
+	}
+
+	int probe(String s, int index, int[] buff) {
+		if (index < 0)
+			return 1;
+		if (index == 0)
+			return s.charAt(index) == '0' ? 0 : 1;
+		if (buff[index] >= 0)
+			return buff[index];
+		int ret = 0;
+		if (s.charAt(index) != '0')
+			ret += probe(s, index - 1, buff);
+		if (Integer.parseInt(s.substring(index - 1, index + 1)) <= 26
+				&& s.charAt(index - 1) != '0')
+			ret += probe(s, index - 2, buff);
+		buff[index] = ret;
+		return ret;
+	}
+
 	// there are 26 characters
 	Map<String, Integer> back = new HashMap<String, Integer>();
 
@@ -90,7 +117,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Solution().numDecodings2("10"));
+		System.out.println(new Solution().numDecodings3("01"));
 	}
 
 }
