@@ -9,6 +9,20 @@ package validateBST;
 //   Both the left and right subtrees must also be binary search trees.
 
 public class Solution {
+	public boolean isValidBST2(TreeNode root) {
+		return root == null
+				|| probe(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+	}
+
+	boolean probe(TreeNode root, int lowerBound, int upperBound) {
+		if (root == null)
+			return true;
+		if (root.val < lowerBound || root.val > upperBound)
+			return false;
+		return probe(root.left, lowerBound, root.val - 1)
+				&& probe(root.right, root.val + 1, upperBound);
+	}
+
 	public boolean isValidBST(TreeNode root) {
 		if (root == null)
 			return true;
@@ -38,13 +52,13 @@ public class Solution {
 
 	public static void main(String[] args) {
 		TreeNode root = new TreeNode(4);
-		// root.left = new TreeNode(2);
-		// root.right = new TreeNode(6);
+		//		root.left = new TreeNode(6);
+		//		root.right = new TreeNode(6);
 		// root.left.left = new TreeNode(1);
 		// root.left.right = new TreeNode(3);
 		// root.right.left = new TreeNode(5);
 		// root.right.right = new TreeNode(7);
-		boolean s = new Solution().isValidBST(root);
+		boolean s = new Solution().isValidBST2(root);
 		System.out.println(s);
 	}
 
