@@ -8,6 +8,38 @@ package partitionList;
 //Given 1->4->3->2->5->2 and x = 3,
 //return 1->2->2->4->3->5
 public class Solution {
+	public ListNode partition2(ListNode head, int x) {
+		if (head == null)
+			return null;
+		ListNode tail = head;
+		int size = 0, cnt = 0;
+		while (tail.next != null) {
+			size++;
+			tail = tail.next;
+		}
+		ListNode prev = null, cur = head, last = tail;
+		ListNode ret = null;
+		while (cnt <= size) {
+			cnt++;
+			// move cur to last
+			if (cur.val >= x) {
+				ListNode next = cur.next;
+				last.next = cur;
+				last = cur;
+				if (prev != null)
+					prev.next = next == null ? tail : next;
+				cur.next = null;
+				cur = next;
+			} else {
+				if (prev == null)
+					ret = cur;
+				prev = cur;
+				cur = cur.next;
+			}
+		}
+		return ret == null ? head : ret;
+	}
+
 	public ListNode partition(ListNode head, int x) {
 		ListNode leftHead = null, leftTail = null, rightHead = null, rightTail = null;
 		ListNode cur = head;
@@ -42,10 +74,15 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		ListNode head = new ListNode(2);
-		head.next = new ListNode(1);
-		ListNode newHead = new Solution().partition(head, 2);
-		System.out.println(newHead);
+		ListNode head = new ListNode(1);
+		head.setNext(2);
+		//		head.setNext(4).setNext(3).setNext(2).setNext(5).setNext(2);
+
+		ListNode newHead = new Solution().partition2(head, 2);
+		while (newHead != null) {
+			System.out.print(newHead.val + " ");
+			newHead = newHead.next;
+		}
 	}
 }
 
@@ -56,5 +93,10 @@ class ListNode {
 	ListNode(int x) {
 		val = x;
 		next = null;
+	}
+
+	ListNode setNext(int i) {
+		next = new ListNode(i);
+		return next;
 	}
 }
