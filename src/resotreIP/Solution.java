@@ -2,6 +2,7 @@ package resotreIP;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 //Given a string containing only digits, restore it by returning all possible valid IP address combinations.
 //
@@ -10,6 +11,46 @@ import java.util.LinkedList;
 //
 //return ["255.255.11.135", "255.255.111.35"]. (Order does not matter)
 public class Solution {
+	public List<String> restoreIpAddresses3(String s) {
+		List<String> ret = new LinkedList<String>();
+		LinkedList<String> cur = new LinkedList<String>();
+		doProbe(s, 0, cur, ret);
+		return ret;
+	}
+
+	void doProbe(String s, int curIndex, LinkedList<String> curStr,
+			List<String> ret) {
+		if (curStr.size() > 4)
+			return;
+		if (curIndex == s.length() && curStr.size() == 4) {
+			StringBuilder sb = new StringBuilder();
+			boolean first = true;
+			for (String ss : curStr) {
+				if (first) {
+					sb.append(ss);
+					first = false;
+				} else {
+					sb.append('.');
+					sb.append(ss);
+				}
+			}
+			ret.add(sb.toString());
+			return;
+		}
+		for (int i = 1; i < 4 && curIndex + i <= s.length(); i++) {
+			if (valid(s.substring(curIndex, curIndex + i))) {
+				curStr.add(s.substring(curIndex, curIndex + i));
+				doProbe(s, curIndex + i, curStr, ret);
+				curStr.removeLast();
+			}
+		}
+	}
+
+	boolean valid(String s) {
+		int i = Integer.parseInt(s);
+		return (s.charAt(0) != '0' && s.length() > 1 || s.length() == 1)
+				&& i >= 0 && i <= 255;
+	}
 
 	public ArrayList<String> restoreIpAddresses2(String s) {
 		ArrayList<String> ret = new ArrayList<String>();
@@ -91,7 +132,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		ArrayList<String> ret = new Solution().restoreIpAddresses2("1231111");
+		List<String> ret = new Solution().restoreIpAddresses3("1231111");
 		for (String s : ret)
 			System.out.println(s);
 	}
