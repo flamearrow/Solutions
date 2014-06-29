@@ -1,19 +1,49 @@
 package uniqueBinarySearchTrees2;
 
 import java.util.ArrayList;
-//Given n, generate all structurally unique BST's (binary search trees) that store values 1...n.
-//
-//For example,
-//Given n = 3, your program should return all 5 unique BST's shown below.
-//
-//   1         3     3      2      1
-//    \       /     /      / \      \
-//     3     2     1      1   3      2
-//    /     /       \                 \
-//   2     1         2                 3
+import java.util.LinkedList;
+import java.util.List;
 
 public class Solution {
-	// use recursion: use each one as root, recuse its left/right part
+	public List<TreeNode> generateTrees2(int n) {
+		return doProbe(1, n);
+	}
+
+	List<TreeNode> doProbe(int start, int end) {
+		List<TreeNode> ret = new LinkedList<TreeNode>();
+		if (start > end) {
+			ret.add(null);
+			return ret;
+		}
+		if (start == end) {
+			ret.add(new TreeNode(start));
+			return ret;
+		}
+		for (int root = start; root <= end; root++) {
+			List<TreeNode> left = doProbe(start, root - 1);
+			List<TreeNode> right = doProbe(root + 1, end);
+			for (TreeNode leftChild : left) {
+				for (TreeNode rightChild : right) {
+					TreeNode rootNode = new TreeNode(root);
+					rootNode.left = clone(leftChild);
+					rootNode.right = clone(rightChild);
+					ret.add(rootNode);
+				}
+			}
+		}
+		return ret;
+	}
+
+	TreeNode clone(TreeNode root) {
+		if (root == null)
+			return null;
+		TreeNode ret = new TreeNode(root.val);
+		ret.left = clone(root.left);
+		ret.right = clone(root.right);
+		return ret;
+	}
+
+	// use recursion: use each one as root, recurse its left/right part
 	public ArrayList<TreeNode> generateTreesNew(int n) {
 		return doGenerateNew(1, n);
 	}
@@ -35,6 +65,7 @@ public class Solution {
 			for (TreeNode leftSubTree : leftSubs) {
 				for (TreeNode rightSubTree : rightSubs) {
 					TreeNode rootNode = new TreeNode(root);
+					// no clone?
 					rootNode.left = leftSubTree;
 					rootNode.right = rightSubTree;
 					ret.add(rootNode);
@@ -104,7 +135,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		ArrayList<TreeNode> trees = new Solution().generateTreesNew(1);
+		List<TreeNode> trees = new Solution().generateTreesNew(1);
 		System.out.println(trees);
 	}
 }
