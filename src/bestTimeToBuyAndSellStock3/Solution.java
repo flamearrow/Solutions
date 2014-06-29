@@ -7,6 +7,47 @@ package bestTimeToBuyAndSellStock3;
 //Note:
 //You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
 public class Solution {
+
+	public int maxProfit2(int[] prices) {
+		if (prices.length == 0)
+			return 0;
+		int[] profitLR = new int[prices.length];
+		int[] profitRL = new int[prices.length];
+		int min = prices[0];
+		for (int i = 1; i < prices.length; i++) {
+			if (prices[i] < min) {
+				min = prices[i];
+				profitLR[i] = profitLR[i - 1];
+			} else {
+				if (prices[i] - min > profitLR[i - 1]) {
+					profitLR[i] = prices[i] - min;
+				} else {
+					profitLR[i] = profitLR[i - 1];
+				}
+			}
+		}
+		int max = prices[prices.length - 1];
+		for (int i = prices.length - 2; i >= 0; i--) {
+			if (prices[i] > max) {
+				max = prices[i];
+				profitRL[i] = profitRL[i + 1];
+			} else {
+				if (max - prices[i] > profitRL[i + 1]) {
+					profitRL[i] = max - prices[i];
+				} else {
+					profitRL[i] = profitRL[i + 1];
+				}
+			}
+		}
+		int ret = 0;
+		for (int i = 0; i < prices.length; i++) {
+			if (profitLR[i] + profitRL[i] > ret) {
+				ret = profitLR[i] + profitRL[i];
+			}
+		}
+		return ret;
+	}
+
 	// the idea is to build two arrays similar to the one pair problem for O(n) each, then find the maximum
 	// a more trivial way is to build the prefix array [0-j] in O(n), 
 	//  then for each j, compute the same subproblem for [j+1, n-1]
