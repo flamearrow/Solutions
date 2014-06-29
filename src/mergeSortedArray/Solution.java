@@ -6,6 +6,21 @@ package mergeSortedArray;
 //You may assume that A has enough space to hold additional elements from B. 
 //The number of elements initialized in A and B are m and n respectively.
 public class Solution {
+	public void merge2(int A[], int m, int B[], int n) {
+		int aP = m - 1, bP = n - 1;
+		int cur = m + n - 1;
+		while (aP >= 0 && bP >= 0) {
+			if (A[aP] > B[bP]) {
+				A[cur--] = A[aP--];
+			} else {
+				A[cur--] = B[bP--];
+			}
+		}
+		while (bP >= 0) {
+			A[cur--] = B[bP--];
+		}
+	}
+
 	public void merge(int A[], int m, int B[], int n) {
 		int cur = A.length - 1;
 		m--;
@@ -31,10 +46,12 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		int[] A = { 1, 3, 5, 7, 9, 0, 0, 0, 0, 0, 0 };
-		int[] B = { 2, 4, 6, 8, 10 };
-		new Solution().merge(A, 5, B, 5);
-		System.out.println(A);
+		int[] A = { 1, 2, 3, 0, 0, 0 };
+		int[] B = { 2, 5, 6 };
+		new Solution().merge2(A, 3, B, 3);
+		for (int i : A) {
+			System.out.print(i + " ");
+		}
 	}
 
 }
