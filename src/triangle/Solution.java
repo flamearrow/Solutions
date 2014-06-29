@@ -1,6 +1,7 @@
 package triangle;
 
 import java.util.ArrayList;
+import java.util.List;
 
 //Given a triangle, find the minimum path sum from top to bottom. Each step you may move to adjacent numbers on the row below.
 //
@@ -18,6 +19,32 @@ import java.util.ArrayList;
 //Bonus point if you are able to do this using only O(n) extra space, where n is the total number of rows in the triangle.
 
 public class Solution {
+
+	public int minimumTotal3(List<List<Integer>> triangle) {
+		return doProbe(triangle, 0, 0, new int[triangle.size()]);
+	}
+
+	int doProbe(List<List<Integer>> triangle, int row, int column, int[] buf) {
+		if (row > triangle.size() - 1)
+			return 0;
+		else {
+			int leftChild = 0;
+			// we can leverage buffer when we check left child and the left child is not the first one in its row
+			//  because if left child is not the first one in its row
+			//  it must have already been visited as the right child of another root
+			if (row + 1 < triangle.size() && column > 0) {
+				leftChild = buf[row + 1];
+			} else {
+				leftChild = doProbe(triangle, row + 1, column, buf);
+			}
+			int rightChild = doProbe(triangle, row + 1, column + 1, buf);
+			int root = triangle.get(row).get(column);
+			int ret = Math.min(root + leftChild, root + rightChild);
+			buf[row] = ret;
+			return ret;
+		}
+	}
+
 	public int minimumTotal2(ArrayList<ArrayList<Integer>> triangle) {
 		int[][] buffer = new int[triangle.size()][triangle.get(
 				triangle.size() - 1).size()];
