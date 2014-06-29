@@ -11,6 +11,41 @@ package validPalindrome;
 //
 //For the purpose of this problem, we define empty string as valid palindrome.
 public class Solution {
+	public boolean isPalindrome2(String s) {
+		int len = s.length();
+		int start = 0, end = len - 1;
+		while (start < len && !valid(s.charAt(start)))
+			start++;
+		while (end >= 0 && !valid(s.charAt(end)))
+			end--;
+
+		while (start < end) {
+			if (!equal(s.charAt(start), s.charAt(end)))
+				return false;
+			start++;
+			end--;
+			while (start < len && !valid(s.charAt(start)))
+				start++;
+			while (end >= 0 && !valid(s.charAt(end)))
+				end--;
+		}
+		return true;
+	}
+
+	boolean valid(char c) {
+		return '0' <= c && '9' >= c || 'a' <= c && 'z' >= c || 'A' <= c
+				&& 'Z' >= c;
+	}
+
+	boolean equal(char c1, char c2) {
+		int diff = 'a' - 'A';
+		if (c1 > 'Z')
+			c1 -= diff;
+		if (c2 > 'Z')
+			c2 -= diff;
+		return c2 == c1;
+	}
+
 	public boolean isPalindrome(String s) {
 		if (s.length() == 0)
 			return true;
@@ -61,6 +96,6 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Solution().isPalindrome("1a2"));
+		System.out.println(new Solution().isPalindrome2(""));
 	}
 }
