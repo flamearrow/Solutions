@@ -9,8 +9,48 @@ package reverseLinkedList2;
 //
 //Note:
 //Given m, n satisfy the following condition:
-//1 �� m �� n �� length of list.
+//1 <= m <= n <= length of list.
 public class Solution {
+	public ListNode reverseBetween2(ListNode head, int m, int n) {
+		int curPtr = 1;
+		ListNode preHead = null, pre = null, cur = head;
+		while (cur != null) {
+			if (curPtr < m - 1) {
+				pre = cur;
+				cur = cur.next;
+				curPtr++;
+			} else if (curPtr == m - 1) {
+				preHead = cur;
+				pre = cur;
+				cur = cur.next;
+				curPtr++;
+			} else if (curPtr == m) {
+				// head of reversed sublist
+				pre = cur;
+				cur = cur.next;
+				curPtr++;
+			} else if (curPtr <= n) {
+				// reverse and relink
+				ListNode next = cur.next;
+				cur.next = pre;
+				pre = cur;
+				cur = next;
+				// end of list, connect preHead
+				if (curPtr == n) {
+					ListNode tail = preHead == null ? head : preHead.next;
+					if (preHead == null)
+						head = pre;
+					else
+						preHead.next = pre;
+					tail.next = cur;
+				}
+				curPtr++;
+			} else
+				break;
+		}
+		return head;
+	}
+
 	public ListNode reverseBetweenNew(ListNode head, int m, int n) {
 		if (m == n)
 			return head;
@@ -89,9 +129,14 @@ public class Solution {
 		head.next.next = new ListNode(3);
 		head.next.next.next = new ListNode(4);
 		head.next.next.next.next = new ListNode(5);
+		head.next.next.next.next.next = new ListNode(6);
 
-		ListNode newHead = new Solution().reverseBetweenNew(head, 1, 1);
-		System.out.println(newHead);
+		ListNode newHead = new Solution().reverseBetween2(head, 1, 1);
+		ListNode cur = newHead;
+		while (cur != null) {
+			System.out.print(cur.val + " ");
+			cur = cur.next;
+		}
 	}
 }
 
