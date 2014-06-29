@@ -2,8 +2,8 @@ package bTreeLevelOrderTraversal2;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Queue;
-
 
 //Given a binary tree, return the bottom-up level order traversal of its nodes' values. (ie, from left to right, level by level from leaf to root).
 //
@@ -21,6 +21,30 @@ import java.util.Queue;
 //  [3],
 //]
 public class Solution {
+	public ArrayList<ArrayList<Integer>> levelOrderBottom2(TreeNode root) {
+		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+		if (root == null)
+			return ret;
+		Queue<TreeNode> q = new LinkedList<TreeNode>();
+		LinkedList<Integer> cur = new LinkedList<Integer>();
+		int left = 1;
+		q.offer(root);
+		while (!q.isEmpty()) {
+			TreeNode next = q.poll();
+			if (next.left != null)
+				q.offer(next.left);
+			if (next.right != null)
+				q.offer(next.right);
+			cur.add(next.val);
+			if (--left == 0) {
+				ret.add(0, new ArrayList<Integer>(cur));
+				cur.clear();
+				left = q.size();
+			}
+		}
+		return ret;
+	}
+
 	public ArrayList<ArrayList<Integer>> levelOrderBottom(TreeNode root) {
 		// BFS
 		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
