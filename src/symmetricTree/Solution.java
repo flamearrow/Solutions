@@ -24,7 +24,20 @@ import java.util.LinkedList;
 //Note:
 //Bonus points if you could solve it both recursively and iteratively. 
 public class Solution {
-	// non recursive solution, use BFS
+	public boolean isSymmetric2(TreeNode root) {
+		return root == null || isReverse(root.left, root.right);
+	}
+
+	boolean isReverse(TreeNode left, TreeNode right) {
+		if (left == null && right == null)
+			return true;
+		if (left == null || right == null)
+			return false;
+		return (left.val == right.val) && isReverse(left.left, right.right)
+				&& isReverse(left.right, right.left);
+	}
+
+	// non recursive solution, use BFS, check a level forms a palindrome
 	public boolean isSymmetric(TreeNode root) {
 		if (root == null)
 			return true;
