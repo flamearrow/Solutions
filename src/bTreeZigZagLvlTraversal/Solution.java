@@ -2,6 +2,7 @@ package bTreeZigZagLvlTraversal;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Queue;
 
 //Given a binary tree, return the zigzag level order traversal of its nodes' values. 
 // (ie, from left to right, then right to left for the next level and alternate between).
@@ -24,6 +25,35 @@ import java.util.LinkedList;
 //]
 
 public class Solution {
+	public ArrayList<ArrayList<Integer>> zigzagLevelOrder2(TreeNode root) {
+		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+		if (root == null)
+			return ret;
+		Queue<TreeNode> q = new LinkedList<TreeNode>();
+		q.offer(root);
+		LinkedList<Integer> cur = new LinkedList<Integer>();
+		int left = 1;
+		boolean reverse = false;
+		while (!q.isEmpty()) {
+			TreeNode next = q.poll();
+			if (next.left != null)
+				q.offer(next.left);
+			if (next.right != null)
+				q.offer(next.right);
+			if (reverse)
+				cur.addFirst(next.val);
+			else
+				cur.addLast(next.val);
+			if (--left == 0) {
+				reverse = !reverse;
+				left = q.size();
+				ret.add(new ArrayList<Integer>(cur));
+				cur.clear();
+			}
+		}
+		return ret;
+	}
+
 	public ArrayList<ArrayList<Integer>> zigzagLevelOrder(TreeNode root) {
 		ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
 		if (root == null)
