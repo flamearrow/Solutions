@@ -6,6 +6,63 @@ import java.util.Stack;
 //Given a 2D binary matrix filled with 0's and 1's,
 //find the largest rectangle containing all ones and return its area. 
 public class Solution {
+	public int maximalRectangle3(char[][] matrix) {
+		if (matrix.length == 0)
+			return 0;
+		int height = matrix.length;
+		int width = matrix[0].length;
+		int[][] m = new int[height][width];
+		for (int i = 0; i < width; i++) {
+			m[0][i] = matrix[0][i] == '1' ? 1 : 0;
+		}
+		for (int i = 1; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				m[i][j] = matrix[i][j] == '1' ? m[i - 1][j] + 1 : 0;
+			}
+		}
+
+		// now each m[i] is a set of heights or histogram
+		int area = 0;
+		for (int i = 0; i < height; i++) {
+			int curArea = calculateMaxArea(m[i]);
+			if (curArea > area) {
+				area = curArea;
+			}
+		}
+		return area;
+	}
+
+	int calculateMaxArea(int[] heights) {
+		Stack<Node> s = new Stack<Node>();
+		s.push(new Node(0, heights[0]));
+		int ret = 0;
+		for (int i = 1; i < heights.length; i++) {
+			int maxHeight = s.peek().height;
+			if (maxHeight < heights[i]) {
+				s.push(new Node(i, heights[i]));
+			} else if (maxHeight > heights[i]) {
+				int startIndex = s.peek().index;
+				while (!s.isEmpty() && s.peek().height > heights[i]) {
+					Node next = s.pop();
+					int curArea = (i - next.index) * next.height;
+					if (curArea > ret)
+						ret = curArea;
+					startIndex = next.index;
+				}
+				s.push(new Node(startIndex, heights[i]));
+			}
+		}
+
+		while (!s.isEmpty()) {
+			Node next = s.pop();
+			int curArea = (heights.length - next.index) * next.height;
+			if (curArea > ret) {
+				ret = curArea;
+			}
+		}
+		return ret;
+	}
+
 	// there's a naive O((mn)^2) solution
 	// this one is a O(m*m*n) solution with an enlightened dp
 	// idea: to maintain three dp tables,
@@ -32,15 +89,15 @@ public class Solution {
 	// 		note we don't really need three two dimen back matrixes, 
 	// 			only three arrays is enough
 	public int maximalRectangleDP1(char[][] matrix) {
-		if(matrix.length == 0) 
+		if (matrix.length == 0)
 			return 0;
 		int width = matrix[0].length;
 		int maxArea = 0;
 		int[] h = new int[width]; // height / hang line length
 		int[] l = new int[width]; // left most index
 		int[] r = new int[width]; // right most index
-		Arrays.fill(r, width-1);
-		
+		Arrays.fill(r, width - 1);
+
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = 0; j < width; j++) {
 				if (matrix[i][j] == '0') {
@@ -68,12 +125,12 @@ public class Solution {
 		}
 		return maxArea;
 	}
-	
+
 	// when search for left and right we're doing another while loop, but this loop can be avoided
 	// because from left to right, l[j] will always be increasing, 
 	// and from right to left, r[j] will always be decreasing
 	public int maximalRectangle(char[][] matrix) {
-		if(matrix.length == 0) 
+		if (matrix.length == 0)
 			return 0;
 		int width = matrix[0].length;
 		int maxArea = 0;
@@ -97,7 +154,7 @@ public class Solution {
 			}
 			for (int j = width - 1; j >= 0; j--) {
 				if (matrix[i][j] == '0') {
-					right = j-1;
+					right = j - 1;
 				} else {
 					r[j] = r[j] < right ? r[j] : right;
 					int newArea = h[j] * (r[j] - l[j] + 1);
@@ -109,7 +166,7 @@ public class Solution {
 		}
 		return maxArea;
 	}
-	
+
 	// another O(mn) solution would be set each row as the X axis 
 	// and calculate the largest histogram from beginning
 	// we need to calculate m rows and for each row 
@@ -133,15 +190,15 @@ public class Solution {
 		}
 		return maxArea;
 	}
-	
+
 	int largestRectangleArea(int[] height) {
-		if(height.length == 0)
+		if (height.length == 0)
 			return 0;
 		Stack<Node> s = new Stack<Node>();
 		s.push(new Node(0, height[0]));
 		int maxArea = 0;
-		for(int i = 1; i < height.length; i++) {
-			if(height[i] > s.peek().height) {
+		for (int i = 1; i < height.length; i++) {
+			if (height[i] > s.peek().height) {
 				s.push(new Node(i, height[i]));
 			} else if (height[i] < s.peek().height) {
 				int rightBound = i - 1;
@@ -153,13 +210,13 @@ public class Solution {
 						maxArea = newArea;
 				}
 				// if previous node's height equals to current height, don't do anything
-				if(s.isEmpty() || s.peek().height < height[i]) {
+				if (s.isEmpty() || s.peek().height < height[i]) {
 					// pre is non-null
 					s.push(new Node(pre.index, height[i]));
 				}
 			}
 		}
-		
+
 		int rightBound = height.length - 1;
 		while (!s.isEmpty()) {
 			Node pre = s.pop();
@@ -179,6 +236,7 @@ public class Solution {
 			this.index = index;
 			this.height = height;
 		}
+
 		@Override
 		public String toString() {
 			return "index: " + index + ", height: " + height;
@@ -188,7 +246,8 @@ public class Solution {
 	public static void main(String[] args) {
 		char[][] matrix = { { '0', '1', '1', '0', '0' },
 				{ '1', '1', '1', '1', '1' }, { '0', '1', '1', '1', '0' } };
-		System.out.println(new Solution().maximalRectangleHistogram(matrix));
+		//		System.out.println(new Solution().maximalRectangleHistogram(matrix));
+		System.out.println(new Solution().maximalRectangle3(matrix));
 
 	}
 }
