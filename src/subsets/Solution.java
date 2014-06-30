@@ -2,6 +2,8 @@ package subsets;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 //Given a set of distinct integers, S, return all possible subsets.
 //
@@ -21,6 +23,27 @@ import java.util.Arrays;
 // []
 //]
 public class Solution {
+	public List<List<Integer>> subsets4(int[] S) {
+		Arrays.sort(S);
+		List<List<Integer>> ret = new ArrayList<List<Integer>>();
+		LinkedList<Integer> cur = new LinkedList<Integer>();
+		probe4(ret, cur, 0, S);
+		return ret;
+	}
+
+	void probe4(List<List<Integer>> ret, LinkedList<Integer> cur, int curIndex,
+			int[] S) {
+		if (curIndex == S.length) {
+			ret.add(new ArrayList<Integer>(cur));
+			return;
+		} else {
+			probe4(ret, cur, curIndex + 1, S);
+			cur.addLast(S[curIndex]);
+			probe4(ret, cur, curIndex + 1, S);
+			cur.removeLast();
+		}
+	}
+
 	// recurse, three parts:
 	// 1) the subsets of previous result
 	// 2) all arrays from 1) plus the new biggest number
@@ -107,7 +130,7 @@ public class Solution {
 
 	public static void main(String[] args) {
 		int[] num = { 1, 2, 3 };
-		ArrayList<ArrayList<Integer>> ret = new Solution().subsets3(num);
+		List<List<Integer>> ret = new Solution().subsets4(num);
 		System.out.println(ret);
 	}
 }
