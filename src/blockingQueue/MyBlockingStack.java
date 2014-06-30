@@ -1,6 +1,6 @@
-package multithread.blockingQueue;
+package blockingQueue;
 
-// implement a BlockingQueue that has put(e) and take() method 
+// implement a BlockingStack that has put(e) and take() method 
 //  that blocks when there's no space/no element
 // Note 1) wait() and notify() can only be used in synchronized block
 //  therefore it's easy to just make the method synchronized
@@ -10,18 +10,18 @@ package multithread.blockingQueue;
 //         they will try to increase/decrease the _array together, 
 //		   which might cause arrayIndexOutOfBounds
 // Note 3) for Generic backArray, use Object[] array, E[] won't be able to initialize
-public class MyBlockingQueue<E> {
+public class MyBlockingStack<E> {
 	private Object[] _array;
 	private int _size;
 	private int _cnt;
 
-	public MyBlockingQueue(int size) {
+	public MyBlockingStack(int size) {
 		_array = new Object[size];
 		_size = size;
 		_cnt = 0;
 	}
 
-	synchronized void put(E e) throws InterruptedException {
+	synchronized void push(E e) throws InterruptedException {
 		while (_cnt >= _size) {
 			System.out.println("put() blocks");
 			wait();
@@ -34,7 +34,7 @@ public class MyBlockingQueue<E> {
 	}
 
 	@SuppressWarnings("unchecked")
-	synchronized E get() throws InterruptedException {
+	synchronized E pop() throws InterruptedException {
 		while (_cnt <= 0) {
 			System.out.println("get() blocks");
 			wait();
@@ -47,34 +47,34 @@ public class MyBlockingQueue<E> {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		MyBlockingQueue<Integer> q = new MyBlockingQueue<Integer>(10);
+		MyBlockingStack<Integer> q = new MyBlockingStack<Integer>(10);
 		while (true) {
 			for (int i = 0; i < 10; i++)
-				new Producer(q).start();
+				new StackProducer(q).start();
 			Thread.sleep(500);
 			for (int i = 0; i < 20; i++)
-				new Consumer(q).start();
+				new StackConsumer(q).start();
 			Thread.sleep(500);
 			for (int i = 0; i < 10; i++)
-				new Producer(q).start();
+				new StackProducer(q).start();
 			Thread.sleep(500);
 			for (int i = 0; i < 1; i++)
-				new Consumer(q).start();
+				new StackConsumer(q).start();
 		}
 	}
 }
 
-class Producer extends Thread {
-	MyBlockingQueue<Integer> _q;
+class StackProducer extends Thread {
+	MyBlockingStack<Integer> _q;
 	static int _cnt = 0;
 
-	public Producer(MyBlockingQueue<Integer> q) {
+	public StackProducer(MyBlockingStack<Integer> q) {
 		_q = q;
 	}
 
 	void produce() {
 		try {
-			_q.put(_cnt++);
+			_q.push(_cnt++);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			System.out.println("procue() is interrupted");
@@ -87,16 +87,16 @@ class Producer extends Thread {
 	}
 }
 
-class Consumer extends Thread {
-	MyBlockingQueue<Integer> _q;
+class StackConsumer extends Thread {
+	MyBlockingStack<Integer> _q;
 
-	public Consumer(MyBlockingQueue<Integer> q) {
+	public StackConsumer(MyBlockingStack<Integer> q) {
 		_q = q;
 	}
 
 	void consume() {
 		try {
-			Integer i = _q.get();
+			Integer i = _q.pop();
 			System.out.println(i);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
