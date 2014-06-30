@@ -1,4 +1,4 @@
-package h20;
+package multithread.h20;
 
 import java.util.concurrent.Semaphore;
 

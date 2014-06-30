@@ -1,4 +1,4 @@
-package blockingQueue;
+package multithread.blockingQueue;
 
 // implement a BlockingQueue that has put(e) and take() method 
 //  that blocks when there's no space/no element

@@ -1,4 +1,4 @@
-package readwriteLock;
+package multithread.readwriteLock;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package hashMap;
+package multithread.hashMap;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;

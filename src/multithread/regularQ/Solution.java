@@ -1,4 +1,4 @@
-package multiplyStrings.regularQ;
+package multithread.regularQ;
 
 import java.util.LinkedList;
 import java.util.Queue;
