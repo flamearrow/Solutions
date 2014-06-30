@@ -8,6 +8,30 @@ package trappingRainWater;
 //Given [0,1,0,2,1,0,1,3,2,1,2,1], return 6.
 //
 public class Solution {
+
+	public int trap3(int[] A) {
+		int start = 0, end = A.length - 1;
+		int ret = 0;
+		while (start < end) {
+			if (A[start] <= A[end]) {
+				int prob = start + 1;
+				while (prob < end && A[prob] <= A[start]) {
+					ret += A[start] - A[prob];
+					prob++;
+				}
+				start = prob;
+			} else {
+				int prob = end - 1;
+				while (prob > start && A[prob] <= A[end]) {
+					ret += A[end] - A[prob];
+					prob--;
+				}
+				end = prob;
+			}
+		}
+		return ret;
+	}
+
 	// we can do this in one loop, keep a start and end pointer, terminate when start touches end
 	// in the loop, check if which edge is smaller, search from the shorter edge towards the higher edge
 	//   terminate when we find a higher edge
@@ -90,8 +114,8 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		int[] arr = { 4, 2, 0, 3, 2, 4, 3, 4 };
-		int ret = new Solution().trap(arr);
+		int[] arr = { 0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1 };
+		int ret = new Solution().trap3(arr);
 		System.out.println(ret);
 	}
 }
