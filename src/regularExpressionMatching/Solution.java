@@ -40,52 +40,34 @@ public class Solution {
 	//  we set 1 for a start at dp[i][j] if (dp[i-1][j] || dp[i-1][j-1])
 	// TODO: "aaa", "ab*a" doesn't pass
 	public boolean isMatchDP(String s, String p) {
-		if (s.length() == 0) {
-			if (p.length() == 0)
-				return true;
-			else {
-				int cur = 0;
-				while (cur < p.length() - 1 && p.charAt(cur + 1) == '*')
-					cur += 2;
-				if (cur == p.length())
-					return true;
-				else
-					return false;
-			}
-		}
-		if (p.length() == 0)
-			return false;
-		int height = p.length();
 		int width = s.length();
-		boolean dp[][] = new boolean[height][width];
-		// specially handle the first column and column
-		int cur = 0;
-		// handle the following case:
-		// p=a*b*c*Zd*e*f* s=Z
-		// this should match
-		while (cur < p.length() - 1 && p.charAt(cur + 1) == '*') {
-			cur += 2;
-		}
-		if (cur < p.length() && p.charAt(cur) == s.charAt(0)) {
-			cur += 1;
-		}
-		while (cur < p.length() - 1 && p.charAt(cur + 1) == '*') {
-			cur += 2;
-		}
-		for (int i = 0; i < cur; i++) {
-			dp[i][0] = true;
+		int height = p.length();
+		boolean[][] dp = new boolean[height + 1][width + 1];
+		dp[0][0] = true;
+		// initialize first column such that if we see a star, we copy from two blocks before
+		for (int i = 1; i <= height; i++) {
+			if (p.charAt(i - 1) == '*')
+				dp[i][0] = dp[i - 2][0];
 		}
 
-		for (int i = 1; i < height; i++) {
-			for (int j = 1; j < width; j++) {
-				if (p.charAt(i) == '.' || s.charAt(j) == p.charAt(i)) {
-					dp[i][j] = dp[i - 1][j - 1];
-				} else if (p.charAt(i) == '*') {
-					dp[i][j] = dp[i - 1][j - 1] || dp[i - 1][j] || dp[i][j - 1];
+		for (int i = 1; i <= height; i++) {
+			for (int j = 1; j <= width; j++) {
+				if (p.charAt(i - 1) == '*') {
+					// skip x*
+					dp[i][j] |= dp[i - 2][j];
+					// match another
+					if (p.charAt(i - 2) == '.'
+							|| p.charAt(i - 2) == s.charAt(j - 1)) {
+						dp[i][j] |= dp[i][j - 1];
+					}
+				} else {
+					dp[i][j] = dp[i - 1][j - 1]
+							&& (p.charAt(i - 1) == s.charAt(j - 1) || p
+									.charAt(i - 1) == '.');
 				}
 			}
 		}
-		return dp[height - 1][width - 1];
+		return dp[height][width];
 	}
 
 	public boolean isMatch3(String s, String p) {
