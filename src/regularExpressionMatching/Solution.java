@@ -38,6 +38,7 @@ public class Solution {
 	// regex dp is simpler than wildcard dp
 	// basicly if there's a star in a row, once we find a 1 in this row, all rest would in this row would be 1
 	//  we set 1 for a start at dp[i][j] if (dp[i-1][j] || dp[i-1][j-1])
+	// TODO: "aaa", "ab*a" doesn't pass
 	public boolean isMatchDP(String s, String p) {
 		if (s.length() == 0) {
 			if (p.length() == 0)
