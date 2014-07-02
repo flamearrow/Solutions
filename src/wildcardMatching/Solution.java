@@ -18,6 +18,85 @@ package wildcardMatching;
 //isMatch("ab", "?*")  true
 //isMatch("aab", "c*a*b")  false
 public class Solution {
+
+	//	isMatch("aa","a") → false
+	//	isMatch("aa","aa") → true
+	//	isMatch("aaa","aa") → false
+	//	isMatch("aa", "*") → true
+	//	isMatch("aa", "a*") → true
+	//	isMatch("ab", "?*") → true
+	//	isMatch("aab", "c*a*b") → false
+	public static void main(String[] args) {
+		System.out.println(new Solution().isMatchDP2("mississippi",
+				"m*issi*iss*"));
+	}
+
+	public boolean isMatchDP2(String s, String p) {
+		if (s.length() != 0 && p.length() == 0)
+			return false;
+		int len = 0;
+		while (len < p.length() && p.charAt(len) == '*') {
+			len++;
+		}
+		if (len == p.length())
+			return true;
+
+		int plenNoStar = 0;
+		for (char c : p.toCharArray())
+			if (c != '*')
+				plenNoStar++;
+		if (plenNoStar > s.length())
+			return false;
+		int height = p.length();
+		int width = s.length();
+
+		boolean dp[][] = new boolean[height + 1][width + 1];
+		dp[0][0] = true;
+		// all consecutive leading stars should have dp[i][0] = true
+		// *** matches a
+		// *a* doesn't match b
+		for (int i = 1; i <= height; i++) {
+			if (p.charAt(i - 1) == '*' && dp[i - 1][0])
+				dp[i][0] = true;
+		}
+		for (int i = 1; i <= height; i++) {
+			for (int j = 1; j <= width; j++) {
+				if (p.charAt(i - 1) == '*') {
+					dp[i][j] = dp[i - 1][j] || dp[i][j - 1] || dp[i - 1][j - 1];
+				} else if (p.charAt(i - 1) == '?'
+						|| p.charAt(i - 1) == s.charAt(j - 1)) {
+					dp[i][j] = dp[i - 1][j - 1];
+				}
+			}
+		}
+		return dp[height][width];
+	}
+
+	public boolean isMatchRec2(String s, String p) {
+		return doMatchRec2(s, p, 0, 0);
+	}
+
+	boolean doMatchRec2(String s, String p, int sPtr, int pPtr) {
+		if (sPtr == s.length() && pPtr == p.length())
+			return true;
+		if (sPtr == s.length() || pPtr == p.length())
+			return false;
+		if (p.charAt(pPtr) == '?') {
+			return doMatchRec2(s, p, sPtr + 1, pPtr + 1);
+		} else if (p.charAt(pPtr) == '*') {
+			for (int i = sPtr; i <= s.length(); i++) {
+				if (doMatchRec2(s, p, i, pPtr + 1))
+					return true;
+			}
+			return false;
+		} else {
+			if (p.charAt(pPtr) == s.charAt(sPtr))
+				return doMatchRec2(s, p, sPtr + 1, pPtr + 1);
+			else
+				return false;
+		}
+	}
+
 	public boolean isMatch2(String s, String p) {
 		return doMatch2(s, p, 0, 0);
 	}
@@ -177,17 +256,5 @@ public class Solution {
 		else {
 			return false;
 		}
-	}
-
-	//	isMatch("aa","a") → false
-	//	isMatch("aa","aa") → true
-	//	isMatch("aaa","aa") → false
-	//	isMatch("aa", "*") → true
-	//	isMatch("aa", "a*") → true
-	//	isMatch("ab", "?*") → true
-	//	isMatch("aab", "c*a*b") → false
-	public static void main(String[] args) {
-		System.out.println(new Solution().isMatchDP("cb", "*?*"));
-		//		System.out.println(new Solution().isMatch("hi", "*?"));
 	}
 }
