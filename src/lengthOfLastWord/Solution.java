@@ -11,6 +11,22 @@ package lengthOfLastWord;
 //Given s = "Hello World",
 //return 5. 
 public class Solution {
+	// search from last
+	public int lengthOfLastWord2(String s) {
+		int cur = s.length() - 1;
+		// skip space
+		while (cur >= 0 && s.charAt(cur) == ' ')
+			cur--;
+		if (cur < 0)
+			return 0;
+		int ret = 0;
+		while (cur >= 0 && s.charAt(cur) != ' ') {
+			cur--;
+			ret++;
+		}
+		return ret;
+	}
+
 	public int lengthOfLastWord(String s) {
 		if (s == null)
 			return 0;
@@ -34,6 +50,6 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Solution().lengthOfLastWord("feaf fae feawf f"));
+		System.out.println(new Solution().lengthOfLastWord2("sd"));
 	}
 }
