@@ -1,6 +1,7 @@
 package minimumWindowSubstring;
 
 import java.util.HashMap;
+import java.util.Map;
 
 //Given a string S and a string T, 
 //find the minimum window in S which will contain all 
@@ -14,10 +15,136 @@ import java.util.HashMap;
 //
 //Note:
 //If there is no such window in S that covers all characters in T, 
-//return the emtpy string "".
+//return the empty string "".
 //
 //If there are multiple such windows, you are guaranteed that there will always be only one unique minimum window in S. 
 public class Solution {
+
+	// count <= 0 means we found all required chars at the moment
+	public String minWindow2(String US, String UT) {
+		// suppose all cap
+		int[] quota = new int[26];
+		int start = 0, end = -1;
+		int count = UT.length();
+		for (char c : UT.toCharArray()) {
+			quota[c - 'A']++;
+		}
+		int minWindow = Integer.MAX_VALUE, minStart = -1, minEnd = -1;
+		boolean expanding = true;
+		while (true) {
+			if (expanding) {
+				end++;
+				if (end == US.length())
+					break;
+				char c = US.charAt(end);
+				// find a valid one, might have found all, check count
+				// if count==0 then we found all, begin shrinking
+				if (--quota[c - 'A'] >= 0) {
+					count--;
+					if (count == 0) {
+						if (end - start < minWindow) {
+							minStart = start;
+							minEnd = end;
+							minWindow = end - start;
+						}
+						expanding = false;
+					}
+				}
+				// otherwise we need to continue expanding
+			} else {
+				char c = US.charAt(start);
+				start++;
+				// we have removed a valid char, need to expand
+				if (++quota[c - 'A'] > 0) {
+					count++;
+					expanding = true;
+				}
+				// otherwise the removed start is not required
+				// we probably found a smaller window, continue shrinking
+				else {
+					if (end - start < minWindow) {
+						minStart = start;
+						minEnd = end;
+						minWindow = end - start;
+					}
+				}
+			}
+		}
+		if (minStart < 0)
+			return "";
+		else
+			return US.substring(minStart, minEnd + 1);
+	}
+
+	public String minWindowMap(String US, String UT) {
+		Map<Character, Integer> quota = new HashMap<Character, Integer>();
+		int start = 0, end = -1;
+		int count = UT.length();
+		for (char c : UT.toCharArray()) {
+			if (quota.containsKey(c)) {
+				quota.put(c, quota.get(c) + 1);
+			} else {
+				quota.put(c, 1);
+			}
+		}
+		int minWindow = Integer.MAX_VALUE, minStart = -1, minEnd = -1;
+		boolean expanding = true;
+		while (true) {
+			if (expanding) {
+				end++;
+				if (end == US.length())
+					break;
+				char c = US.charAt(end);
+				// find a valid one, might have found all, check count
+				// if count==0 then we found all, begin shrinking
+				if (!quota.containsKey(c))
+					continue;
+				quota.put(c, quota.get(c) - 1);
+				if (quota.get(c) >= 0) {
+					count--;
+					if (count == 0) {
+						if (end - start < minWindow) {
+							minStart = start;
+							minEnd = end;
+							minWindow = end - start;
+						}
+						expanding = false;
+					}
+				}
+				// otherwise we need to continue expanding
+			} else {
+				char c = US.charAt(start);
+				start++;
+
+				boolean movedValid = false;
+				if (quota.containsKey(c)) {
+					quota.put(c, quota.get(c) + 1);
+					if (quota.get(c) > 0)
+						movedValid = true;
+				}
+
+				// we have removed a valid char, need to expand
+				if (movedValid) {
+					count++;
+					expanding = true;
+				}
+				// otherwise the removed start is not required
+				// we probably found a smaller window, continue shrinking
+				else {
+					if (end - start < minWindow) {
+						minStart = start;
+						minEnd = end;
+						minWindow = end - start;
+					}
+				}
+			}
+		}
+		if (minStart < 0)
+			return "";
+		else
+			return US.substring(minStart, minEnd + 1);
+	}
+
 	// build a HashMap<Char, Int> to represent how many char we still need to
 	// satisfy a window
 	// keep two pointers left and right, first move right until hash map has no
@@ -79,8 +206,8 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		String S = "ABC";
-		String T = "ABC";
-		System.out.println(new Solution().minWindow(S, T));
+		String S = "ABDDCBNA";
+		String T = "ACB";
+		System.out.println(new Solution().minWindowMap(S, T));
 	}
 }
