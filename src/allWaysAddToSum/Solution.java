@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 // find all possible ways to add to a given number
-// e.g: input 2, output {{1, 1}, {2}}
+// e.g: input 2, output {{1, 1}, {2}} 
 // 	    input 3, output {{1, 1, 1}, {1, 2}, {3}}
 public class Solution {
 	ArrayList<ArrayList<Integer>> getWays(int input) {
