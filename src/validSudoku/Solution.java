@@ -1,11 +1,62 @@
 package validSudoku;
 
+import java.util.Arrays;
+
 //Determine if a Sudoku is valid, according to: Sudoku Puzzles - The Rules.
 //
 //The Sudoku board could be partially filled, where empty cells are filled
 // with the character '.'.
 public class Solution {
 
+	// O(n^2)
+	public boolean isValidSudoku2(char[][] board) {
+		boolean[] visited = new boolean[10];
+
+		for (int i = 0; i < 9; i++) {
+			Arrays.fill(visited, false);
+			for (int j = 0; j < 9; j++) {
+				if (board[i][j] != '.')
+					if (visited[board[i][j] - '0']) {
+						return false;
+					} else {
+						visited[board[i][j] - '0'] = true;
+					}
+			}
+		}
+
+		for (int i = 0; i < 9; i++) {
+			Arrays.fill(visited, false);
+			for (int j = 0; j < 9; j++) {
+				if (board[j][i] != '.')
+					if (visited[board[j][i] - '0']) {
+						return false;
+					} else {
+						visited[board[j][i] - '0'] = true;
+					}
+			}
+		}
+
+		//check each 3 X 3 subsquare
+		for (int i = 0; i < 9; i += 3) {
+			for (int j = 0; j < 9; j += 3) {
+				Arrays.fill(visited, false);
+				// upperLeft is board[i][j]
+				for (int x = i; x < i + 3; x++) {
+					for (int y = j; y < j + 3; y++) {
+						if (board[x][y] != '.')
+							if (visited[board[x][y] - '0']) {
+								return false;
+							} else {
+								visited[board[x][y] - '0'] = true;
+							}
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+	// O(n^3)
 	public boolean isValidSudoku(char[][] board) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
