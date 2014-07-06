@@ -1,6 +1,6 @@
 package addBinary;
 
-//Given two binary strings, return their sum (also a binary string).
+//Given two Binary strings, return their sum (also a binary string).
 //
 //For example,
 //a = "11"
