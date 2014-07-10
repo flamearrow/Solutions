@@ -19,7 +19,8 @@ public class Solution {
 				endX = tmp;
 			}
 			for (int x = startX + 1; x < endX; x++) {
-				int y = (int) (tilt * (x - startX) + startY);
+				// note: +0.5 here to make it most accurate
+				int y = (int) (tilt * (x - startX) + startY + 0.5);
 				arr[x][y] = 1;
 			}
 		}
@@ -31,7 +32,8 @@ public class Solution {
 				endY = tmp;
 			}
 			for (int y = startY + 1; y < endY; y++) {
-				int x = (int) ((y - startY) / tilt + startX);
+				// note: +0.5 here to make it most accurate
+				int x = (int) ((y - startY) / tilt + startX + 0.5);
 				arr[x][y] = 1;
 			}
 		}
@@ -43,7 +45,7 @@ public class Solution {
 		//		double d2 = 1;
 		//		System.out.println(d2 / d1);
 		int[][] arr = new int[10][10];
-		drawLine(arr, 0, 0, 0, 2);
+		drawLine(arr, 0, 0, 1, 9);
 		for (int[] arrr : arr) {
 			for (int i : arrr) {
 				System.out.print(i);
