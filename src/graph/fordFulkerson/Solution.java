@@ -1,4 +1,4 @@
-package fordFulkerson;
+package graph.fordFulkerson;
 
 import java.util.LinkedList;
 import java.util.Queue;
