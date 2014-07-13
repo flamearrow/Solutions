@@ -2,8 +2,10 @@ package threeSum;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 //Given an array S of n integers, are there elements a, b, c in S such that a + b + c = 0? 
 // Find all unique triplets in the array which gives the sum of zero.
@@ -20,6 +22,31 @@ import java.util.List;
 //    (-1, -1, 2)
 
 public class Solution {
+
+	public List<List<Integer>> threeSum3(int[] num) {
+		// Sort them so that the result is in non decreasing order
+		Arrays.sort(num);
+		List<List<Integer>> ret = new LinkedList<List<Integer>>();
+		Set<Integer> backSet = new HashSet<Integer>();
+		for (int i = 0; i < num.length - 2; i++) {
+			int target = 0 - num[i];
+			// it's TLE because we're cleaning the set in each loop?
+			backSet.clear();
+			for (int j = i + 1; j < num.length; j++) {
+				if (backSet.contains(num[j])) {
+					// find a triple, num[i] + num[j] + (target-num[j]) = 0
+					List<Integer> newResult = new LinkedList<Integer>();
+					newResult.add(num[i]);
+					newResult.add(num[j]);
+					newResult.add(target - num[j]);
+					ret.add(newResult);
+				} else {
+					backSet.add(target - num[j]);
+				}
+			}
+		}
+		return ret;
+	}
 
 	public List<List<Integer>> threeSum2(int[] num) {
 		Arrays.sort(num);
@@ -133,8 +160,14 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		int[] num = { 0, 0, 0 };
-		ArrayList<ArrayList<Integer>> ret = new Solution().threeSum(num);
+		int[] num = { -13, 10, 11, -3, 8, 11, -4, 8, 12, -13, 5, -6, -4, -2,
+				12, 11, 7, -7, -3, 10, 12, 13, -3, -2, 6, -1, 14, 7, -13, 8,
+				14, -10, -4, 10, -6, 11, -2, -3, 4, -13, 0, -14, -3, 3, -9, -6,
+				-9, 13, -6, 3, 1, -9, -6, 13, -4, -15, -11, -12, 7, -9, 3, -2,
+				-12, 6, -15, -10, 2, -2, -6, 13, 1, 9, 14, 5, -11, -10, 14, -5,
+				11, -6, 6, -3, -8, -15, -13, -4, 7, 13, -1, -9, 11, -13, -4,
+				-15, 9, -4, 12, -4, 1, -9, -5, 9, 8, -14, -1, 4, 14 };
+		List<List<Integer>> ret = new Solution().threeSum3(num);
 		System.out.println(ret);
 	}
 }
