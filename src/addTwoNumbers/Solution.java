@@ -68,7 +68,44 @@ public class Solution {
 		cur.next = l1;
 		return ret;
 	}
+	
+	public ListNode addTwoNumbers3(ListNode l1, ListNode l2) {
+		ListNode ret = null, prev = null;
+		int carry = 0;
+		while (l1 != null && l2 != null) {
+			int rst = l1.val + l2.val + carry;
+			carry = rst / 10;
+			ListNode newNode = new ListNode(rst % 10);
+			if (ret == null) {
+				ret = newNode;
+			} else {
+				prev.next = newNode;
+			}
+			prev = newNode;
 
+			l1 = l1.next;
+			l2 = l2.next;
+		}
+
+		ListNode leftNode = l1 == null ? l2 : l1;
+		while (leftNode != null) {
+			int rst = leftNode.val + carry;
+			carry = rst / 10;
+			ListNode newNode = new ListNode(rst % 10);
+			if (ret == null) {
+				ret = newNode;
+			} else {
+				prev.next = newNode;
+			}
+			prev = newNode;
+			leftNode = leftNode.next;
+		}
+		if (carry == 1) {
+			prev.next = new ListNode(1);
+		}
+		return ret;
+	}
+	
 	public ListNode addTwoNumbers2(ListNode l1, ListNode l2) {
 		int carry = 0;
 		ListNode ret = null, cur = null, prev = null;
