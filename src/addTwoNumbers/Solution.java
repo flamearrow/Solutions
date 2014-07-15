@@ -7,6 +7,68 @@ package addTwoNumbers;
 //Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
 //Output: 7 -> 0 -> 8
 public class Solution {
+	public ListNode addTwoNumbersForward(ListNode l1, ListNode l2) {
+		ListNode p1 = l1, p2 = l2;
+		while (p1 != null && p2 != null) {
+			p1 = p1.next;
+			p2 = p2.next;
+		}
+		ListNode left = p1 == null ? p2 : p1;
+		boolean padL1 = p1 == null;
+		int leadingZero = 0;
+		while (left != null) {
+			leadingZero++;
+			left = left.next;
+		}
+		if (leadingZero > 0) {
+			leadingZero--;
+			ListNode newHead = new ListNode(0);
+			ListNode cur = newHead;
+			while (leadingZero > 0) {
+				cur.next = new ListNode(0);
+				cur = cur.next;
+				leadingZero--;
+			}
+			if (padL1) {
+				cur.next = l1;
+				l1 = newHead;
+			} else {
+				cur.next = l2;
+				l2 = newHead;
+			}
+		}
+
+		// now p1 and p2 are the head of two same length chains
+		TmpNode rst = add(l1, l2);
+		if (rst.carry == 1) {
+			ListNode ret = new ListNode(1);
+			ret.next = rst.n;
+			return ret;
+		} else {
+			return rst.n;
+		}
+	}
+
+	static final class TmpNode {
+		ListNode n;
+		int carry;
+	}
+
+	public TmpNode add(ListNode p1, ListNode p2) {
+		TmpNode ret = new TmpNode();
+		if (p1 == null && p2 == null) {
+			ret.n = null;
+			ret.carry = 0;
+			return ret;
+		}
+		TmpNode nextRst = add(p1.next, p2.next);
+		int rst = (p1.val + p2.val + nextRst.carry) % 10;
+		int carry = (p1.val + p2.val + nextRst.carry) / 10;
+		ret.n = new ListNode(rst);
+		ret.n.next = nextRst.n;
+		ret.carry = carry;
+		return ret;
+	}
 	// what if two linked list are stored in normal order?
 	//Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
 	//Output: 8 -> 0 -> 7
