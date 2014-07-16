@@ -3,6 +3,29 @@ package mergeTwoSortedLists;
 //Merge two sorted linked lists and return it as a new list. 
 //The new list should be made by splicing together the nodes of the first two lists.
 public class Solution {
+	public ListNode mergeTwoLists3(ListNode l1, ListNode l2) {
+		ListNode ret = null, pre = null;
+		while (l1 != null || l2 != null) {
+			ListNode cur = null;
+			if (l1 != null && l2 != null)
+				cur = l1.val < l2.val ? l1 : l2;
+			else
+				cur = l1 == null ? l2 : l1;
+
+			if (ret == null)
+				ret = cur;
+			else
+				pre.next = cur;
+
+			pre = cur;
+			if (cur == l1)
+				l1 = l1.next;
+			else
+				l2 = l2.next;
+
+		}
+		return ret;
+	}
 	public ListNode mergeTwoLists2(ListNode l1, ListNode l2) {
 		ListNode ret = null, pre = null;
 		while (l1 != null && l2 != null) {
