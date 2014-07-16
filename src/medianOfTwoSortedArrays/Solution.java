@@ -4,6 +4,106 @@ package medianOfTwoSortedArrays;
 //Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).
 
 public class Solution {
+	
+	// the idea is when you locate two pointers, they are not necessarily the targets
+	// because two targets might be in the same array.
+	// need to get (smaller one, Math.min(next of Smaller one in the same array, bigger one)
+	public double findMedianSortedArrays3(int A[], int B[]) {
+		int[] longArr = A.length > B.length ? A : B;
+		int[] shortArr = A.length > B.length ? B : A;
+		boolean even = (longArr.length + shortArr.length) % 2 == 0;
+		int sum = (longArr.length + shortArr.length) / 2 - 1;
+		if (shortArr.length == 0) {
+			return even ? ((double) longArr[sum] + (double) longArr[sum + 1]) / 2
+					: longArr[sum + 1];
+		}
+		int left = 0, right = shortArr.length - 1;
+		int longPtr = 0, shortPtr = 0;
+
+		// loop on shortArr so that we never gets out of bound
+		while (left <= right) {
+			shortPtr = (left + right) / 2;
+			longPtr = sum - shortPtr;
+			if (found(longArr, shortArr, longPtr, shortPtr)) {
+				if (even) {
+					// need to check if two elements are in the same array
+					if (longArr[longPtr] > shortArr[shortPtr]
+							&& shortPtr < shortArr.length - 1) {
+						return ((double) shortArr[shortPtr] + (double) Math
+								.min(longArr[longPtr], shortArr[shortPtr + 1])) / 2;
+					} else if (longArr[longPtr] < shortArr[shortPtr]
+							&& longPtr < longArr.length - 1) {
+						return ((double) longArr[longPtr] + (double) Math.min(
+								longArr[longPtr + 1], shortArr[shortPtr])) / 2;
+
+					}
+					return ((double) longArr[longPtr] + (double) shortArr[shortPtr]) / 2;
+				} else {
+					if (longArr[longPtr] > shortArr[shortPtr]
+							&& shortPtr < shortArr.length - 1) {
+						return Math.min(longArr[longPtr],
+								shortArr[shortPtr + 1]);
+					} else if (longArr[longPtr] < shortArr[shortPtr]
+							&& longPtr < longArr.length - 1) {
+						return Math.min(longArr[longPtr + 1],
+								shortArr[shortPtr]);
+					}
+					return longArr[longPtr] > shortArr[shortPtr] ? longArr[longPtr]
+							: shortArr[shortPtr];
+				}
+			} else {
+				// go left, note we go left when 
+				// 1) found() fails
+				// 2) longPtr is at edge
+				if (longPtr >= 1 && longArr[longPtr - 1] > shortArr[shortPtr]
+						|| longPtr == 0
+						&& longArr[longPtr] > shortArr[shortPtr]) {
+					left = shortPtr + 1;
+				} else {
+					right = shortPtr - 1;
+				}
+			}
+		}
+		// if we reach here, it means either two numbers are in the same array 
+		// or there's one at an edge of an array
+
+		// shortArr's elements are too small
+		if (left >= shortArr.length) {
+			if (even) {
+				if (longPtr > 0)
+					return ((double) longArr[longPtr] + (double) Math
+							.max(longArr[longPtr - 1],
+									shortArr[shortArr.length - 1])) / 2;
+				else
+					return ((double) longArr[longPtr] + shortArr[shortArr.length - 1]) / 2;
+			} else
+				return longArr[longPtr];
+
+		}
+		// shortArr's elements are too big
+		if (right < 0) {
+			if (even) {
+				if (longPtr < longArr.length - 1)
+					return ((double) longArr[longPtr] + (double) Math.min(
+							longArr[longPtr + 1], shortArr[0])) / 2;
+				else
+					return ((double) longArr[longPtr] + shortArr[0]) / 2;
+			} else {
+				if (longPtr < longArr.length)
+					return Math.min(longArr[longPtr + 1], shortArr[0]);
+				else
+					return shortArr[0];
+			}
+		}
+		return -1;
+	}
+
+	boolean found(int[] longArr, int[] shortArr, int longPtr, int shortPtr) {
+		return longPtr >= 1 && longArr[longPtr - 1] <= shortArr[shortPtr]
+				&& shortArr[shortPtr] <= longArr[longPtr] || shortPtr >= 1
+				&& shortArr[shortPtr - 1] <= longArr[longPtr]
+				&& longArr[longPtr] <= shortArr[shortPtr];
+	}
 	// bsearch: start, end, move start or end if necessary
 	public double findMedianSortedArrays2(int A[], int B[]) {
 		int shortArr[], longArr[];
