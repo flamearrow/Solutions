@@ -29,8 +29,10 @@ public class IntervalTree {
 		itvs.add(new Interval(12, 15));
 		itvs.add(new Interval(30, 40));
 		IntervalTree tree = new IntervalTree(itvs);
-		System.out.println(tree);
-		System.out.println(tree.overLap(new Interval(6, 7)));
+		//		System.out.println(tree);
+		//		System.out.println(tree.overLap(new Interval(6, 7)));
+		for (Interval i : tree.overLaps(new Interval(41, 50)))
+			System.out.println(i);
 	}
 
 	void insert(Interval interval) {
@@ -60,7 +62,7 @@ public class IntervalTree {
 	}
 
 	// return one interval
-	Interval overLap(Interval interval) {
+	public Interval overLap(Interval interval) {
 		INode cur = root;
 		// while there's a possible overlap 
 		while (cur.max > interval.start) {
@@ -75,6 +77,23 @@ public class IntervalTree {
 		return null;
 	}
 
+	// return all overlapped intervals
+	public List<Interval> overLaps(Interval interval) {
+		List<Interval> ret = new LinkedList<Interval>();
+		probe(root, ret, interval);
+		return ret;
+	}
+
+	private void probe(INode cur, List<Interval> ret, Interval interval) {
+		if (cur == null || cur.max < interval.start)
+			return;
+		// over lap
+		if (!(cur.interval.start > interval.end || cur.interval.end < interval.start)) {
+			ret.add(cur.interval);
+		}
+		probe(cur.left, ret, interval);
+		probe(cur.right, ret, interval);
+	}
 }
 
 class Interval {
