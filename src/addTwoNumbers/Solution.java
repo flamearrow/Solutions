@@ -39,36 +39,32 @@ public class Solution {
 		}
 
 		// now p1 and p2 are the head of two same length chains
-		TmpNode rst = add(l1, l2);
+		TmpNode rst = add2(l1, l2);
 		if (rst.carry == 1) {
 			ListNode ret = new ListNode(1);
-			ret.next = rst.n;
+			ret.next = rst.node;
 			return ret;
 		} else {
-			return rst.n;
+			return rst.node;
 		}
 	}
 
-	static final class TmpNode {
-		ListNode n;
-		int carry;
-	}
-
-	public TmpNode add(ListNode p1, ListNode p2) {
+	public TmpNode add2(ListNode p1, ListNode p2) {
 		TmpNode ret = new TmpNode();
 		if (p1 == null && p2 == null) {
-			ret.n = null;
+			ret.node = null;
 			ret.carry = 0;
 			return ret;
 		}
 		TmpNode nextRst = add(p1.next, p2.next);
 		int rst = (p1.val + p2.val + nextRst.carry) % 10;
 		int carry = (p1.val + p2.val + nextRst.carry) / 10;
-		ret.n = new ListNode(rst);
-		ret.n.next = nextRst.n;
+		ret.node = new ListNode(rst);
+		ret.node.next = nextRst.node;
 		ret.carry = carry;
 		return ret;
 	}
+
 	// what if two linked list are stored in normal order?
 	//Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
 	//Output: 8 -> 0 -> 7
@@ -130,7 +126,7 @@ public class Solution {
 		cur.next = l1;
 		return ret;
 	}
-	
+
 	public ListNode addTwoNumbers3(ListNode l1, ListNode l2) {
 		ListNode ret = null, prev = null;
 		int carry = 0;
@@ -167,7 +163,7 @@ public class Solution {
 		}
 		return ret;
 	}
-	
+
 	public ListNode addTwoNumbers2(ListNode l1, ListNode l2) {
 		int carry = 0;
 		ListNode ret = null, cur = null, prev = null;
