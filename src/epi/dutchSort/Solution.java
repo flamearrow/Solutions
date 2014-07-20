@@ -9,11 +9,35 @@ import java.util.Random;
 
 // a subroutine of quick sort
 public class Solution {
+
+	static void rearrange2(int[] array, int index) {
+		int head = 0, tail = array.length - 1, cur = 0;
+		int pivot = array[index];
+		while (cur <= tail) {
+			if (array[cur] < pivot) {
+				int tmp = array[head];
+				array[head] = array[cur];
+				array[cur] = tmp;
+				head++;
+				// this is only required when pivot is not picked up from first
+				if (head > cur)
+					cur = head;
+			} else if (array[cur] == pivot) {
+				cur++;
+			} else {
+				int tmp = array[tail];
+				array[tail] = array[cur];
+				array[cur] = tmp;
+				tail--;
+			}
+		}
+	}
+
 	// if there're dups, we need to keep FOUR groups
-	//  1) smaller than pivot-covered from start to cur
+	//  1) smaller than pivot-covered from 0 to start
 	//  2) equal to pivot-covered from start to cur
-	//  3) bigger than pivot-covered from cur to end
-	//  4) not touched-covered from end to tail
+	//  3) bigger than pivot-covered from end to tail
+	//  4) not touched-covered from cur to end
 	// and while loop need to check equal
 	static void rearrange(int[] array, int index) {
 		int start = 0, cur = 0, end = array.length - 1;
@@ -24,6 +48,7 @@ public class Solution {
 				array[start] = array[cur];
 				array[cur] = tmp;
 				start++;
+				// this is only required when pivot is not picked up from first
 				if (start > cur)
 					cur = start;
 			} else if (array[cur] == pivot) {
@@ -38,13 +63,14 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		int[] array = generateArray();
+		//		int[] array = generateArray();
+		int[] array = { 2, 1, 3 };
 		System.out.println("before");
 		for (int i : array) {
 			System.out.print(i + " ");
 		}
 		System.out.println("\nafter");
-		rearrange(array, 0);
+		rearrange2(array, 0);
 		for (int i : array) {
 			System.out.print(i + " ");
 		}
