@@ -53,13 +53,15 @@ public class Solution {
 		System.out.println("maxSum is " + maxSum);
 	}
 
+	// this doens't work for doubles and is confusing
 	// the idea is we always keep the max positive product and min negative product to each seen number
 	// update the two according to the new number we see
 	// set curMaxProduct and curMinProduct to 1 if we can't get a valid value at this point
-
 	//         3, -4,    5,  -6,    -7
 	// curMax  3,  1,    5, 360,   210
 	// curMin  1, -12, -60, -30, -2520
+
+	// this one doesn't work for double array
 	static void maxProduct(int[] array) {
 		int curMaxProduct = 1, curMinProduct = 1, maxProduct = 1;
 		for (int i = 0; i < array.length; i++) {
@@ -87,9 +89,54 @@ public class Solution {
 		System.out.println("maxProduct is " + maxProduct);
 	}
 
+	// should be that cumbersome... just compare three candidates each time, don't even bother the plus and minus
+	//  compare these three candidates 1) array[i] 2) array[i] * preMax 3) array[i] * preMin
+	static double maxProduct2(double[] array) {
+		double preMax = array[0];
+		double preMin = array[0];
+		double ret = Integer.MIN_VALUE;
+		for (int i = 1; i < array.length; i++) {
+			double bufMax = preMax;
+			double bufMin = preMin;
+			// there are three candidates for updating preMax and preMin
+			//  they are 1) array[i] 2) array[i] * preMax 3) array[i] * preMin
+			preMax = max(array[i], array[i] * bufMax, array[i] * bufMin);
+			preMin = min(array[i], array[i] * bufMax, array[i] * bufMin);
+			ret = Math.max(ret, preMax);
+		}
+		return ret;
+	}
+
+	static double max(double... arr) {
+		double ret = Double.MIN_VALUE;
+		for (double d : arr) {
+			ret = Math.max(ret, d);
+		}
+		return ret;
+	}
+
+	static double min(double... arr) {
+		double ret = Double.MAX_VALUE;
+		for (double d : arr) {
+			ret = Math.min(ret, d);
+		}
+		return ret;
+	}
+
 	public static void main(String[] args) {
-		int[] array = { -1, -2, -3, -4, 5 };
+		int[] array = { 1, 2, 3, -4, 7 };
+		//		double[] arrayd = convert(array);
+		double[] arrayd = { -1, 2, 3, 0.1, 0.2, 5 };
 		maxSum2(array);
 		maxProduct(array);
+		System.out.println(maxProduct2(arrayd));
+	}
+
+	static double[] convert(int[] array) {
+		double[] ret = new double[array.length];
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = (double) array[i];
+		}
+		return ret;
 	}
 }
