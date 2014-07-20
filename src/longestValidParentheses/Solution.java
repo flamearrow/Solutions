@@ -9,6 +9,33 @@ import java.util.Stack;
 //
 //Another example is ")()())", where the longest valid parentheses substring is "()()", which has length = 4. 
 public class Solution {
+
+	public int longestValidParentheses2(String s) {
+		Stack<Integer> stack = new Stack<Integer>();
+		int ret = 0, pre = -1;
+		for (int i = 0; i < s.length(); i++) {
+			char cur = s.charAt(i);
+			if (cur == '(') {
+				stack.push(i);
+			} else {
+				// wild ')'
+				if (stack.isEmpty()) {
+					pre = i;
+				} else {
+					int curLen = 0;
+					stack.pop();
+					if (stack.isEmpty()) {
+						curLen = i - pre;
+					} else {
+						curLen = i - stack.peek();
+					}
+					ret = Math.max(curLen, ret);
+				}
+			}
+		}
+		return ret;
+	}
+
 	public int longestValidParentheses(String s) {
 		// use stack to store positions, remember the last wild ')'
 		int prevPosition = -1;
@@ -68,7 +95,7 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		String s = "()(()";
-		System.out.println(new Solution().longestValidParenthesesNew(s));
+		String s = "(()((())))";
+		System.out.println(new Solution().longestValidParentheses2(s));
 	}
 }
