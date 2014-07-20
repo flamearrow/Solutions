@@ -15,6 +15,38 @@ package reverseNodesInKGroup;
 //
 //For k = 3, you should return: 3->2->1->4->5
 public class Solution {
+
+	public ListNode reverseKGroup3(ListNode head, int k) {
+		ListNode ret = null, pre = null;
+		ListNode cur = head;
+		int curLen = k;
+		while (cur != null) {
+			cur = cur.next;
+			// reverse the sublist from pre to cur
+			if (--curLen == 0) {
+				ListNode tmp = (pre == null ? head : pre.next);
+				ListNode next = tmp.next;
+				ListNode tail = tmp;
+				// reversing a linkedlist requires two pointers, tmp and next
+				while (next != cur) {
+					ListNode buf = next.next;
+					next.next = tmp;
+					tmp = next;
+					next = buf;
+				}
+				if (pre == null) {
+					ret = tmp;
+				} else {
+					pre.next = tmp;
+				}
+				pre = tail;
+				pre.next = cur;
+				curLen = k;
+			}
+		}
+		return ret == null ? head : ret;
+	}
+
 	public ListNode reverseKGroup2(ListNode head, int k) {
 		if (head == null)
 			return null;
@@ -93,15 +125,14 @@ public class Solution {
 
 	public static void main(String[] args) {
 		ListNode head = new ListNode(1);
-		//		head.setNext(2).setNext(3).setNext(4).setNext(5).setNext(6).setNext(7)
-		//				.setNext(8);
-		ListNode ret = new Solution().reverseKGroup2(head, 1);
+		head.setNext(2).setNext(3).setNext(4).setNext(5).setNext(6).setNext(7)
+				.setNext(8);
+		ListNode ret = new Solution().reverseKGroup3(head, 8);
 		while (ret != null) {
 			System.out.print(ret.val + " ");
 			ret = ret.next;
 		}
 	}
-
 }
 
 class ListNode {
