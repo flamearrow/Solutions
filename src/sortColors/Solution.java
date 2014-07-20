@@ -7,6 +7,28 @@ package sortColors;
 //Note:
 //You are not suppose to use the library's sort function for this problem. 
 public class Solution {
+	static void sortColors2(int[] A) {
+		int head = 0, tail = A.length - 1, cur = 0;
+		int pivot = 1;
+		while (cur <= tail) {
+			if (A[cur] < pivot) {
+				int tmp = A[head];
+				A[head] = A[cur];
+				A[cur] = tmp;
+				head++;
+				if (head > cur)
+					cur = head;
+			} else if (A[cur] == pivot) {
+				cur++;
+			} else {
+				int tmp = A[tail];
+				A[tail] = A[cur];
+				A[cur] = tmp;
+				tail--;
+			}
+		}
+	}
+
 	// keep two pointers tail0 and head2
 	// iterate the array tail head2,
 	// if i == 0, swap it with tail0
@@ -37,9 +59,10 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		int[] A = { 2, 2 };
-		new Solution().sortColors(A);
+		int[] A = { 0, 1, 2, 1, 0, 2, 1, 2, 1, 2, 0, 1, 2, 0, 2, 1, 0, 1, 2, 1,
+				2, 1, 2, 1, 0, 2, 1, 2, 0, 2, 2 };
+		sortColors2(A);
 		for (int i : A)
-			System.out.println(i);
+			System.out.print(i + " ");
 	}
 }
