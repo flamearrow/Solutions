@@ -3,6 +3,28 @@ package implementStrStr;
 //implement strstr()
 //Returns a pointer to the first occurrence of needle in haystack, or null if needle is not part of haystack.
 public class Solution {
+
+	public String strStr4(String haystack, String needle) {
+		int[] skipList = buildSkipList3(needle);
+		int hPtr = 0, nPtr = 0;
+		while (hPtr + nPtr < haystack.length()) {
+			if (haystack.charAt(hPtr + nPtr) == needle.charAt(nPtr)) {
+				nPtr++;
+				if (nPtr == needle.length())
+					return haystack.substring(hPtr);
+			} else {
+				if (nPtr == 0)
+					hPtr++;
+				else {
+					int skipped = nPtr - skipList[nPtr - 1];
+					nPtr -= skipped;
+					hPtr += skipped;
+				}
+			}
+		}
+		return null;
+	}
+
 	public String strStr3(String haystack, String needle) {
 		int[] skipList = buildSkipList3(needle);
 		int hPtr = 0, nPtr = 0;
@@ -40,7 +62,7 @@ public class Solution {
 		}
 		return ret;
 	}
-	
+
 	public String strStr2(String haystack, String needle) {
 		if (needle.length() == 0)
 			return haystack;
@@ -55,10 +77,10 @@ public class Solution {
 			} else {
 				// skipLen = matched length - skipLen[nPtr-1]
 				if (nPtr > 0) {
-					int skipLen = nPtr - skipList[nPtr-1];
+					int skipLen = nPtr - skipList[nPtr - 1];
 					hPtr += skipLen;
 					nPtr -= skipLen;
-				} 
+				}
 				// no match, advance hPtr
 				else {
 					hPtr++;
@@ -79,6 +101,7 @@ public class Solution {
 		}
 		return ret;
 	}
+
 	// naive
 	public String strStr(String haystack, String needle) {
 		if (needle.length() == 0)
@@ -92,7 +115,7 @@ public class Solution {
 		}
 		return null;
 	}
-	
+
 	// using Knuth-Morris-Pratt algorithm
 	public String strStrKMP(String haystack, String needle) {
 		if (needle.length() == 0)
@@ -159,11 +182,10 @@ public class Solution {
 		}
 		return ret;
 	}
-	
-	
+
 	public static void main(String[] args) {
-		String haystack = "mlgbmlgbaoao";
-		String needle = "gbml";
-		System.out.println(new Solution().strStr(haystack, needle));
+		String haystack = "mississippi";
+		String needle = "issip";
+		System.out.println(new Solution().strStr4(haystack, needle));
 	}
 }
