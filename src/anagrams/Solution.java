@@ -18,7 +18,7 @@ public class Solution {
 			String key = sortStr(s);
 			if (!backMap.containsKey(key)) {
 				backMap.put(key, new LinkedList<String>());
-			} 
+			}
 			backMap.get(key).add(s);
 		}
 		for (Map.Entry<String, List<String>> entry : backMap.entrySet()) {
