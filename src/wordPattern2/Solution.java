@@ -17,7 +17,6 @@ import java.util.Set;
 //Notes:
 //You may assume both pattern and str contains only lowercase letters.
 public class Solution {
-	main
 	public boolean wordPatternMatch(String pattern, String str) {
 		return doMatch(new HashMap<Character, String>(), new HashSet<String>(),
 				pattern, str);

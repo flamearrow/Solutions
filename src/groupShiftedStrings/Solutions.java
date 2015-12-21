@@ -1,5 +1,6 @@
 package groupShiftedStrings;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,14 +25,28 @@ public class Solutions {
 		String[] strings = { "abc", "bcd", "acef", "xyz", "az", "ba", "a", "z",
 				"ace", "bdf" };
 		Solutions s = new Solutions();
-		s.gropuStrings(strings);
-		// String ss = "abcdefghijklmnopqrstuvwxyz";
-		// for (char c : ss.toCharArray()) {
-		// System.out.println(s.nextChar(c, false));
-		// }
+		s.groupStrings2(strings);
 	}
 
-	public void gropuStrings(String[] strings) {
+	public List<List<String>> groupStrings(String[] strings) {
+		List<List<String>> ret = new LinkedList<>();
+		Map<String, List<String>> set = new HashMap<>();
+		for (String s : strings) {
+			String index = getIndex2(s);
+			if (!set.containsKey(index)) {
+				List<String> list = new LinkedList<String>();
+				set.put(index, list);
+			}
+			set.get(index).add(s);
+		}
+		for (List<String> list : set.values()) {
+			Collections.sort(list);
+			ret.add(list);
+		}
+		return ret;
+	}
+
+	public void groupStrings2(String[] strings) {
 		Map<String, List<String>> set = new HashMap<>();
 		for (String s : strings) {
 			String index = getIndex2(s);
