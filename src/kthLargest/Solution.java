@@ -62,6 +62,6 @@ public class Solution {
 			aL.add(i);
 		kthSmallest(aL.iterator(), 5);
 		System.out.println();
-		kthSmallest(arr, 5);
+		kthSmallest(arr, 2);
 	}
 }
