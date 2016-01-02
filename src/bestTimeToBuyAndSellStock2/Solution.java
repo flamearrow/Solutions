@@ -26,6 +26,7 @@ public class Solution {
 	//  if a[i-1]<=a[i]>a[i+1] then it's local max
 	//  if a[i-1]>a[i]<=a[i+1] then it's local min
 	//  we need to buy at local min and sell at local max
+	// when we can do as many as we can, make sure to buy at bottom and sell at peak
 	public int maxProfit2(int[] prices) {
 		int len = prices.length;
 		int buy = prices[0];

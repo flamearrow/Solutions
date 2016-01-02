@@ -9,10 +9,10 @@ public class Solution {
 		// use a backtrack array to print the path
 		int[] dp = new int[input.length];
 		// back[i] is the index of previous number of lis ends at input[i]
-		//  -1 means i is the first
+		// -1 means i is the first
 		int[] back = new int[input.length];
-		// note after one loop we need to do another loop in dp[] 
-		//  to find the longest possible size, then start form there
+		// note after one loop we need to do another loop in dp[]
+		// to find the longest possible size, then start form there
 		dp[0] = 1;
 		back[0] = -1;
 		for (int i = 1; i < input.length; i++) {
@@ -46,7 +46,32 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		int[] input = { 1, 10, 3, 8, 5, 6, 7, 9 };
-		System.out.println(new Solution().lis(input));
+		int[] input = { 1, 3, 6, 7, 9, 4, 10, 5, 6 };
+		System.out.println(new Solution().lengthOfLIS(input));
+	}
+
+	public int lengthOfLIS(int[] nums) {
+		if (nums.length == 0) {
+			return 0;
+		}
+		// use an array to keep track of the length that ENDS at i
+		int[] indices = new int[nums.length];
+		int[] lengths = new int[nums.length];
+		lengths[0] = 1;
+		for (int i = 1; i < nums.length; i++) {
+			lengths[i] = 1;
+			indices[i] = i;
+			for (int last = 0; last < i; last++) {
+				if (nums[i] > nums[last] && lengths[i] < lengths[last] + 1) {
+					lengths[i] = lengths[last] + 1;
+					indices[i] = i;
+				}
+			}
+		}
+		int max = lengths[0];
+		for (int i : lengths) {
+			max = Math.max(i, max);
+		}
+		return max;
 	}
 }
