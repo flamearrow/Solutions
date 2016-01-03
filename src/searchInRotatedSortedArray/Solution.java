@@ -114,6 +114,6 @@ public class Solution {
 		System.out.println(new Solution().search2(A, 0));
 		// int target = 3;
 		//		for (int target : A)
-		//			System.out.println(new Solution().search(A, target));
+		//			System.out.println(new PeekingIterator().search(A, target));
 	}
 }

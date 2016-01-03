@@ -159,7 +159,7 @@ public class Solution {
 	public static void main(String[] args) {
 		//		String[] ss = { "1e+1e1", "1e1.1", "1e-1.1", "1e-11", "1e11", "1e+11" };
 		//		for (String s : ss)
-		//			System.out.println(new Solution().isNumber(s));
+		//			System.out.println(new PeekingIterator().isNumber(s));
 		String s = "  .2e81";
 		System.out.println(new Solution().isNumberRegex(s));
 	}

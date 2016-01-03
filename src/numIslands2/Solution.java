@@ -53,7 +53,7 @@ public class Solution {
 	}
 
 	// use union, represents islands by tree
-	// roots[cur] is the root of cur island, a bunch of island would belong to
+	// roots[cur] is the root of cur island, a bunch of islands would belong to
 	// one root
 	// which is uid of these island
 	// when merge two roots, just do root[rootToBeMerged] = newRoot

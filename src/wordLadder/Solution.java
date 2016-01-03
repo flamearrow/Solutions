@@ -194,7 +194,7 @@ public class Solution {
 		//		dict.add("pot");
 		//		dict.add("hog");
 		//		System.out
-		//				.println(new Solution().ladderLengthNaive("hot", "hot", dict));
+		//				.println(new PeekingIterator().ladderLengthNaive("hot", "hot", dict));
 		System.out.println(new Solution().ladderLength2("hot", "dog", dict));
 	}
 }

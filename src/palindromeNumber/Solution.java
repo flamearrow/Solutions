@@ -57,7 +57,7 @@ public class Solution {
 	public static void main(String[] args) {
 		System.out.println(new Solution().isPalindrome3(12));
 		//		for (int i = 0; i < 10000; i++) {
-		//			if (new Solution().isPalindrome(i))
+		//			if (new PeekingIterator().isPalindrome(i))
 		//				System.out.println(i);
 		//		}
 	}

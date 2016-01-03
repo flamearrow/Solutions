@@ -29,7 +29,7 @@ public class Solution {
 	public static void main(String[] args) {
 		// int[] nums1 = { 3, 9 };
 		// int[] nums2 = { 8, 9 };
-		// for (int i : new Solution().maxNumber(nums1, nums2, 3)) {
+		// for (int i : new PeekingIterator().maxNumber(nums1, nums2, 3)) {
 		// System.out.print(i + " ");
 		// }
 

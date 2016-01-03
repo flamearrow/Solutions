@@ -127,7 +127,7 @@ public class Solution {
 
 	public static void main(String[] args) {
 		//		int[] inputs = { 1, 2, 1, 2, 1 };
-		//		System.out.println(new Solution().findMajorityHalf(inputs));
+		//		System.out.println(new PeekingIterator().findMajorityHalf(inputs));
 		int[] inputs = { 2, 2, 2, 3, 3, 1, 1 };
 		System.out.println(new Solution().findMajorityOneThrid(inputs));
 	}

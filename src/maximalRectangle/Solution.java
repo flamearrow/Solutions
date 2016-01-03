@@ -246,7 +246,7 @@ public class Solution {
 	public static void main(String[] args) {
 		char[][] matrix = { { '0', '1', '1', '0', '0' },
 				{ '1', '1', '1', '1', '1' }, { '0', '1', '1', '1', '0' } };
-		//		System.out.println(new Solution().maximalRectangleHistogram(matrix));
+		//		System.out.println(new PeekingIterator().maximalRectangleHistogram(matrix));
 		System.out.println(new Solution().maximalRectangle3(matrix));
 
 	}
