@@ -3,6 +3,21 @@ package maxSumAndProductOfSubArray;
 // given an array of integers, find the consecutive sub array with max sum
 // given an array of doubles, find the consecutive sub array with max product
 public class Solution {
+	static void maxProductReimpl(int[] nums) {
+		int ret = nums[0];
+		int preMax = nums[0];
+		int preMin = nums[0];
+
+		for(int i = 1; i < nums.length; i++) {
+			int canMax = nums[i] * preMax;
+			int canMin = nums[i] * preMin;
+			preMax = Math.max(canMax, Math.max(canMin, nums[i]));
+			preMin = Math.min(canMax, Math.min(canMin, nums[i]));
+			ret = Math.max(ret, preMax);
+		}
+		System.out.println(ret);
+	}
+
 	static void maxSum(int[] array) {
 		// doesn't work for all negatives
 		// need to check if all are negatives first if so return the biggest negative one
@@ -124,12 +139,14 @@ public class Solution {
 	}
 
 	public static void main(String[] args) {
-		int[] array = { 1, 2, 3, -4, 7 };
-		//		double[] arrayd = convert(array);
-		double[] arrayd = { -1, 2, 3, 0.1, 0.2, 5 };
-		maxSum2(array);
-		maxProduct(array);
-		System.out.println(maxProduct2(arrayd));
+//		int[] array = { 1, 2, 3, -4, 7 };
+//		//		double[] arrayd = convert(array);
+//		double[] arrayd = { -1, 2, 3, 0.1, 0.2, 5 };
+//		maxSum2(array);
+//		maxProduct(array);
+//		System.out.println(maxProduct2(arrayd));
+		int[] nums = {-4, -3, -2};
+		maxProductReimpl(nums);
 	}
 
 	static double[] convert(int[] array) {
