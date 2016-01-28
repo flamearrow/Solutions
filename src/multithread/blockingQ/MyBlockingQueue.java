@@ -1,5 +1,6 @@
 package multithread.blockingQ;
 
+
 public class MyBlockingQueue<E> {
 	// for Generic types, use Object[] as back array, cast to E when return
 	Object[] _arr;
