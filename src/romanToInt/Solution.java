@@ -15,8 +15,7 @@ import java.util.Map;
 //
 //Input is guaranteed to be within the range from 1 to 3999.
 public class Solution {
-	
-	
+
 	static Map<Character, Integer> backMap;
 	static {
 		int[] integer = { 1000, 500, 100, 50, 10, 5, 1 };
