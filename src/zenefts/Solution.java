@@ -8,30 +8,39 @@ import java.util.*;
  */
 public class Solution {
     public static void main(String[] args) {
-//        int[] arr = {1, 2, 3};
-//        System.out.println(countUneatenLeaves4(24, arr));
-//        for (Set<Integer> set : getSetsSizeOf(3, arr)) {
-//            for (int i : set) {
-//                System.out.print(i + " ");
-//            }
-//            System.out.println();
-//            System.out.println(getLcmList(set));
+////        int[] arr = {1, 2, 3};
+////        System.out.println(countUneatenLeaves4(24, arr));
+////        for (Set<Integer> set : getSetsSizeOf(3, arr)) {
+////            for (int i : set) {
+////                System.out.print(i + " ");
+////            }
+////            System.out.println();
+////            System.out.println(getLcmList(set));
+////        }
+//        List<Long> bigIntegers = new LinkedList<>();
+//
+//        Set<Integer> integers = new HashSet<>();
+//        int[] ints = {1000000000, 999999999, 999999998, 999999997, 999999996, 999999995,
+//                999999994, 999999993, 999999992, 999999991};
+//        for (int i : ints) {
+//            integers.add(i);
 //        }
-        List<Long> bigIntegers = new LinkedList<>();
+//
+//        BigInteger lcm = getLcmList(integers);
+//        System.out.println(lcm + " is lcm");
+//        for (int i : ints) {
+//            System.out.println(lcm.mod(new BigInteger(String.valueOf(i))));
+//        }
+        System.out.println(gcd(5, 15));
+    }
 
-        Set<Integer> integers = new HashSet<>();
-        int[] ints = {1000000000, 999999999, 999999998, 999999997, 999999996, 999999995,
-                999999994, 999999993, 999999992, 999999991};
-        for (int i : ints) {
-            integers.add(i);
+    static int gcd(int a, int b) {
+        while (a != 0) {
+            int tmp = a;
+            a = b % a;
+            b = tmp;
         }
-
-        BigInteger lcm = getLcmList(integers);
-        System.out.println(lcm + " is lcm");
-        for (int i : ints) {
-            System.out.println(lcm.mod(new BigInteger(String.valueOf(i))));
-        }
-
+        return b;
     }
 
     static int bitFlip(int[] arr) {

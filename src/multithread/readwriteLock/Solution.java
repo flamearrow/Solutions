@@ -27,7 +27,7 @@ class Data {
 		write = _lock.writeLock();
 	}
 
-	public void read() {
+	public void read() throws InterruptedException{
 		read.lock();
 		try {
 			for (String s : _backList) {
