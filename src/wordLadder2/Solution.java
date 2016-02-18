@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-//Given two words (start and end), and a dictionary, find all shortest transformation sequence(s) from start to end, such that:
+//Given two words (start and end), and a dictionary, find all shortest transformation sequence(s)
+// from start to end, such that:
 //
 //Only one letter can be changed at a time
 //Each intermediate word must exist in the dictionary
