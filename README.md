@@ -1,6 +1,4 @@
 Solutions 
 =========
 
-a place holder for leetcode Solution-s
-
-Built in jdk1.7.0_45
+Solutions from leetcode and other coding interview questions, this is boring, don't spend too much time on it
