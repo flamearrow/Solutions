@@ -28,7 +28,7 @@ public class Solution {
      * @param payList A list of number for the amount each one paid
      *                e.g 1,2,3,4 means A paid 1 coin, B paid 2 coins, C paid 3 coins and D paid
      *                4 coins
-     * @return A grid representing how much how should pay who.
+     * @return A grid representing how much who should pay who.
      *          e.g a[0][2]=5 means A should pay C 5 coins,
      *              a[1][2]=1 means B should Pay C 1 coin
      */
