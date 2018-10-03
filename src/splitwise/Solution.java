@@ -38,8 +38,8 @@ public class Solution {
         int[] diffs = new int[headCount];
 
         for (int i = 0; i < headCount; i++) {
-            // diffs[i] positive if need to send
-            // diffs[i] negative if need to receive
+            // diffs[i] positive if need to receive
+            // diffs[i] negative if need to send
             // if 0, then don't need to send/receive
             diffs[i] = payList[i] - costPerPerson;
         }
