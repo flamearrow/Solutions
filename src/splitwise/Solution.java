@@ -54,9 +54,9 @@ public class Solution {
         while (nextNegIndex != -1 && nextPosIndex != -1) {
             // how much should be paid
             int amountToPay = Math.min(diffs[nextPosIndex], -diffs[nextNegIndex]);
-            ret[nextPosIndex][nextNegIndex] = amountToPay;
+            ret[nextNegIndex][nextPosIndex] = amountToPay;
 
-            // clear the dept between the two
+            // clear the debit between the two
             diffs[nextPosIndex] -= amountToPay;
             diffs[nextNegIndex] += amountToPay;
 
