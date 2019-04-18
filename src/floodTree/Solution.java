@@ -12,24 +12,24 @@ import java.util.List;
 //   the cost is the minimal time to flood the entire tree
 // e.g the following tree's flooding cost is 3  
 //           a
-//			/ \
+//	    / \
 //         a   a
-//		  /
+//	  /
 //       a 
 // e.g the following tree's flooding cost is 4  
-//			    a
+//			a
 //		    /   |   \
 //		   a    a    a
-//	      /
-//	     a 
+//	          /
+//	         a 
 // e.g the following tree's cost is 5
-//				    a
+//				a
 //			   /  |   |  \   
 //			  a   a   a   a
 //			 /   /
 //			a   a   
-//         /    
-//		  a
+//                     /    
+//		      a
 
 public class Solution {
 	public static void main(String[] args) {
