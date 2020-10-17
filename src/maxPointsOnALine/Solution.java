@@ -130,10 +130,10 @@ public class Solution {
 					if (l.contains(p)) {
 						if (backMap.containsKey(l)) {
 							count = backMap.get(l) + 1;
-							backMap.put(l, new Integer(count));
+							backMap.put(l, count);
 						} else {
 							count = 1;
-							backMap.put(l, new Integer(1));
+							backMap.put(l, 1);
 						}
 						if (count > maxCount) {
 							maxCount = count;
