@@ -21,7 +21,7 @@ public class Permutations {
 	List<List<Integer>> getPermute(int[] num, int index) {
 		if (index == num.length - 1) {
 			List<List<Integer>> ret = new ArrayList<>();
-			ArrayList<Integer> l = new ArrayList<Integer>();
+			ArrayList<Integer> l = new ArrayList<>();
 			l.add(num[index]);
 			ret.add(l);
 			return ret;
