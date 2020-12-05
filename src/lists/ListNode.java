@@ -4,13 +4,19 @@ package lists;
  * Created by flamearrow on 1/18/16.
  */
 public class ListNode {
-    int val;
+    public int val;
     public ListNode next;
 
-    ListNode(int x) {
+    public ListNode(int x) {
         val = x;
         next = null;
     }
+
+    public ListNode(int x, ListNode next) {
+        val = x;
+        this.next = next;
+    }
+
 
     public ListNode setNext(int nextX) {
         next = new ListNode(nextX);
