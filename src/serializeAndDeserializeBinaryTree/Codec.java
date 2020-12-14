@@ -1,5 +1,7 @@
 package serializeAndDeserializeBinaryTree;
 
+import treeUtils.TreeNode;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -26,142 +28,123 @@ import java.util.Queue;
 //Note: Do not use class member/global/static variables to store states. 
 // Your serialize and deserialize algorithms should be stateless.
 public class Codec {
-	public static void main(String[] args) {
-		 TreeNode root = new TreeNode(1);
-		 root.setLeft(2);
-		 root.setRight(3).setLeft(4);
-		 root.right.setRight(5);
+    public static void main(String[] args) {
+        TreeNode root = new TreeNode(1);
+        root.setLeft(2);
+        root.setRight(3).setLeft(4);
+        root.right.setRight(5);
 
 //		TreeNode root = new TreeNode(-1);
 //		root.setLeft(0);
 //		root.setRight(-2);
 
-		String data = new Codec().serialize(root);
-		System.out.println(data);
+        String data = new Codec().serialize(root);
+        System.out.println(data);
 
-		TreeNode s = new Codec().deserialize(data);
-		System.out.println("m");
-	}
+        TreeNode s = new Codec().deserialize(data);
+        System.out.println("m");
+    }
 
-	public String serialize(TreeNode root) {
-		// return inPreCodec(root);
-		return leetCodeCodec(root);
-	}
+    public String serialize(TreeNode root) {
+        // return inPreCodec(root);
+        return leetCodeCodec(root);
+    }
 
-	public TreeNode deserialize(String data) {
-		// return inPreDecode(data);
+    public TreeNode deserialize(String data) {
+        // return inPreDecode(data);
 
-		return leetCodeDecode(data);
-	}
+        return leetCodeDecode(data);
+    }
 
-	String leetCodeCodec(TreeNode root) {
-		StringBuilder sb = new StringBuilder();
-		Queue<TreeNode> q = new LinkedList<TreeNode>();
-		q.add(root);
-		while (!q.isEmpty()) {
-			TreeNode cur = q.poll();
-			if (cur == null) {
-				sb.append(" n");
-			} else {
-				sb.append(" " + cur.val);
-				q.add(cur.left);
-				q.add(cur.right);
-			}
+    String leetCodeCodec(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        Queue<TreeNode> q = new LinkedList<TreeNode>();
+        q.add(root);
+        while (!q.isEmpty()) {
+            TreeNode cur = q.poll();
+            if (cur == null) {
+                sb.append(" n");
+            } else {
+                sb.append(" " + cur.val);
+                q.add(cur.left);
+                q.add(cur.right);
+            }
 
-		}
-		return sb.toString();
-	}
+        }
+        return sb.toString();
+    }
 
-	TreeNode leetCodeDecode(String data) {
-		String[] arr = data.trim().split(" ");
+    TreeNode leetCodeDecode(String data) {
+        String[] arr = data.trim().split(" ");
 
-		Queue<TreeNode> q = new LinkedList<>();
-		
-		TreeNode root = createNode(arr[0]);
-		q.add(root);
+        Queue<TreeNode> q = new LinkedList<>();
 
-		for (int i = 1; i < arr.length; i += 2) {
-			TreeNode left = createNode(arr[i]);
-			TreeNode right = createNode(arr[i + 1]);
-			q.add(left);
-			q.add(right);
-			TreeNode preRoot = null;
-			while(preRoot == null) {
-				preRoot = q.poll();
-			}
-			preRoot.left = left;
-			preRoot.right = right;
-		}
+        TreeNode root = createNode(arr[0]);
+        q.add(root);
 
-		return root;
-	}
+        for (int i = 1; i < arr.length; i += 2) {
+            TreeNode left = createNode(arr[i]);
+            TreeNode right = createNode(arr[i + 1]);
+            q.add(left);
+            q.add(right);
+            TreeNode preRoot = null;
+            while (preRoot == null) {
+                preRoot = q.poll();
+            }
+            preRoot.left = left;
+            preRoot.right = right;
+        }
 
-	TreeNode createNode(String s) {
-		if (s.equals("n")) {
-			return null;
-		} else {
-			return new TreeNode(Integer.parseInt(s));
-		}
-	}
+        return root;
+    }
 
-	////////////
+    TreeNode createNode(String s) {
+        if (s.equals("n")) {
+            return null;
+        } else {
+            return new TreeNode(Integer.parseInt(s));
+        }
+    }
 
-	// this codec only works for single/unique digits
-	String inPreCodec(TreeNode root) {
-		return inOrderTraverse(root) + "/" + preOrderTraverse(root);
-	}
+    ////////////
 
-	String inOrderTraverse(TreeNode root) {
-		if (root == null) {
-			return "";
-		}
-		return inOrderTraverse(root.left) + root.val + inOrderTraverse(root.right);
-	}
+    // this codec only works for single/unique digits
+    String inPreCodec(TreeNode root) {
+        return inOrderTraverse(root) + "/" + preOrderTraverse(root);
+    }
 
-	String preOrderTraverse(TreeNode root) {
-		if (root == null) {
-			return "";
-		}
-		return "" + root.val + preOrderTraverse(root.left) + preOrderTraverse(root.right);
-	}
+    String inOrderTraverse(TreeNode root) {
+        if (root == null) {
+            return "";
+        }
+        return inOrderTraverse(root.left) + root.val + inOrderTraverse(root.right);
+    }
 
-	TreeNode inPreDecode(String data) {
-		if (data.equals("/")) {
-			return null;
-		}
-		String[] arr = data.split("/");
-		return decodeInPre(arr[0], arr[1]);
-	}
+    String preOrderTraverse(TreeNode root) {
+        if (root == null) {
+            return "";
+        }
+        return "" + root.val + preOrderTraverse(root.left) + preOrderTraverse(root.right);
+    }
 
-	TreeNode decodeInPre(String inOrder, String preOrder) {
-		if (inOrder == null || inOrder.length() == 0) {
-			return null;
-		}
-		char rootChar = preOrder.charAt(0);
-		int leftSize = inOrder.indexOf(rootChar);
-		TreeNode root = new TreeNode(rootChar - '0');
-		root.left = decodeInPre(inOrder.substring(0, leftSize), preOrder.substring(1, leftSize + 1));
-		root.right = decodeInPre(inOrder.substring(leftSize + 1), preOrder.substring(leftSize + 1));
-		return root;
-	}
-}
+    TreeNode inPreDecode(String data) {
+        if (data.equals("/")) {
+            return null;
+        }
+        String[] arr = data.split("/");
+        return decodeInPre(arr[0], arr[1]);
+    }
 
-class TreeNode {
-	int val;
-	TreeNode left;
-	TreeNode right;
-
-	TreeNode(int x) {
-		val = x;
-	}
-
-	public TreeNode setLeft(int aLeft) {
-		left = new TreeNode(aLeft);
-		return left;
-	}
-
-	public TreeNode setRight(int aRight) {
-		right = new TreeNode(aRight);
-		return right;
-	}
+    TreeNode decodeInPre(String inOrder, String preOrder) {
+        if (inOrder == null || inOrder.length() == 0) {
+            return null;
+        }
+        char rootChar = preOrder.charAt(0);
+        int leftSize = inOrder.indexOf(rootChar);
+        TreeNode root = new TreeNode(rootChar - '0');
+        root.left =
+                decodeInPre(inOrder.substring(0, leftSize), preOrder.substring(1, leftSize + 1));
+        root.right = decodeInPre(inOrder.substring(leftSize + 1), preOrder.substring(leftSize + 1));
+        return root;
+    }
 }
